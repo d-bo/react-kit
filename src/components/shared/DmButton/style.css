@@ -1,0 +1,58 @@
+.dm-button {
+  border: 0;
+  text-align: center;
+  width: 100%;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  padding: 21px;
+  color: #fff;
+  background: #626dff;
+  cursor: pointer;
+  border-radius:3px;
+  -moz-border-radius:3px;
+  -webkit-border-radius:3px;
+  transition: all 0.5s ease;
+  border: 1px solid #5c66e9;
+}
+
+.dm-button:hover {
+
+}
+
+.button-grey {
+  font-size: 24px;
+  padding: 7px;
+  background: #e5e5e5;
+  color: #333;
+  border: 1px solid #e1e1e1;
+}
+.button-grey:hover {
+  background: #f0f0f0;
+}
+
+.button-transparent {
+  font-size: 24px;
+  padding: 7px;
+  background: transparent;
+  color: #333;
+  border: 0;
+}
+
+.button-red {
+  font-size: 24px;
+  padding: 7px;
+  background: #e63d3d;
+  color: #fff;
+  border: 1px solid #ca3a3a;
+}
+.button-red:hover {
+  background: #eb1f1f;
+}
+
+.td-pad-10 {}
+
+.button-icon {
+  font-size: 24px;
+  padding: 12px;
+}

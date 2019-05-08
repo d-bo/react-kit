@@ -1,0 +1,17 @@
+.dm-input {
+  border: 0;
+  width: 100%;
+  color: #403866;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  padding: 21px;
+  background: #e6e6e6;
+  margin: 7px 0;
+  cursor: pointer;
+  text-align: center;
+}
+
+.dm-input::placeholder {
+  color: #999;
+}
