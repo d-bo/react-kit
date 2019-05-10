@@ -26,24 +26,28 @@ class Profile extends Component {
       user: logged_user,
       loading: false,
       loadingExit: false,
-      verifyLinkSent: false,
+      verifyLinkSent: false
     };
-
-    // TODO
-    if (logged_user) {
-      firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
-        .onSnapshot(function(doc) {
-          return {
-            ...this.state,
-            ...doc.data()
-          }
-        });
-    }
 
     this.handleLogOut = this.handleLogOut.bind(this);
     this.sendVerifyLink = this.sendVerifyLink.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
     this.handleUpdateUser = this.handleUpdateUser.bind(this);
+  }
+
+  componentDidMount() {
+    var logged_user = firebase.auth().currentUser;
+    var self = this;
+    // TODO
+    if (logged_user) {
+      firebase.firestore().collection('users').doc(logged_user.uid)
+        .onSnapshot(function(doc) {
+          console.log(doc.data())
+          self.setState({
+            ...doc.data()
+          });
+        });
+    }
   }
 
   handleLogOut() {
@@ -95,20 +99,21 @@ class Profile extends Component {
     self.setState({
       loading: true
     });
-    firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
-    .set({
-      city: this.state.city
-    }, {merge: true}).then(function(e) {
-      self.setState({
-        errors: '',
-        loading: false
+    firebase.firestore().collection('users')
+      .doc(firebase.auth().currentUser.uid)
+      .set({
+        city: this.state.city
+      }, {merge: true}).then(function(e) {
+        self.setState({
+          errors: '',
+          loading: false
+        });
+      }).catch(function(error) {
+        self.setState({
+          errors: error.message,
+          loading: false
+        });
       });
-    }).catch(function(error) {
-      self.setState({
-        errors: error.message,
-        loading: false
-      });
-    });
   }
 
   render() {
