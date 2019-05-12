@@ -1,18 +1,19 @@
+import './style.scss';
 import Navbar from '../app-navbar';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import * as firebase from 'firebase/app';
 import DmButton from '../shared/DmButton';
 import DmInput from '../shared/DmInput';
-import { firebaseLogOut } from '../../redux/actions';
-import { FaCheck } from "react-icons/fa";
+import { firebaseLogOut, setProfileImgUrl } from '../../redux/actions';
 import DmFolderWidget from '../shared/DmFolderWidget';
 import 'firebase/firestore';
 
 
 const mapStateToProps = state => state.firebaseAuth;
 const mapDispatchToProps = dispatch => ({
-  firebaseLogOut: () => dispatch(firebaseLogOut())
+  firebaseLogOut: () => dispatch(firebaseLogOut()),
+  setProfileImgUrl: img_url => dispatch(setProfileImgUrl(img_url))
 });
 
 
@@ -26,27 +27,32 @@ class Profile extends Component {
       user: logged_user,
       loading: false,
       loadingExit: false,
-      verifyLinkSent: false
+      loadingImg: false,
+      verifyLinkSent: false,
+      imgFile: '',
+      profileImg: props.profileImg
     };
 
     this.handleLogOut = this.handleLogOut.bind(this);
     this.sendVerifyLink = this.sendVerifyLink.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
     this.handleUpdateUser = this.handleUpdateUser.bind(this);
+    this.handleCountryChange = this.handleCountryChange.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
+    this.handleUploadClick = this.handleUploadClick.bind(this);
+    this.handleSaveImage = this.handleSaveImage.bind(this);
+    this.cancelImgUpload = this.cancelImgUpload.bind(this);
   }
 
   componentDidMount() {
-    var logged_user = firebase.auth().currentUser;
-    var self = this;
-    // TODO
-    if (logged_user) {
-      firebase.firestore().collection('users').doc(logged_user.uid)
-        .onSnapshot(function(doc) {
-          console.log(doc.data())
-          self.setState({
-            ...doc.data()
-          });
-        });
+    // Set local profile img url
+    if (this.state.user && this.props.profileImg === '') {
+      if (this.state.user.photoURL) {
+        this.props.setProfileImgUrl(this.state.user.photoURL);
+      } else {
+        // No image ? Set default empty user img
+        this.props.setProfileImgUrl(this.state.user.photoURL);
+      }
     }
   }
 
@@ -94,6 +100,12 @@ class Profile extends Component {
     });
   }
 
+  handleCountryChange(e) {
+    this.setState({
+      country: e
+    });
+  }
+
   handleUpdateUser() {
     var self = this;
     self.setState({
@@ -102,7 +114,9 @@ class Profile extends Component {
     firebase.firestore().collection('users')
       .doc(firebase.auth().currentUser.uid)
       .set({
-        city: this.state.city
+        city: this.props.city,
+        country: this.props.country,
+        profileImg: this.props.profileImg
       }, {merge: true}).then(function(e) {
         self.setState({
           errors: '',
@@ -116,6 +130,77 @@ class Profile extends Component {
       });
   }
 
+  handleImageChange(e) {
+    e.preventDefault();
+    let reader = new FileReader();
+    let file = e.target.files[0];
+    reader.onloadend = () => {
+      this.setState({
+        imgFile: file
+      });
+      this.props.setProfileImgUrl(reader.result);
+    }
+    reader.readAsDataURL(file);
+  }
+
+  handleUploadClick() {
+    document.getElementById("img-file-upload").click();
+  }
+
+  handleSaveImage() {
+    var self = this;
+    self.setState({
+      loadingImg: true
+    });
+    if (this.state.imgFile !== '') {
+      var storageRef = firebase.storage().ref();
+      var extension = this.state.imgFile.name.split('.').pop().toLowerCase();
+      var fileName = `users/${firebase.auth().currentUser.uid}.${extension}`;
+      var imgRef = storageRef.child(fileName);
+
+      imgRef.put(this.state.imgFile)
+        .then(snapshot => {
+          this.handleUpdateUser();
+        })
+        .catch(e => console.log("ERR:", e));
+    }
+  }
+
+  cancelImgUpload() {
+    this.setState({
+      imgFile: ''
+    });
+    this.props.setProfileImgUrl('');
+  }
+
+  // Retrieve firebase profile img url
+  // Cache it to the local storage
+  // Call this once after the new image accepted
+  syncFirebaseUserProfile() {
+    var logged_user = firebase.auth().currentUser;
+    var self = this;
+
+    if (logged_user) {
+      firebase.firestore().collection('users').doc(logged_user.uid)
+        .onSnapshot(function(doc) {
+          self.setState({
+            ...doc.data()
+          });
+          // Get profile image URL
+          var photoRef = firebase.storage().ref(`${doc.data().photo}`);
+          photoRef.getDownloadURL().then((url) => {
+            this.props.setProfileImgUrl(url);
+            self.setState({
+              profileImg: url
+            });
+          }).catch((e) => {
+            console.log("ERR", e);
+          });
+
+        });
+    }
+  }
+
   render() {
     return (
       <>
@@ -125,51 +210,38 @@ class Profile extends Component {
 
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Profile" className="fade-in-fx">
-              <img src="/bio_1.jpg" alt="" />
+              {this.props.profileImg !== '' &&
+                <>
+                  <div style={{textAlign: 'center'}}>
+                    <img src={this.props.profileImg} className="profile-img" alt="" />
+                  </div>
+                </>
+              }
+              <input type="file" className="input-hidden" 
+              onChange={this.handleImageChange} id="img-file-upload" />
               <DmButton text="UPLOAD PICTURE" loading={this.state.loading} 
-                className="margin-top" />
+                className="margin-top" onClick={this.handleUploadClick} />
             </DmFolderWidget>
           </div>
 
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Settings" className="fade-in-fx">
-
-              <h3>City</h3>
+              
               <table style={{width: '100%'}}><tbody><tr>
               <td>
-                <DmInput type="text" value={this.state.city} 
-                placeholder="Enter your city ..." onChange={this.handleCityChange} />
+                <h3>Country</h3>
+                <DmInput type="text" value={this.state.country} 
+                placeholder="Enter your city ..." onChange={this.handleCountryChange} />
               </td>
               <td>
-                <DmButton icon={<FaCheck />} loading={this.state.loading} 
-                onClick={() => this.props.history.push('/profile')} 
-                className="button-icon" />
+                <h3>City</h3>
+                <DmInput type="text" value={this.state.city} 
+                placeholder="Enter your city ..." onChange={this.handleCityChange} />
               </td>
               </tr></tbody></table>
 
               {this.state.user && 
                 <>
-                  {this.state.user.displayName &&
-                    <p>Hello, <b>{this.state.user.displayName}</b></p>
-                  }
-                  {(this.state.user.email && !this.state.user.displayName) &&
-                    <p>Hello, <b>{this.state.user.email}</b></p>
-                  }
-                  {this.state.user.photoURL &&
-                    <>
-                    <img style={{width: '100px'}} src={this.state.user.photoURL} alt="" />
-                    </>
-                  }
-                  {this.state.user.providerId &&
-                    <div className="action-message round-border-5px margin-top">
-                      {this.state.user.providerId}
-                    </div>
-                  }
-                  {this.state.user.uid &&
-                    <div className="action-message round-border-5px margin-top">
-                      UID: <b>{this.state.user.uid}</b>
-                    </div>
-                  }
                   {(!this.state.user.emailVerified && !this.state.verifyLinkSent) &&
                     <>
                       <div className="action-message round-border-5px">

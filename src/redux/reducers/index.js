@@ -1,30 +1,52 @@
 import { combineReducers } from 'redux';
-import { AUTH_FIREBASE, SET_EMAIL } from '../actions';
+import { AUTH_FIREBASE, SET_EMAIL, SET_PROFILE_IMG_URL } from '../actions';
 import { SET_PASSWORD, SET_NAME, LOADING, LOGOUT } from '../actions';
-import 'firebase/auth';
 
 var initState = {
 	loading: false,   // global state lock ??
 	email: '',
 	password: '',
 	displayName: '',
-	city: ''
+	city: '',
+	country: '',
+	profileImg: ''
 };
+
+// Local state snapshot ?
+const localState = localStorage.getItem('localAppState');
+if (localState) {
+  initState = JSON.parse(localState);
+}
+
+function storeState(state) {
+  localStorage.setItem('localAppState', JSON.stringify(state));
+  return state;
+}
 
 const firebaseAuth = (state = initState, action) => {
 	switch(action.type) {
+
 		case AUTH_FIREBASE:
-			return {...state, firebase_user: action.firebase_user};
+			return storeState({...state, firebase_user: action.firebase_user});
+
 		case SET_EMAIL:
-			return {...state, email: action.email};
+			return storeState({...state, email: action.email});
+
 		case SET_PASSWORD:
-			return {...state, password: action.password};
+			return storeState({...state, password: action.password});
+
 		case SET_NAME:
-			return {...state, displayName: action.displayName};
+			return storeState({...state, displayName: action.displayName});
+
 		case LOADING:
-			return {...state, loading: action.loading};
+			return storeState({...state, loading: action.loading});
+
 		case LOGOUT:
-			return {...state, firebase_user: null};
+			return storeState({...state, firebase_user: null});
+
+		case SET_PROFILE_IMG_URL:
+			return storeState({...state, profileImg: action.img_url});
+			
 		default:
 			return state;
 	}

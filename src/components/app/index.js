@@ -72,7 +72,7 @@ class App extends Component {
     return (
       <>
       <Navbar {...this.props} />
-      <div className="container slide-in-fx">
+      <div className="container fade-in-fx">
         <div className="row">
           <div className="col-sm-4">
 

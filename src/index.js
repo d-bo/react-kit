@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app';
 import './index.scss';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/storage';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import store from './redux/store';

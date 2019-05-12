@@ -4,6 +4,12 @@ export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_NAME = 'SET_NAME';
 export const LOGOUT = 'LOGOUT';
 export const LOADING = 'LOADING';
+export const SET_PROFILE_IMG_URL = 'SET_PROFILE_IMG_URL';
+
+export const setProfileImgUrl = img_url => ({
+	type: SET_PROFILE_IMG_URL,
+	img_url
+});
 
 export const firebaseAuth = firebase_user => ({
 	type: AUTH_FIREBASE,
