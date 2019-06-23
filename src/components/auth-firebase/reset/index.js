@@ -7,8 +7,8 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import { firebaseAuth } from '../../../redux/actions';
 import { Link } from 'react-router-dom';
-import Navbar from '../../app-navbar';
 import DmFolderWidget from '../../shared/DmFolderWidget';
+import { Router } from 'react-router-dom';
 
 const mapStateToProps = state => {
   return state.firebaseAuth;
@@ -66,7 +66,6 @@ class Reset extends Component {
   render() {
     return (
       <>
-      <Navbar {...this.props} />
       <div className="container">
         <div className="row">
           <div className="col-sm-3"></div>
@@ -98,12 +97,18 @@ class Reset extends Component {
                   </div>
                   </>
                 }
-                <div className="margin-top custom-a">
-                  <table width="100%"><tbody><tr>
-                  <td style={{textAlign: 'left'}}><Link to="/auth/signin">SIGN IN</Link></td>
-                  <td style={{textAlign: 'right'}}><Link to="/auth/register">REGISTER</Link></td>
-                  </tr></tbody></table>
-                </div>
+                <Router history={this.props.history}>
+                  <div className="margin-top custom-a">
+                    <table width="100%"><tbody><tr>
+                    <td style={{textAlign: 'left'}}>
+                        <Link to="/auth/signin">SIGN IN</Link>
+                    </td>
+                    <td style={{textAlign: 'right'}}>
+                        <Link to="/auth/register">REGISTER</Link>
+                    </td>
+                    </tr></tbody></table>
+                  </div>
+                </Router>
               </div>
               }
             </DmFolderWidget>

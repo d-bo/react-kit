@@ -77,14 +77,6 @@ body {
   border-bottom: 1px solid #f0f0f0;
 }
 
-.navbar-body {
-  padding: 5px;
-  background: $bg-widget;
-  color: #555;
-  border: 1px solid #f0f0f0;
-
-}
-
 .fade-in-fx {
   animation: custom_fadein 0.5s;
 }
@@ -138,20 +130,6 @@ body {
   font-weight: bold;
 }
 
-.img-navbar {
-  width: 40px;
-  margin: 0 7px 0 7px;
-  border-radius: 50%;
-}
-
-.navbar {
-  font-size: 20px;
-}
-
-.navbar-user {
-  font-size: 14px;
-}
-
 .col-sm-4 {
   padding: 7px;
 }
@@ -175,4 +153,11 @@ body {
 
 .round-border-50 {
   border-radius: 50%;
+}
+
+.fit-in-cover {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  text-align: center;
 }

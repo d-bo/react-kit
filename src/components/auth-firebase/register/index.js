@@ -1,6 +1,5 @@
 import './style.css';
 import 'firebase/auth';
-import Navbar from '../../app-navbar';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as firebase from 'firebase/app';
@@ -9,6 +8,7 @@ import DmInput from '../../shared/DmInput';
 import DmButton from '../../shared/DmButton';
 import { firebaseAuth } from '../../../redux/actions';
 import DmFolderWidget from '../../shared/DmFolderWidget';
+import { Router } from 'react-router-dom';
 
 const mapStateToProps = state => {
   return state.firebaseAuth;
@@ -98,7 +98,6 @@ class Register extends Component {
   render() {
     return (
       <>
-      <Navbar {...this.props} />
       <div className="container">
         <div className="row">
           <div className="col-sm-3"></div>
@@ -123,12 +122,18 @@ class Register extends Component {
                 {this.state.errors && 
                   <div className="error-message round-border-5px">{this.state.errors}</div>}
 
-                <div className="margin-top custom-a">
-                  <table width="100%"><tbody><tr>
-                  <td style={{textAlign: 'left'}}><Link to="/auth/reset">FORGOT PASSWORD ?</Link></td>
-                  <td style={{textAlign: 'right'}}><Link to="/auth/signin">SIGN IN</Link></td>
-                  </tr></tbody></table>
-                </div>
+                <Router history={this.props.history}>
+                  <div className="margin-top custom-a">
+                    <table width="100%"><tbody><tr>
+                    <td style={{textAlign: 'left'}}>
+                        <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
+                    </td>
+                    <td style={{textAlign: 'right'}}>
+                        <Link to="/auth/signin">SIGN IN</Link>
+                    </td>
+                    </tr></tbody></table>
+                  </div>
+                </Router>
 
               </div>
               }

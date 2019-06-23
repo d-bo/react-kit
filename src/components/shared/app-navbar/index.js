@@ -1,12 +1,14 @@
+import './style.scss';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import * as firebase from 'firebase/app';
-import DmButton from '../shared/DmButton';
-import { Link } from 'react-router-dom';
-import { firebaseLogOut } from '../../redux/actions';
+import DmButton from '../DmButton';
+import { firebaseLogOut } from '../../../redux/actions';
+import { Router } from 'react-router-dom';
 
 
-const mapStateToProps = state => state;
+const mapStateToProps = state => state.firebaseAuth;
 const mapDispatchToProps = dispatch => ({
   firebaseLogOut: () => dispatch(firebaseLogOut())
 });
@@ -49,6 +51,10 @@ class Navbar extends Component {
   }
 
   render() {
+
+    const {history} = this.props;
+    const {firebase_user} = this.props;
+
     return (
       <div className="navbar-body" style={{marginBottom: '14px'}}>
         <div className="container navbar">
@@ -56,36 +62,38 @@ class Navbar extends Component {
 
             <div className="col-sm-4">
               <div>
-                <Link to="/"><img src="/favicons/apple-touch-icon.png" 
-                  alt="" className="img-navbar" />
+                <Router history={history}>
+                  <Link to="/"><img src="/favicons/apple-touch-icon.png" 
+                    alt="" className="img-navbar" />
                   </Link>
+                </Router>
               </div>
             </div>
 
             <div className="col-sm-4"></div>
 
             <div className="col-sm-4 navbar-user">
-              {this.state.user &&
+              {firebase_user &&
                 <div style={{textAlign: 'right'}}>
                   <span onClick={this.redirectProfile} style={{cursor: 'pointer'}}>
-                  {this.state.user.displayName &&
-                    <b>{this.state.user.displayName}</b>
+                  {firebase_user.displayName &&
+                    <b>{firebase_user.displayName}</b>
                   }
-                  {(this.state.user.email && !this.state.user.displayName) &&
-                    <b>{this.state.user.email}</b>
+                  {(firebase_user.email && !firebase_user.displayName) &&
+                    <b>{firebase_user.email}</b>
                   }
-                  {this.state.user.photoURL &&
-                    <img className="img-navbar" src={this.state.user.photoURL} 
+                  {firebase_user.profileImg &&
+                    <img className="img-navbar" src={firebase_user.profileImg}
                     alt="" />
                   }
-                  {!this.state.user.photoURL &&
+                  {!firebase_user.profileImg &&
                     <img className="img-navbar" src="/no-user.png"
                     alt="" />
                   }
                   </span>
                 </div>
               }
-              {!this.state.user &&
+              {!firebase_user &&
                 <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '50%'}}></td>
                 <td style={{width: '50%'}}>

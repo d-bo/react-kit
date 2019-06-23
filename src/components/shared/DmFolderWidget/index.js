@@ -1,7 +1,7 @@
 import React from 'react';
 
 const DmFolderWidget = props => 
-	<div className={`${props.className}`}>
+	<div className={`${props.className}`} style={props.style}>
 	  <div className="folder-center">
 	    <div className="folder-right round-border-5px-only-top">
 	    	{props.icon &&

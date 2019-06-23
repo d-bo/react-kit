@@ -7,14 +7,11 @@ import { connect } from 'react-redux';
 import * as firebase from 'firebase/app';
 import { firebaseAuth } from '../../../redux/actions';
 import { Link } from 'react-router-dom';
-import Navbar from '../../app-navbar';
 import DmFolderWidget from '../../shared/DmFolderWidget';
 import { FaGithub, FaGoogle } from "react-icons/fa";
 
 
-const mapStateToProps = state => {
-  return state.firebaseAuth;
-};
+const mapStateToProps = state => state.firebaseAuth;
 const mapDispatchToProps = dispatch => ({
   firebaseAuth: firebase_user => dispatch(firebaseAuth(firebase_user))
 });
@@ -30,7 +27,6 @@ class SignIn extends Component {
       errorSignIn: null,
       email: props.email,
       password: props.password,
-      user: props.user
     };
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleGithub = this.handleGithub.bind(this);
@@ -49,10 +45,10 @@ class SignIn extends Component {
     firebase.auth().signInWithEmailAndPassword(
         this.state.email, 
         this.state.password
-      ).then(function() {
+      ).then(() => {
         self.props.firebaseAuth(firebase.auth().currentUser);
         self.props.history.push('/');
-      }).catch(function(error) {
+      }).catch((error) => {
 
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -117,16 +113,18 @@ class SignIn extends Component {
   }
 
   render() {
+
+    const {firebase_user} = this.props;
+
     return (
       <>
-      <Navbar {...this.props} />
       <div className="container">
         <div className="row">
           <div className="col-sm-3"></div>
           <div className="col-sm-6 px-xl-5">
 
             <DmFolderWidget title="Sign In" className="fade-in-fx vertical-center">
-              {!this.state.user &&
+              {!firebase_user &&
               <div style={this.props.style}>
 
                 <DmInput type="text" value={this.state.email} 
@@ -143,11 +141,10 @@ class SignIn extends Component {
                 <div className="margin-top custom-a">
                   <table width="100%"><tbody><tr>
                   <td style={{textAlign: 'left'}}>
-                    <Link to="/auth/reset">FORGOT PASSWORD ?
-                    </Link>
+                      <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
                   </td>
                   <td style={{textAlign: 'right'}}>
-                    <Link to="/auth/register">REGISTER</Link>
+                      <Link to="/auth/register">REGISTER</Link>
                   </td>
                   </tr></tbody></table>
                 </div>

@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { AUTH_FIREBASE, SET_EMAIL, SET_PROFILE_IMG_URL } from '../actions';
 import { SET_PASSWORD, SET_NAME, LOADING, LOGOUT } from '../actions';
 
+
 var initState = {
 	loading: false,   // global state lock ??
 	email: '',
@@ -18,7 +19,8 @@ if (localState) {
   initState = JSON.parse(localState);
 }
 
-function storeState(state) {
+// Each time save state to localStorage
+const storeState = function(state) {
   localStorage.setItem('localAppState', JSON.stringify(state));
   return state;
 }
