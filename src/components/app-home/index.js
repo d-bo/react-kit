@@ -6,6 +6,7 @@ import DmButton from '../shared/DmButton';
 import DmFolderWidget from '../shared/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
 import { FaRegStar, FaCommentAlt } from "react-icons/fa";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 
 const mapStateToProps = state => state.firebaseAuth;
@@ -34,15 +35,26 @@ class Home extends Component {
         <div className="row">
           <div className="col-sm-3">
             <DmFolderWidget title="Shailene Woodley" style={{textAlign: "center"}}>
-              <img src="/bio_4.jpg" alt="" className="fit-in-cover round-border-50" />
-                    <DmButton text={<FaHeart />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
-                    className="margin-top-10 button-grey margin-top" />
+            <LazyLoadImage
+              alt=""
+              src="/bio_4.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-50" />
+
+              <DmButton text={<FaHeart />} loading={this.state.loading} 
+              click={() => this.props.history.push('/profile')} 
+              className="margin-top-10 button-grey margin-top" />
             </DmFolderWidget>
           </div>
           <div className="col-sm-3">
             <DmFolderWidget title="Ashley judd" style={{textAlign: "center"}}>
-              <img src="/ashley_judd.jpg" alt="" className="fit-in-cover round-border-50" />
+              <LazyLoadImage
+                src="/ashley_judd.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-50" />
               <table style={{width: '100%'}} className="margin-top"><tbody><tr>
                 <td style={{width: '35%'}}>
                   <DmButton text={<FaRegThumbsUp />} loading={this.state.loading} 
@@ -64,7 +76,12 @@ class Home extends Component {
           </div>
           <div className="col-sm-3">
             <DmFolderWidget title="Brie Larson" style={{textAlign: "center"}}>
-              <img src="/brie_larson.jpg" alt="" className="fit-in-cover round-border-50" />
+              <LazyLoadImage
+                src="/brie_larson.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-50" />
               <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '30%'}} className="td-pad-10">
                     <DmButton text={<FaEnvelope />} loading={this.state.loading} 
@@ -86,7 +103,12 @@ class Home extends Component {
           </div>
           <div className="col-sm-3">
             <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
-              <img src="/natasha_henstridge.jpg" alt="" className="fit-in-cover round-border-50" />
+              <LazyLoadImage
+                src="/natasha_henstridge.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-50" />
             </DmFolderWidget>
           </div>
         </div>
@@ -96,7 +118,12 @@ class Home extends Component {
 
             <DmFolderWidget title="Python Identity Operators">
                 <div style={{textAlign: 'center', marginBottom: '14px'}}>
-                  <img src="/bio_1.jpg" alt="" className="round-border-5px" />
+                <LazyLoadImage
+                  src="/bio_1.jpg"
+                  alt=""
+                  placeholderSrc="/no-image-slide.png"
+                  effect="blur"
+                  className="round-border-5px" />
                 </div>
 
                 <table style={{width: '100%'}}><tbody><tr>
@@ -177,7 +204,12 @@ class Home extends Component {
         <div className="row">
           <div className="col-sm-4">
             <DmFolderWidget title="BRAWLcast 261 Data Raven - Renegade Interrupt">
-              <img src="/cast_1.jpg" alt="" className="in-folder-img round-border-50" />
+              <LazyLoadImage
+                src="/cast_1.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="in-folder-img round-border-50" />
               Rizzle - Serenity <b>[Dispatch Recordings]</b>
               Kasra - Alburz <b>[Critical Music]</b>
               Skeptical - Mechanism [Exit Records]
@@ -194,7 +226,12 @@ class Home extends Component {
           </div>
           <div className="col-sm-8">
             <DmFolderWidget title="Rave girl 303">
-                <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
+              <LazyLoadImage
+                src="/bio_3.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="in-folder-img round-border-50" />
                 <p>
                 When the conditional part of an if-statement is long enough to require 
                 that it be written across multiple lines, it's worth noting that the 

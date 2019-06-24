@@ -7,6 +7,7 @@ import DmInput from '../shared/DmInput';
 import DmFolderWidget from '../shared/DmFolderWidget';
 import { firebaseLogOut, setProfileImgUrl } from '../../redux/actions';
 import { MdClear, MdDone } from "react-icons/md";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 
 const mapStateToProps = state => state.firebaseAuth;
@@ -209,6 +210,10 @@ class Profile extends Component {
   }
 
   render() {
+
+    const {firebase_user} = this.props;
+    const {photoURL} = firebase_user;
+
     return (
       <>
       <div className="container">
@@ -218,19 +223,23 @@ class Profile extends Component {
             <DmFolderWidget title="Profile" className="fade-in-fx">
 
               { // Default profile img
-                this.props.profileImg !== '' && this.state.uploadedImg === '' &&
+                photoURL !== '' && this.state.uploadedImg === '' &&
                 <>
                   <div style={{textAlign: 'center'}}>
-                    <img src={this.props.profileImg} 
-                    className="profile-img round-border-5px" alt="" />
+                    <LazyLoadImage
+                      src={photoURL}
+                      alt=""
+                      placeholderSrc="/no-image-slide.png"
+                      effect="blur"
+                      className="profile-img round-border-5px" />
                   </div>
                 </>
               }
 
               { // Handle uploaded profile img
                 // Show uploaded image
-                ((this.props.profileImg !== "" && this.state.uploadedImg !== "") || 
-                (this.props.profileImg === "" && this.state.uploadedImg !== "")) &&
+                ((photoURL !== "" && this.state.uploadedImg !== "") || 
+                (photoURL === "" && this.state.uploadedImg !== "")) &&
                 <>
                   <div style={{textAlign: 'center'}}>
                     <img src={this.state.uploadedImg} 
@@ -240,7 +249,7 @@ class Profile extends Component {
               }
 
               { // No default, no uploaded image -> show no-user picture
-                (this.props.profileImg === "" && this.state.uploadedImg === "") &&
+                (photoURL === "" && this.state.uploadedImg === "") &&
                 <>
                   <div style={{textAlign: 'center'}}>
                     <img src="/no-user.png"

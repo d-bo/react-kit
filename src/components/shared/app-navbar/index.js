@@ -6,6 +6,7 @@ import * as firebase from 'firebase/app';
 import DmButton from '../DmButton';
 import { firebaseLogOut } from '../../../redux/actions';
 import { Router } from 'react-router-dom';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 
 const mapStateToProps = state => state.firebaseAuth;
@@ -82,11 +83,15 @@ class Navbar extends Component {
                   {(firebase_user.email && !firebase_user.displayName) &&
                     <b>{firebase_user.email}</b>
                   }
-                  {firebase_user.profileImg &&
-                    <img className="img-navbar" src={firebase_user.profileImg}
-                    alt="" />
+                  {firebase_user.photoURL &&
+                    <LazyLoadImage
+                      src={firebase_user.photoURL}
+                      alt=""
+                      placeholderSrc="/no-image-slide.png"
+                      effect="blur"
+                      className="img-navbar" />
                   }
-                  {!firebase_user.profileImg &&
+                  {!firebase_user.photoURL &&
                     <img className="img-navbar" src="/no-user.png"
                     alt="" />
                   }
@@ -97,9 +102,9 @@ class Navbar extends Component {
                 <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '50%'}}></td>
                 <td style={{width: '50%'}}>
-                  <DmButton text="SIGN IN" loading={this.state.loading} 
-                  onClick={() => this.props.history.push('/profile')} 
-                  style={{padding: '7px 0', border: '1px solid #555', 
+                  <DmButton text="SIGN IN" loading={this.state.loading}
+                  onClick={() => this.props.history.push('/profile')}
+                  style={{padding: '7px 0', border: '1px solid #555',
                   background: 'transparent', color: '#333'}} />
                 </td>
                 </tr></tbody></table>
