@@ -14,7 +14,7 @@ const mapStateToProps = state => {
   return state.firebaseAuth;
 };
 const mapDispatchToProps = dispatch => ({
-  firebaseAuth: firebase_user => dispatch(firebaseAuth(firebase_user))
+  firebaseAuth: firebaseUser => dispatch(firebaseAuth(firebaseUser))
 });
 
 class Reset extends Component {

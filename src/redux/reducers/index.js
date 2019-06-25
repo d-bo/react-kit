@@ -1,16 +1,15 @@
 import { combineReducers } from 'redux';
-import { AUTH_FIREBASE, SET_EMAIL, SET_PROFILE_IMG_URL } from '../actions';
-import { SET_PASSWORD, SET_NAME, LOADING, LOGOUT } from '../actions';
+import { actionTypes } from '../actions';
 
 
 var initState = {
-	loading: false,   // global state lock ??
-	email: '',
-	password: '',
-	displayName: '',
-	city: '',
-	country: '',
-	profileImg: ''
+	loading: false,   // global state lock ?? mutex like
+	email: "",
+	password: "",
+	displayName: "",
+	city: "",
+	country: "",
+	profileImgUrl: "",
 };
 
 // Local state snapshot ?
@@ -28,27 +27,27 @@ const storeState = function(state) {
 const firebaseAuth = (state = initState, action) => {
 	switch(action.type) {
 
-		case AUTH_FIREBASE:
-			return storeState({...state, firebase_user: action.firebase_user});
+		case actionTypes.AUTH_FIREBASE:
+			return storeState({...state, firebaseUser: action.firebaseUser});
 
-		case SET_EMAIL:
+		case actionTypes.SET_EMAIL:
 			return storeState({...state, email: action.email});
 
-		case SET_PASSWORD:
+		case actionTypes.SET_PASSWORD:
 			return storeState({...state, password: action.password});
 
-		case SET_NAME:
+		case actionTypes.SET_NAME:
 			return storeState({...state, displayName: action.displayName});
 
-		case LOADING:
+		case actionTypes.LOADING:
 			return storeState({...state, loading: action.loading});
 
-		case LOGOUT:
-			return storeState({...state, firebase_user: null});
+		case actionTypes.LOGOUT:
+			return storeState({...state, firebaseUser: null});
 
-		case SET_PROFILE_IMG_URL:
-			return storeState({...state, profileImg: action.img_url});
-			
+		case actionTypes.SET_PROFILE_IMG_URL:
+			return storeState({...state, profileImgUrl: action.profileImgUrl});
+
 		default:
 			return state;
 	}

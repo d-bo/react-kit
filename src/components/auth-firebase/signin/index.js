@@ -13,7 +13,7 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 
 const mapStateToProps = state => state.firebaseAuth;
 const mapDispatchToProps = dispatch => ({
-  firebaseAuth: firebase_user => dispatch(firebaseAuth(firebase_user))
+  firebaseAuth: firebaseUser => dispatch(firebaseAuth(firebaseUser))
 });
 
 
@@ -114,7 +114,7 @@ class SignIn extends Component {
 
   render() {
 
-    const {firebase_user} = this.props;
+    const {firebaseUser} = this.props;
 
     return (
       <>
@@ -124,7 +124,7 @@ class SignIn extends Component {
           <div className="col-sm-6 px-xl-5">
 
             <DmFolderWidget title="Sign In" className="fade-in-fx vertical-center">
-              {!firebase_user &&
+              {!firebaseUser &&
               <div style={this.props.style}>
 
                 <DmInput type="text" value={this.state.email} 

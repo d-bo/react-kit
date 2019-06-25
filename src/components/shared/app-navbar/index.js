@@ -54,7 +54,7 @@ class Navbar extends Component {
   render() {
 
     const {history} = this.props;
-    const {firebase_user} = this.props;
+    const {firebaseUser, profileImgUrl} = this.props;
 
     return (
       <div className="navbar-body" style={{marginBottom: '14px'}}>
@@ -74,31 +74,59 @@ class Navbar extends Component {
             <div className="col-sm-4"></div>
 
             <div className="col-sm-4 navbar-user">
-              {firebase_user &&
+              {firebaseUser &&
                 <div style={{textAlign: 'right'}}>
                   <span onClick={this.redirectProfile} style={{cursor: 'pointer'}}>
-                  {firebase_user.displayName &&
-                    <b>{firebase_user.displayName}</b>
+                  {firebaseUser.displayName &&
+                    <b>{firebaseUser.displayName}</b>
                   }
-                  {(firebase_user.email && !firebase_user.displayName) &&
-                    <b>{firebase_user.email}</b>
+                  {(firebaseUser.email && !firebaseUser.displayName) &&
+                    <b>{firebaseUser.email}</b>
                   }
-                  {firebase_user.photoURL &&
+
+                  { // Custom uploaded image
+                    (profileImgUrl !== undefined && profileImgUrl !== "") &&
+                    <>
                     <LazyLoadImage
-                      src={firebase_user.photoURL}
+                      src={profileImgUrl}
                       alt=""
                       placeholderSrc="/no-image-slide.png"
                       effect="blur"
                       className="img-navbar" />
+                    </>
                   }
-                  {!firebase_user.photoURL &&
-                    <img className="img-navbar" src="/no-user.png"
-                    alt="" />
+
+                  { // No custom image
+                    (profileImgUrl === "" || typeof profileImgUrl === "undefined") &&
+                    <>
+                    <div>typeof profileImgUrl === "undefined"</div>
+                    { // No image uploaded
+                      firebaseUser.photoURL &&
+                      <>
+                        <LazyLoadImage
+                          src={firebaseUser.photoURL}
+                          alt=""
+                          placeholderSrc="/no-image-slide.png"
+                          effect="blur"
+                          className="img-navbar" />
+                      </>
+                    }
+
+                    { // No image uploaded
+                      !firebaseUser.photoURL &&
+                      <>
+                        <img className="img-navbar" src="/no-user.png"
+                        alt="" />
+                      </>
+                    }
+
+                    </>
                   }
+
                   </span>
                 </div>
               }
-              {!firebase_user &&
+              {!firebaseUser &&
                 <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '50%'}}></td>
                 <td style={{width: '50%'}}>
