@@ -20,10 +20,13 @@ firebase.initializeApp(firebase_config);
 firebase.auth().languageCode = (navigator.languages && 
   navigator.languages.length) ? navigator.languages[0] : navigator.language;
 
-var history = createBrowserHistory();
+// Router history
+const history = createBrowserHistory();
+// React Context
+const firebaseUserContext = React.createContext();
 
 // Render app when user acquired
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function(firebaseUser) {
 	ReactDOM.render(
     <>
 			<Provider store={store}>

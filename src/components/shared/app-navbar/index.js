@@ -1,12 +1,12 @@
-import './style.scss';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import React, { Component } from 'react';
-import * as firebase from 'firebase/app';
-import DmButton from '../DmButton';
-import { firebaseLogOut } from '../../../redux/actions';
-import { Router } from 'react-router-dom';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import "./style.scss";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import React, { Component } from "react";
+import * as firebase from "firebase/app";
+import DmButton from "../DmButton";
+import { firebaseLogOut } from "../../../redux/actions";
+import { Router } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 
 const mapStateToProps = state => state.firebaseAuth;
@@ -23,7 +23,7 @@ class Navbar extends Component {
       user: firebase.auth().currentUser,
       loading: false,
       loadingExit: false,
-      verifyLinkSent: false
+      verifyLinkSent: false,
     };
     this.handleLogOut = this.handleLogOut.bind(this);
     this.redirectProfile = this.redirectProfile.bind(this);
@@ -37,18 +37,18 @@ class Navbar extends Component {
     firebase.auth().signOut().then(function() {
       self.setState({user: null, loadingExit: false});
       self.props.firebaseLogOut();
-      self.props.history.push('/auth/signin');
+      self.props.history.push("/auth/signin");
     }).catch(function(error) {
       var errorMessage = error.message;
       self.setState({
         errors: errorMessage,
-        loadingExit: false
+        loadingExit: false,
       });
     });
   }
 
   redirectProfile() {
-    this.props.history.push('/profile');
+    this.props.history.push("/profile");
   }
 
   render() {
@@ -57,7 +57,7 @@ class Navbar extends Component {
     const {firebaseUser, profileImgUrl} = this.props;
 
     return (
-      <div className="navbar-body" style={{marginBottom: '14px'}}>
+      <div className="navbar-body" style={{marginBottom: "14px"}}>
         <div className="container navbar">
           <div className="row">
 
@@ -75,8 +75,8 @@ class Navbar extends Component {
 
             <div className="col-sm-4 navbar-user">
               {firebaseUser &&
-                <div style={{textAlign: 'right'}}>
-                  <span onClick={this.redirectProfile} style={{cursor: 'pointer'}}>
+                <div style={{textAlign: "right"}}>
+                  <span onClick={this.redirectProfile} style={{cursor: "pointer"}}>
                   {firebaseUser.displayName &&
                     <b>{firebaseUser.displayName}</b>
                   }
@@ -127,13 +127,13 @@ class Navbar extends Component {
                 </div>
               }
               {!firebaseUser &&
-                <table style={{width: '100%'}}><tbody><tr>
-                <td style={{width: '50%'}}></td>
-                <td style={{width: '50%'}}>
+                <table style={{width: "100%"}}><tbody><tr>
+                <td style={{width: "50%"}}></td>
+                <td style={{width: "50%"}}>
                   <DmButton text="SIGN IN" loading={this.state.loading}
-                  onClick={() => this.props.history.push('/profile')}
-                  style={{padding: '7px 0', border: '1px solid #555',
-                  background: 'transparent', color: '#333'}} />
+                  onClick={() => this.props.history.push("/profile")}
+                  style={{padding: "7px 0", border: "1px solid #555",
+                  background: "transparent", color: "#333"}} />
                 </td>
                 </tr></tbody></table>
               }

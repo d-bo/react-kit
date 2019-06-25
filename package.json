@@ -32,6 +32,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "eslint-config-google": "^0.13.0",
+    "eslint-plugin-react": "^7.14.2",
     "react-test-renderer": "^16.8.6"
   }
 }
