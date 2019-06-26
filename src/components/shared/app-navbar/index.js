@@ -7,6 +7,7 @@ import DmButton from "../DmButton";
 import { firebaseLogOut } from "../../../redux/actions";
 import { Router } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 
 const mapStateToProps = state => state.firebaseAuth;
@@ -20,7 +21,6 @@ class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: firebase.auth().currentUser,
       loading: false,
       loadingExit: false,
       verifyLinkSent: false,
@@ -35,7 +35,7 @@ class Navbar extends Component {
       loadingExit: true
     });
     firebase.auth().signOut().then(function() {
-      self.setState({user: null, loadingExit: false});
+      self.setState({loadingExit: false});
       self.props.firebaseLogOut();
       self.props.history.push("/auth/signin");
     }).catch(function(error) {
@@ -54,7 +54,8 @@ class Navbar extends Component {
   render() {
 
     const {history} = this.props;
-    const {firebaseUser, profileImgUrl} = this.props;
+    const firebaseUser = this.context;
+    const {profileImgUrl} = this.props;
 
     return (
       <div className="navbar-body" style={{marginBottom: "14px"}}>
@@ -145,5 +146,7 @@ class Navbar extends Component {
     );
   }
 }
+
+Navbar.contextType = FirebaseUserContext;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

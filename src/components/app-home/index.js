@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { firebaseLogOut } from '../../redux/actions';
-import FirebaseUserContext from '../../contexts/FirebaseUserContext';
 import DmButton from '../shared/DmButton';
 import DmFolderWidget from '../shared/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
@@ -16,8 +15,6 @@ const mapDispatchToProps = dispatch => ({
 
 
 class Home extends Component {
-
-  static contextType = FirebaseUserContext;
 
   constructor(props) {
     super(props);

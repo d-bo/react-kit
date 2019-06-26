@@ -1,16 +1,17 @@
-import * as firebase from 'firebase/app';
-import './index.scss';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/storage';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import store from './redux/store';
-import App from './components/app';
-import { Provider } from 'react-redux';
-import { createBrowserHistory } from 'history';
-import * as serviceWorker from './serviceWorker';
-import firebase_config from './config/firebase.config';
+import * as firebase from "firebase/app";
+import "./index.scss";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/storage";
+import React from "react";
+import ReactDOM from "react-dom";
+import store from "./redux/store";
+import App from "./components/app";
+import { Provider } from "react-redux";
+import { createBrowserHistory } from "history";
+import * as serviceWorker from "./serviceWorker";
+import firebase_config from "./config/firebase.config";
+import { FirebaseUserContext } from "./contexts/FirebaseUserContext";
 
 
 // Init firebase account
@@ -22,17 +23,16 @@ firebase.auth().languageCode = (navigator.languages &&
 
 // Router history
 const history = createBrowserHistory();
-// React Context
-const firebaseUserContext = React.createContext();
+
 
 // Render app when user acquired
 firebase.auth().onAuthStateChanged(function(firebaseUser) {
-	ReactDOM.render(
-    <>
-			<Provider store={store}>
+  ReactDOM.render(
+    <FirebaseUserContext.Provider value={firebaseUser}>
+      <Provider store={store}>
         <App history={history} />
-			</Provider>
-    </>
-		, document.getElementById('root'));
-	serviceWorker.unregister();
+      </Provider>
+    </FirebaseUserContext.Provider>
+    , document.getElementById("root"));
+  serviceWorker.unregister();
 });

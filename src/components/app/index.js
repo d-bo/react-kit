@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import * as firebase from 'firebase/app';
 import React, { Component } from 'react';
 import { firebaseLogOut } from '../../redux/actions';
-import FirebaseUserContext from '../../contexts/FirebaseUserContext';
 import { Router, Route, Switch } from 'react-router-dom';
 import Reset from '../auth-firebase/reset';
 import SignIn from '../auth-firebase/signin';
@@ -26,8 +25,6 @@ const mapDispatchToProps = dispatch => ({
 
 
 class App extends Component {
-
-  static contextType = FirebaseUserContext;
 
 	constructor(props) {
 		super(props);

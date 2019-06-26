@@ -1,19 +1,20 @@
-import './style.scss';
-import { connect } from 'react-redux';
-import React, { Component } from 'react';
-import * as firebase from 'firebase/app';
-import DmButton from '../shared/DmButton';
-import DmInput from '../shared/DmInput';
-import DmFolderWidget from '../shared/DmFolderWidget';
-import { firebaseLogOut, setProfileImgUrl } from '../../redux/actions';
+import "./style.scss";
+import { connect } from "react-redux";
+import React, { Component } from "react";
+import * as firebase from "firebase/app";
+import DmButton from "../shared/DmButton";
+import DmInput from "../shared/DmInput";
+import DmFolderWidget from "../shared/DmFolderWidget";
+import { firebaseLogOut, setProfileImgUrl } from "../../redux/actions";
 import { MdClear, MdDone } from "react-icons/md";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 
 
 const mapStateToProps = state => state.firebaseAuth;
 const mapDispatchToProps = dispatch => ({
   firebaseLogOut: () => dispatch(firebaseLogOut()),
-  setProfileImgUrl: img_url => dispatch(setProfileImgUrl(img_url))
+  setProfileImgUrl: (img_url) => dispatch(setProfileImgUrl(img_url))
 });
 
 
@@ -23,7 +24,7 @@ class Profile extends Component {
     // Firebase user instance
     var logged_user = firebase.auth().currentUser;
     // Not authenticated ? Redirect to signin
-    if (!logged_user) props.history.push('/auth/signin');
+    if (!logged_user) props.history.push("/auth/signin");
     super(props);
     this.state = {
       user: logged_user,
@@ -31,8 +32,8 @@ class Profile extends Component {
       loadingExit: false,
       loadingImg: false,
       verifyLinkSent: false,
-      imgFile: '',
-      uploadedImg: '',
+      imgFile: "",
+      uploadedImg: "",
       showSaveImgDialog: false
     };
 
@@ -55,8 +56,8 @@ class Profile extends Component {
     firebase.auth().signOut().then(function() {
       self.setState({user: null, loadingExit: false});
       self.props.firebaseLogOut();
-      localStorage.removeItem('localAppState');
-      self.props.history.push('/auth/signin');
+      localStorage.removeItem("localAppState");
+      self.props.history.push("/auth/signin");
     }).catch(function(error) {
       var errorMessage = error.message;
       self.setState({
@@ -72,7 +73,7 @@ class Profile extends Component {
       loading: true
     });
     firebase.auth().currentUser.sendEmailVerification({
-      url: 'http://localhost:3000/'
+      url: "http://localhost:3000/"
     }).then(function() {
       self.setState({
         verifyLinkSent: true
@@ -103,7 +104,7 @@ class Profile extends Component {
     self.setState({
       loading: true
     });
-    firebase.firestore().collection('users')
+    firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid)
       .set({
         city: this.props.city,
@@ -111,7 +112,7 @@ class Profile extends Component {
         profileImgUrl: this.props.profileImgUrl,
       }, {merge: true}).then(function(e) {
         self.setState({
-          errors: '',
+          errors: "",
           loading: false,
         });
       }).catch(function(error) {
@@ -151,7 +152,7 @@ class Profile extends Component {
     if (this.state.imgFile !== "") {
 
       var storageRef = firebase.storage().ref();
-      var extension = this.state.imgFile.name.split('.').pop().toLowerCase();
+      var extension = this.state.imgFile.name.split(".").pop().toLowerCase();
       var fileName = `users/${firebase.auth().currentUser.uid}.${extension}`;
       var imgRef = storageRef.child(fileName);
 
@@ -177,9 +178,9 @@ class Profile extends Component {
 
   cancelImgUpload() {
     this.setState({
-      imgFile: '',
+      imgFile: "",
       showSaveImgDialog: false,
-      uploadedImg: ''
+      uploadedImg: "",
     });
   }
 
@@ -191,7 +192,7 @@ class Profile extends Component {
     var self = this;
 
     if (logged_user) {
-      firebase.firestore().collection('users').doc(logged_user.uid)
+      firebase.firestore().collection("users").doc(logged_user.uid)
         .onSnapshot(function(doc) {
           self.setState({
             ...doc.data()
@@ -216,7 +217,8 @@ class Profile extends Component {
   render() {
 
     const {uploadedImg} = this.state;
-    const {firebaseUser, profileImgUrl} = this.props;
+    const firebaseUser = this.context;
+    const {profileImgUrl} = this.props;
 
     return (
       <>
@@ -234,7 +236,7 @@ class Profile extends Component {
                     && profileImgUrl !== ""
                     && uploadedImg === "") &&
                   <>
-                    <div style={{textAlign: 'center'}}>
+                    <div style={{textAlign: "center"}}>
                       <LazyLoadImage
                         src={profileImgUrl}
                         alt=""
@@ -250,7 +252,7 @@ class Profile extends Component {
                     && profileImgUrl !== ""
                     && uploadedImg !== "") &&
                   <>
-                    <div style={{textAlign: 'center'}}>
+                    <div style={{textAlign: "center"}}>
                       <LazyLoadImage
                         src={uploadedImg}
                         alt=""
@@ -267,7 +269,7 @@ class Profile extends Component {
                   { // No image uploaded
                     (firebaseUser.photoURL && uploadedImg === "") &&
                     <>
-                      <div style={{textAlign: 'center'}}>
+                      <div style={{textAlign: "center"}}>
                         <LazyLoadImage
                           src={firebaseUser.photoURL}
                           alt=""
@@ -281,7 +283,7 @@ class Profile extends Component {
                   { // No image uploaded
                     (!firebaseUser.photoURL && uploadedImg === "") &&
                     <>
-                      <div style={{textAlign: 'center'}}>
+                      <div style={{textAlign: "center"}}>
                         <img src="/no-user.png" alt="" />
                       </div>
                     </>
@@ -292,7 +294,7 @@ class Profile extends Component {
                     ((firebaseUser.photoURL && uploadedImg !== "") || 
                     (!firebaseUser.photoURL && uploadedImg !== "")) &&
                     <>
-                      <div style={{textAlign: 'center'}}>
+                      <div style={{textAlign: "center"}}>
                         <img src={this.state.uploadedImg} 
                         className="profile-img round-border-5px" alt="" />
                       </div>
@@ -305,13 +307,13 @@ class Profile extends Component {
 
               { // Cancel image upload or save dialog
                 this.state.showSaveImgDialog &&
-                <table style={{width: '100%'}}><tbody><tr>
+                <table style={{width: "100%"}}><tbody><tr>
                 <td>
-                  <DmButton icon={<MdDone style={{fontSize: '32px'}} />} loading={this.state.loadingImg} 
+                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={this.state.loadingImg} 
                     className="margin-top button-grey" onClick={this.handleSaveImage} />
                 </td>
                 <td>
-                  <DmButton icon={<MdClear style={{fontSize: '32px'}} />} loading={this.state.loadingImg} 
+                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={this.state.loadingImg} 
                     className="margin-top button-grey" onClick={this.cancelImgUpload} />
                 </td>
                 </tr></tbody></table>
@@ -328,7 +330,7 @@ class Profile extends Component {
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Settings" className="fade-in-fx">
 
-              <table style={{width: '100%'}}><tbody><tr>
+              <table style={{width: "100%"}}><tbody><tr>
               <td>
                 <h3>Country</h3>
                 <DmInput type="text" value={this.state.country}
@@ -361,10 +363,10 @@ class Profile extends Component {
                   }
 
                   <DmButton text="SAVE" loading={this.state.loading} onClick={this.handleUpdateUser}
-                  style={{ marginTop: '35px'}} />
+                  style={{ marginTop: "35px"}} />
 
                   <DmButton text="EXIT" loading={this.state.loadingExit} onClick={this.handleLogOut}
-                  style={{ marginTop: '7px'}} />
+                  style={{ marginTop: "7px"}} />
                 </>
               }
 
@@ -376,5 +378,7 @@ class Profile extends Component {
     );
   }
 }
+
+Profile.contextType = FirebaseUserContext;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
