@@ -237,7 +237,6 @@ class Profile extends Component {
 
     const {uploadedImg} = this.state;
     const firebaseUser = this.context;
-    const {profileImgUrl} = this.props;
 
     return (
       <>
@@ -246,7 +245,8 @@ class Profile extends Component {
 
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Profile" className="fade-in-fx">
-
+            {(firebaseUser && firebaseUser.hasOwnProperty('photoURL')) &&
+              <>
               {(firebaseUser.photoURL && uploadedImg === "") &&
                 <>
                   <div style={{textAlign: "center"}}>
@@ -295,6 +295,8 @@ class Profile extends Component {
                   </div>
                 </>
               }
+              </>
+            }
 
               { // Cancel image upload or save dialog
                 this.state.showSaveImgDialog &&

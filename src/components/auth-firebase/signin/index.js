@@ -25,8 +25,8 @@ class SignIn extends Component {
     this.state = {
       loading: false,
       errorSignIn: null,
-      email: props.email,
-      password: props.password,
+      email: "",
+      password: "",
     };
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleGithub = this.handleGithub.bind(this);
@@ -37,11 +37,31 @@ class SignIn extends Component {
 
   handleSignIn() {
     if (this.state.loading) return;
-    var self = this;
+    
+    // Validate email
+    var re = /\S+@\S+\.\S+/;
+    if (!re.test(this.state.email)) {
+      this.setState({
+        errors: "Incorrect email",
+        loading: false,
+      });
+      return;
+    }
+    // Validate password
+    if (this.state.password.length < 6) {
+      this.setState({
+        errors: "Password min 6 symbols length",
+        loading: false
+      });
+      return;
+    }
+
     this.setState({
       errors: null,
       loading: true
     });
+
+    const self = this;
     firebase.auth().signInWithEmailAndPassword(
         this.state.email, 
         this.state.password

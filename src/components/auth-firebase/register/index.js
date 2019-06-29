@@ -9,6 +9,7 @@ import DmButton from '../../shared/DmButton';
 import { firebaseAuth } from '../../../redux/actions';
 import DmFolderWidget from '../../shared/DmFolderWidget';
 import { Router } from 'react-router-dom';
+import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 const mapStateToProps = state => {
   return state.firebaseAuth;
@@ -24,11 +25,11 @@ class Register extends Component {
     super(props);
     this.state = {
       errors: null,
-      email: props.email,
-      password: props.password,
-      displayName: props.displayName,
+      email: "",
+      password: "",
+      displayName: "",
       verifyLinkSent: false,
-      user: props.user
+      user: props.user,
     };
     this.handleRegister = this.handleRegister.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -46,6 +47,34 @@ class Register extends Component {
 
   handleRegister(e) {
     if (this.state.loading) return;
+
+    // Validate email
+    var re = /\S+@\S+\.\S+/;
+    if (!re.test(this.state.email)) {
+      this.setState({
+        errors: "Incorrect email",
+        loading: false,
+      });
+      return;
+    }
+    // Validate password
+    if (this.state.password.length < 6) {
+      this.setState({
+        errors: "Password min 6 symbols length",
+        loading: false
+      });
+      return;
+    }
+
+    // Validate name
+    if (this.state.displayName.length < 6) {
+      this.setState({
+        errors: "Name min 6 symbols length",
+        loading: false
+      });
+      return;
+    }
+
     var self = this;
     this.setState({
       errors: null,
@@ -112,7 +141,7 @@ class Register extends Component {
           <div className="col-sm-6 px-xl-5">
 
             <DmFolderWidget title="Register" className="fade-in-fx vertical-center">
-              {!this.state.user &&
+              {!this.context &&
               <div style={this.props.style}>
 
                 <DmInput type="text" value={this.state.displayName} 
@@ -155,5 +184,7 @@ class Register extends Component {
     );
   }
 }
+
+Register.contextType = FirebaseUserContext;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);
