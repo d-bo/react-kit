@@ -13,18 +13,34 @@ var initState = {
 };
 
 // Local state snapshot ?
-const localState = localStorage.getItem('localAppState');
-if (localState) {
-  initState = JSON.parse(localState);
+const getInitState = () => {
+	const localAppCurrentUserID = localStorage.getItem('localAppCurrentUserID');
+
+	if (localAppCurrentUserID) {
+		const stateName = `localAppState${localAppCurrentUserID}`;
+		const localState = localStorage.getItem(stateName);
+		console.log(stateName);
+
+		if (localState) {
+		  initState = JSON.parse(localState);
+		  return initState;
+		}
+	}
+
+	return null;
 }
 
 // Each time save state to localStorage
-const storeState = function(state) {
-  localStorage.setItem('localAppState', JSON.stringify(state));
+const storeState = function (state) {
+	const localAppCurrentUserID = localStorage.getItem('localAppCurrentUserID');
+	if (localAppCurrentUserID) {
+		const stateName = `localAppState${localAppCurrentUserID}`;
+  	localStorage.setItem(stateName, JSON.stringify(state));
+	}
   return state;
 }
 
-const firebaseAuth = (state = initState, action) => {
+const firebaseAuth = (state = getInitState(), action) => {
 	switch(action.type) {
 
 		case actionTypes.AUTH_FIREBASE:

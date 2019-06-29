@@ -37,6 +37,7 @@ class Navbar extends Component {
     firebase.auth().signOut().then(function() {
       self.setState({loadingExit: false});
       self.props.firebaseLogOut();
+      localStorage.removeItem('localAppCurrentUserID');
       self.props.history.push("/auth/signin");
     }).catch(function(error) {
       var errorMessage = error.message;
@@ -100,7 +101,6 @@ class Navbar extends Component {
                   { // No custom image
                     (profileImgUrl === "" || typeof profileImgUrl === "undefined") &&
                     <>
-                    <div>typeof profileImgUrl === "undefined"</div>
                     { // No image uploaded
                       firebaseUser.photoURL &&
                       <>

@@ -34,7 +34,15 @@ class Register extends Component {
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleKeyboardEnter = this.handleKeyboardEnter.bind(this);
   }
+
+  handleKeyboardEnter (e) {
+    alert(e);
+    if (e.key === 'Enter') {
+      this.handleRegister();
+    }
+  };
 
   handleRegister(e) {
     if (this.state.loading) return;
@@ -117,7 +125,8 @@ class Register extends Component {
                 onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
                 <DmButton text="Ok" loading={this.state.loading} 
-                onClick={this.handleRegister} style={{marginTop: '35px'}} />
+                onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter}
+                style={{marginTop: '35px'}} />
 
                 {this.state.errors && 
                   <div className="error-message round-border-5px">{this.state.errors}</div>}

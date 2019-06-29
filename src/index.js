@@ -27,6 +27,10 @@ const history = createBrowserHistory();
 
 // Render app when user acquired
 firebase.auth().onAuthStateChanged(function(firebaseUser) {
+	// Multi-user local storage support
+	if (firebaseUser && firebaseUser.hasOwnProperty('uid')) {
+		localStorage.setItem('localAppCurrentUserID', firebaseUser.uid);
+	}
   ReactDOM.render(
     <FirebaseUserContext.Provider value={firebaseUser}>
       <Provider store={store}>

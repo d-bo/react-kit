@@ -9,6 +9,7 @@ import { firebaseAuth } from '../../../redux/actions';
 import { Link } from 'react-router-dom';
 import DmFolderWidget from '../../shared/DmFolderWidget';
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 
 const mapStateToProps = state => state.firebaseAuth;
@@ -20,7 +21,6 @@ const mapDispatchToProps = dispatch => ({
 class SignIn extends Component {
 
   constructor(props) {
-    if (firebase.auth().currentUser) props.history.push('/');
     super(props);
     this.state = {
       loading: false,
@@ -114,7 +114,7 @@ class SignIn extends Component {
 
   render() {
 
-    const {firebaseUser} = this.props;
+    const firebaseUser = this.context;
 
     return (
       <>
@@ -174,5 +174,7 @@ class SignIn extends Component {
     );
   }
 }
+
+SignIn.contextType = FirebaseUserContext;
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

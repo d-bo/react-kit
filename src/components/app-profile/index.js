@@ -55,8 +55,8 @@ class Profile extends Component {
     });
     firebase.auth().signOut().then(function() {
       self.setState({user: null, loadingExit: false});
+      localStorage.removeItem('localAppCurrentUserID');
       self.props.firebaseLogOut();
-      localStorage.removeItem("localAppState");
       self.props.history.push("/auth/signin");
     }).catch(function(error) {
       var errorMessage = error.message;

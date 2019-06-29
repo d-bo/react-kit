@@ -45,7 +45,7 @@ class App extends Component {
     firebase.auth().signOut().then(function() {
       self.setState({loadingExit: false});
       self.props.firebaseLogOut();
-      localStorage.removeItem('localAppState');
+      localStorage.removeItem('localAppCurrentUserID');
       self.props.history.push('/auth/signin');
     }).catch(function(error) {
       var errorMessage = error.message;
@@ -84,7 +84,7 @@ class App extends Component {
           <Router history={this.props.history}>
             <Switch>
               <Route path="/" exact component={Home} />
-              <Route path="/profile" exact component={Profile} />
+              <Route path="/profile" component={Profile} />
               <Route path="/auth/signin" component={SignIn} />
               <Route path="/auth/register" component={Register} />
               <Route path="/auth/reset" component={Reset} />
