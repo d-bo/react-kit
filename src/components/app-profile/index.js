@@ -14,7 +14,7 @@ import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 const mapStateToProps = state => state.firebaseAuth;
 const mapDispatchToProps = dispatch => ({
   firebaseLogOut: () => dispatch(firebaseLogOut()),
-  setProfileImgUrl: (img_url) => dispatch(setProfileImgUrl(img_url))
+  setProfileImgUrl: (img_url) => dispatch(setProfileImgUrl(img_url)),
 });
 
 
@@ -56,6 +56,7 @@ class Profile extends Component {
     firebase.auth().signOut().then(function() {
       self.setState({user: null, loadingExit: false});
       localStorage.removeItem('localAppCurrentUserID');
+      self.props.setProfileImgUrl("");
       self.props.firebaseLogOut();
       self.props.history.push("/auth/signin");
     }).catch(function(error) {
@@ -151,28 +152,46 @@ class Profile extends Component {
     });
     if (this.state.imgFile !== "") {
 
-      var storageRef = firebase.storage().ref();
-      var extension = this.state.imgFile.name.split(".").pop().toLowerCase();
-      var fileName = `users/${firebase.auth().currentUser.uid}.${extension}`;
-      var imgRef = storageRef.child(fileName);
+      const storageRef = firebase.storage().ref();
+      const extension = this.state.imgFile.name.split(".").pop().toLowerCase();
+      const fileName = `users/${firebase.auth().currentUser.uid}.${extension}`;
+      const imgRef = storageRef.child(fileName);
+      const user = firebase.auth().currentUser;
 
       // Upload file to firebase
       // Get uploaded file url
       // Cache url to localStorage
+      // Update firebase user profile
       imgRef.put(this.state.imgFile)
         .then(snapshot => {
             imgRef.getDownloadURL().then((url) => {
               self.props.setProfileImgUrl(url);
-              self.setState({
-                loadingImg: false,
-                showSaveImgDialog: false,
-                imgFile: "",
+              user.updateProfile({
+                photoURL: url
+              }).then(function() {
+                self.setState({
+                  loadingImg: false,
+                  showSaveImgDialog: false,
+                  imgFile: "",
+                });
+              }).catch(function(error) {
+                self.setState({
+                  errors: error.message,
+                  loading: false,
+                });
               });
             }).catch((e) => {
-              console.log("ERR", e);
+              self.setState({
+                errors: e.message,
+                loading: false,
+              });
             });
-        })
-        .catch(e => console.log("ERR:", e));
+        }).catch((e) => {
+              self.setState({
+                errors: e.message,
+                loading: false,
+              });
+        });
     }
   }
 
@@ -228,80 +247,52 @@ class Profile extends Component {
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Profile" className="fade-in-fx">
 
-              { // Profile image
-                firebaseUser &&
+              {(firebaseUser.photoURL && uploadedImg === "") &&
                 <>
-                { // Custom uploaded image
-                  (profileImgUrl !== undefined
-                    && profileImgUrl !== ""
-                    && uploadedImg === "") &&
-                  <>
-                    <div style={{textAlign: "center"}}>
-                      <LazyLoadImage
-                        src={profileImgUrl}
-                        alt=""
-                        placeholderSrc="/no-image-slide.png"
-                        effect="blur"
-                        className="profile-img round-border-5px" />
-                    </div>
-                  </>
-                }
+                  <div style={{textAlign: "center"}}>
+                    <LazyLoadImage
+                      src={firebaseUser.photoURL}
+                      alt=""
+                      placeholderSrc="/no-image-slide.png"
+                      effect="blur"
+                      className="profile-img round-border-5px" />
+                  </div>
+                </>
+              }
 
-                { // Custom uploaded image
-                  (profileImgUrl !== undefined
-                    && profileImgUrl !== ""
-                    && uploadedImg !== "") &&
-                  <>
-                    <div style={{textAlign: "center"}}>
-                      <LazyLoadImage
-                        src={uploadedImg}
-                        alt=""
-                        placeholderSrc="/no-image-slide.png"
-                        effect="blur"
-                        className="profile-img round-border-5px" />
-                    </div>
-                  </>
-                }
+              {(firebaseUser.photoURL && uploadedImg !== "") &&
+                <>
+                  <div style={{textAlign: "center"}}>
+                    <LazyLoadImage
+                      src={uploadedImg}
+                      alt=""
+                      placeholderSrc="/no-image-slide.png"
+                      effect="blur"
+                      className="profile-img round-border-5px" />
+                  </div>
+                </>
+              }
 
-                { // No custom image
-                  (profileImgUrl === "" || typeof profileImgUrl === "undefined") &&
-                  <>
-                  { // No image uploaded
-                    (firebaseUser.photoURL && uploadedImg === "") &&
-                    <>
-                      <div style={{textAlign: "center"}}>
-                        <LazyLoadImage
-                          src={firebaseUser.photoURL}
-                          alt=""
-                          placeholderSrc="/no-image-slide.png"
-                          effect="blur"
-                          className="profile-img round-border-5px" />
-                      </div>
-                    </>
-                  }
+              { // No image uploaded
+                (!firebaseUser.photoURL && uploadedImg === "") &&
+                <>
+                  <div style={{textAlign: "center"}}>
+                    <img src="/no-user.png" alt="" />
+                  </div>
+                </>
+              }
 
-                  { // No image uploaded
-                    (!firebaseUser.photoURL && uploadedImg === "") &&
-                    <>
-                      <div style={{textAlign: "center"}}>
-                        <img src="/no-user.png" alt="" />
-                      </div>
-                    </>
-                  }
-
-                  { // Handle uploaded profile img
-                    // Show uploaded image
-                    ((firebaseUser.photoURL && uploadedImg !== "") || 
-                    (!firebaseUser.photoURL && uploadedImg !== "")) &&
-                    <>
-                      <div style={{textAlign: "center"}}>
-                        <img src={this.state.uploadedImg} 
-                        className="profile-img round-border-5px" alt="" />
-                      </div>
-                    </>
-                  }
-                  </>
-                }
+              {
+                (!firebaseUser.photoURL && uploadedImg !== "") &&
+                <>
+                  <div style={{textAlign: "center"}}>
+                    <LazyLoadImage
+                      src={uploadedImg}
+                      alt=""
+                      placeholderSrc="/no-image-slide.png"
+                      effect="blur"
+                      className="profile-img round-border-5px" />
+                  </div>
                 </>
               }
 

@@ -11,9 +11,6 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 
 const mapStateToProps = state => state.firebaseAuth;
-const mapDispatchToProps = dispatch => ({
-  firebaseLogOut: () => dispatch(firebaseLogOut())
-});
 
 
 class Navbar extends Component {
@@ -25,27 +22,7 @@ class Navbar extends Component {
       loadingExit: false,
       verifyLinkSent: false,
     };
-    this.handleLogOut = this.handleLogOut.bind(this);
     this.redirectProfile = this.redirectProfile.bind(this);
-  }
-
-  handleLogOut() {
-    var self = this;
-    self.setState({
-      loadingExit: true
-    });
-    firebase.auth().signOut().then(function() {
-      self.setState({loadingExit: false});
-      self.props.firebaseLogOut();
-      localStorage.removeItem('localAppCurrentUserID');
-      self.props.history.push("/auth/signin");
-    }).catch(function(error) {
-      var errorMessage = error.message;
-      self.setState({
-        errors: errorMessage,
-        loadingExit: false,
-      });
-    });
   }
 
   redirectProfile() {
@@ -86,41 +63,47 @@ class Navbar extends Component {
                     <b>{firebaseUser.email}</b>
                   }
 
-                  { // Custom uploaded image
-                    (profileImgUrl !== undefined && profileImgUrl !== "") &&
+                  { // No image uploaded
+                    firebaseUser.photoURL && profileImgUrl === "" &&
                     <>
-                    <LazyLoadImage
-                      src={profileImgUrl}
-                      alt=""
-                      placeholderSrc="/no-image-slide.png"
-                      effect="blur"
-                      className="img-navbar" />
+                      <LazyLoadImage
+                        src={firebaseUser.photoURL}
+                        alt=""
+                        placeholderSrc="/no-image-slide.png"
+                        effect="blur"
+                        className="img-navbar" />
                     </>
                   }
 
-                  { // No custom image
-                    (profileImgUrl === "" || typeof profileImgUrl === "undefined") &&
+                  { // No image uploaded
+                    !firebaseUser.photoURL && profileImgUrl === "" &&
                     <>
-                    { // No image uploaded
-                      firebaseUser.photoURL &&
-                      <>
-                        <LazyLoadImage
-                          src={firebaseUser.photoURL}
-                          alt=""
-                          placeholderSrc="/no-image-slide.png"
-                          effect="blur"
-                          className="img-navbar" />
-                      </>
-                    }
+                      <img className="img-navbar" src="/no-user.png"
+                      alt="" />
+                    </>
+                  }
 
-                    { // No image uploaded
-                      !firebaseUser.photoURL &&
-                      <>
-                        <img className="img-navbar" src="/no-user.png"
-                        alt="" />
-                      </>
-                    }
+                  { // No image uploaded
+                    firebaseUser.photoURL && profileImgUrl !== "" &&
+                    <>
+                      <LazyLoadImage
+                        src={profileImgUrl}
+                        alt=""
+                        placeholderSrc="/no-image-slide.png"
+                        effect="blur"
+                        className="img-navbar" />
+                    </>
+                  }
 
+                  { // No image uploaded
+                    !firebaseUser.photoURL && profileImgUrl !== "" &&
+                    <>
+                      <LazyLoadImage
+                        src={profileImgUrl}
+                        alt=""
+                        placeholderSrc="/no-image-slide.png"
+                        effect="blur"
+                        className="img-navbar" />
                     </>
                   }
 
@@ -149,4 +132,4 @@ class Navbar extends Component {
 
 Navbar.contextType = FirebaseUserContext;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default connect(mapStateToProps)(Navbar);
