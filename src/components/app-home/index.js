@@ -4,7 +4,7 @@ import { firebaseLogOut } from '../../redux/actions';
 import DmButton from '../shared/DmButton';
 import DmFolderWidget from '../shared/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
-import { FaRegStar, FaCommentAlt } from "react-icons/fa";
+import { FaRegStar, FaCommentAlt, FaCartPlus } from "react-icons/fa";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 
@@ -13,6 +13,21 @@ const mapDispatchToProps = dispatch => ({
   firebaseLogOut: () => dispatch(firebaseLogOut())
 });
 
+const ProdWidget = () => {
+  return (
+    <table style={{width: '100%', margin: "10px 0"}}><tbody><tr>
+      <td style={{width: '50%'}}>
+        <DmButton text={<FaRegThumbsUp />}
+        click={() => null}
+        className="margin-top-10 button-transparent" />
+      </td>
+      <td style={{width: '50%'}}>
+        <DmButton text={<FaCartPlus />} 
+        click={() => null}
+        className="margin-top-10 button-grey" />
+      </td>
+    </tr></tbody></table>);
+};
 
 class Home extends Component {
 
@@ -27,7 +42,145 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="container fade-in-fx">
+      <div className="container-fluid fade-in-fx">
+
+        <div className="row">
+          <div className="col-sm-2">
+            <DmFolderWidget title="Утюг Tefal CV-901"
+            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
+            style={{textAlign: "center"}}>
+
+            <ProdWidget />
+
+            <LazyLoadImage
+              alt=""
+              src="prod-1.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px product-pic-shadow" />
+
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Холодильник SAMSUNG XL-908" desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин" style={{textAlign: "center"}}>
+
+              <ProdWidget />
+
+              <LazyLoadImage
+                src="/prod-2.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Пылесос MUSTANG El Diablo"
+            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
+            style={{textAlign: "center"}}>
+
+              <ProdWidget />
+
+              <LazyLoadImage
+                src="/prod-3.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Стиральная машина LIQUID MOLLY KL-908" style={{textAlign: "center"}}>
+
+              <ProdWidget />
+
+              <LazyLoadImage
+                src="/prod-4.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Телефон NOKIA 3310" style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/prod-5.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+
+              <ProdWidget />
+
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Стиральная машина LIQUID MOLLY KL-908" style={{textAlign: "center"}}>
+
+              <ProdWidget />
+
+              <LazyLoadImage
+                src="/prod-6.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+
+        </div>
+
+        <p></p>
+
+        <div className="row">
+          <div className="col-sm-3">
+            <DmFolderWidget title="Mercedes ZX180" style={{textAlign: "center"}}>
+            <ProdWidget />
+            <LazyLoadImage
+              alt=""
+              src="avto-1.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-3">
+            <DmFolderWidget title="Toyota RAV102" style={{textAlign: "center"}}>
+              <ProdWidget />
+              <LazyLoadImage
+                src="/avto-2.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-3">
+            <DmFolderWidget title="LADA 540 El Diablo" style={{textAlign: "center"}}>
+              <ProdWidget />
+              <LazyLoadImage
+                src="/avto-3.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-3">
+            <DmFolderWidget title="BMW Z3 Autotesting" style={{textAlign: "center"}}>
+              <ProdWidget />
+              <LazyLoadImage
+                src="/avto-4.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+            </DmFolderWidget>
+          </div>
+        </div>
+
+        <p></p>
 
         <div className="row">
           <div className="col-sm-3">
@@ -37,9 +190,9 @@ class Home extends Component {
               src="/bio_4.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
-              className="fit-in-cover round-border-50" />
+              className="fit-in-cover round-border-5px" />
 
-              <DmButton text={<FaHeart />} loading={this.state.loading} 
+              <DmButton text={<FaHeart />} loading={this.state.loading}
               click={() => this.props.history.push('/profile')} 
               className="margin-top-10 button-grey margin-top" />
             </DmFolderWidget>
@@ -51,24 +204,21 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-50" />
+                className="fit-in-cover round-border-5px" />
+
               <table style={{width: '100%'}} className="margin-top"><tbody><tr>
-                <td style={{width: '35%'}}>
+                <td style={{width: '50%'}}>
                   <DmButton text={<FaRegThumbsUp />} loading={this.state.loading} 
                   click={() => this.props.history.push('/profile')} 
                   className="margin-top-10 button-transparent" />
                 </td>
-                <td style={{width: '30%'}} className="td-pad-10">
-                  <DmButton text={<FaHeart />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
-                  className="margin-top-10 button-red" />
-                </td>
-                <td style={{width: '35%'}}>
+                <td style={{width: '50%'}}>
                   <DmButton text={<FaEnvelope />} loading={this.state.loading} 
                   click={() => this.props.history.push('/profile')} 
-                  className="margin-top-10 button-transparent" />
+                  className="margin-top-10 button-grey" />
                 </td>
               </tr></tbody></table>
+
             </DmFolderWidget>
           </div>
           <div className="col-sm-3">
@@ -78,7 +228,7 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-50" />
+                className="fit-in-cover round-border-5px" />
               <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '30%'}} className="td-pad-10">
                     <DmButton text={<FaEnvelope />} loading={this.state.loading} 
@@ -105,10 +255,87 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-50" />
+                className="fit-in-cover round-border-5px" />
             </DmFolderWidget>
           </div>
         </div>
+
+        <div className="row">
+          <div className="col-sm-3">
+            <DmFolderWidget title="Shailene Woodley" style={{textAlign: "center"}}>
+            <LazyLoadImage
+              alt=""
+              src="/nude-1.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px product-pic-shadow" />
+              <DmButton text={<FaHeart />} loading={this.state.loading}
+              click={() => this.props.history.push('/profile')} 
+              className="margin-top-10 button-grey margin-top" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-3">
+            <DmFolderWidget desc="Njkbvwiueg wewiugfuwgeuwg" title="Ashley judd" style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/nude-2.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+              <table style={{width: '100%'}} className="margin-top"><tbody><tr>
+                <td style={{width: '50%'}}>
+                  <DmButton text={<FaRegThumbsUp />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top-10 button-transparent" />
+                </td>
+                <td style={{width: '50%'}}>
+                  <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top-10 button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-3">
+            <DmFolderWidget title={<FaRegStar />} style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/nude-3.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    click={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-3">
+            <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/nude-4.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+        </div>
+
+        <p></p>
 
         <div className="row">
           <div className="col-sm-4">
@@ -146,7 +373,7 @@ class Home extends Component {
           </div>
           <div className="col-sm-4">
             <DmFolderWidget title="Skills">
-            <DmButton text="INSTALL" loading={this.state.loading} 
+            <DmButton text="INSTALL" loading={this.state.loading}
             click={() => this.props.history.push('/profile')} className="margin-bottom" />
               <code style={{fontSize: '12px',lineHeight: '10px'}}>
                 # No extra indentation.

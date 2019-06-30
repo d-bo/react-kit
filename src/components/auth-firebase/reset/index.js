@@ -71,7 +71,8 @@ class Reset extends Component {
           <div className="col-sm-3"></div>
           <div className="col-sm-6 px-xl-5">
 
-            <DmFolderWidget title="Reset password" className="fade-in-fx vertical-center">
+          <div className="vertical-center">
+            <DmFolderWidget title="Reset password" className="fade-in-fx">
               {!this.state.user &&
               <div style={this.props.style}>
                 {!this.state.resetSent &&
@@ -112,6 +113,7 @@ class Reset extends Component {
               </div>
               }
             </DmFolderWidget>
+          </div>
 
           </div>
         <div className="col-sm-3"></div>

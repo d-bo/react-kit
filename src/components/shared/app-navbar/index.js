@@ -61,50 +61,49 @@ class Navbar extends Component {
                     <b>{firebaseUser.email}</b>
                   }
 
-                  { // No image uploaded
-                    firebaseUser.photoURL && profileImgUrl === "" &&
+                  {firebaseUser.hasOwnProperty('photoURL') &&
                     <>
-                      <LazyLoadImage
-                        src={firebaseUser.photoURL}
-                        alt=""
-                        placeholderSrc="/no-image-slide.png"
-                        effect="blur"
-                        className="img-navbar" />
+                    {firebaseUser.photoURL && profileImgUrl === "" &&
+                      <>
+                        <LazyLoadImage
+                          src={firebaseUser.photoURL}
+                          alt=""
+                          placeholderSrc="/no-image-slide.png"
+                          effect="blur"
+                          className="img-navbar" />
+                      </>
+                    }
+
+                    {!firebaseUser.photoURL && profileImgUrl === "" &&
+                      <>
+                        <img className="img-navbar" src="/no-user.png"
+                        alt="" />
+                      </>
+                    }
+
+                    {firebaseUser.photoURL && profileImgUrl !== "" &&
+                      <>
+                        <LazyLoadImage
+                          src={profileImgUrl}
+                          alt=""
+                          placeholderSrc="/no-image-slide.png"
+                          effect="blur"
+                          className="img-navbar" />
+                      </>
+                    }
+
+                    {!firebaseUser.photoURL && profileImgUrl !== "" &&
+                      <>
+                        <LazyLoadImage
+                          src={profileImgUrl}
+                          alt=""
+                          placeholderSrc="/no-image-slide.png"
+                          effect="blur"
+                          className="img-navbar" />
+                      </>
+                    }
                     </>
                   }
-
-                  { // No image uploaded
-                    !firebaseUser.photoURL && profileImgUrl === "" &&
-                    <>
-                      <img className="img-navbar" src="/no-user.png"
-                      alt="" />
-                    </>
-                  }
-
-                  { // No image uploaded
-                    firebaseUser.photoURL && profileImgUrl !== "" &&
-                    <>
-                      <LazyLoadImage
-                        src={profileImgUrl}
-                        alt=""
-                        placeholderSrc="/no-image-slide.png"
-                        effect="blur"
-                        className="img-navbar" />
-                    </>
-                  }
-
-                  { // No image uploaded
-                    !firebaseUser.photoURL && profileImgUrl !== "" &&
-                    <>
-                      <LazyLoadImage
-                        src={profileImgUrl}
-                        alt=""
-                        placeholderSrc="/no-image-slide.png"
-                        effect="blur"
-                        className="img-navbar" />
-                    </>
-                  }
-
                   </span>
                 </div>
               }

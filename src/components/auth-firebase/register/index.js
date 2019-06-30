@@ -80,6 +80,7 @@ class Register extends Component {
       errors: null,
       loading: true
     });
+
     firebase.auth().createUserWithEmailAndPassword(
         this.state.email, 
         this.state.password
@@ -140,7 +141,8 @@ class Register extends Component {
           <div className="col-sm-3"></div>
           <div className="col-sm-6 px-xl-5">
 
-            <DmFolderWidget title="Register" className="fade-in-fx vertical-center">
+          <div className="vertical-center">
+            <DmFolderWidget title="Register" className="fade-in-fx">
               {!this.context &&
               <div style={this.props.style}>
 
@@ -176,6 +178,8 @@ class Register extends Component {
               </div>
               }
             </DmFolderWidget>
+          </div>
+
           </div>
           <div className="col-sm-3"></div>
         </div>

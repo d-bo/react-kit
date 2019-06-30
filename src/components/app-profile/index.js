@@ -356,7 +356,7 @@ class Profile extends Component {
                   }
 
                   <DmButton text="SAVE" loading={this.state.loading} onClick={this.handleUpdateUser}
-                  style={{ marginTop: "35px"}} />
+                  style={{ marginTop: "35px", fontSize: "14px"}} className="button-grey" />
 
                   <DmButton text="EXIT" loading={this.state.loadingExit} onClick={this.handleLogOut}
                   style={{ marginTop: "7px"}} />

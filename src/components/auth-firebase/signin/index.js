@@ -143,7 +143,8 @@ class SignIn extends Component {
           <div className="col-sm-3"></div>
           <div className="col-sm-6 px-xl-5">
 
-            <DmFolderWidget title="Sign In" className="fade-in-fx vertical-center">
+          <div className="vertical-center">
+            <DmFolderWidget title="Sign In" className="fade-in-fx">
               {!firebaseUser &&
               <div style={this.props.style}>
 
@@ -185,6 +186,7 @@ class SignIn extends Component {
               </div>
               }
             </DmFolderWidget>
+          </div>
 
           </div>
         <div className="col-sm-3"></div>

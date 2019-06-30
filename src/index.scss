@@ -71,7 +71,7 @@ body {
 }
 
 .login-body {
-  padding: 14px;
+  padding: 7px;
 	background: $bg-widget;
   color: #555;
   border-bottom: 1px solid #f0f0f0;
@@ -97,11 +97,11 @@ body {
 }
 
 .folder-right {
-  font-size: 20px;
+  font-size: 19px;
   display: inline-block;
-  padding: 7px 28px;
+  padding: 7px 14px;
   background: $bg-widget;
-  color: $app-color;
+  color: #555;
   border: 1px solid #f0f0f0;
   border-bottom: 0;
 }
@@ -130,10 +130,6 @@ body {
   font-weight: bold;
 }
 
-.col-sm-4 {
-  padding: 7px;
-}
-
 .slide-in-fx {
   animation: custom_slide_in 0.5s;
 }
@@ -156,8 +152,32 @@ body {
 }
 
 .fit-in-cover {
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  padding: 5px;
   object-fit: cover;
   text-align: center;
+}
+
+.shadow-right-bottom {
+  -webkit-box-shadow: -10px 10px 5px -5px rgba(242,242,242,1);
+  -moz-box-shadow: -10px 10px 5px -5px rgba(242,242,242,1);
+  box-shadow: -10px 10px 5px -5px rgba(242,242,242,1);
+}
+
+.product-pic-shadow {
+  -webkit-box-shadow: 0px 0px 5px 3px rgba(235,235,235,1);
+  -moz-box-shadow: 0px 0px 5px 3px rgba(235,235,235,1);
+  box-shadow: 0px 0px 5px 3px rgba(235,235,235,1);
+}
+
+.col-sm-3 {
+  padding: 10px;
+}
+
+.col-sm-4 {
+  padding: 5px;
+}
+
+.col-sm-2 {
+  padding: 10px;
 }
