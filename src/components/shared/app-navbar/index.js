@@ -35,13 +35,13 @@ class Navbar extends Component {
 
     return (
       <div className="navbar-body" style={{marginBottom: "14px"}}>
-        <div className="container navbar">
+        <div className="container-fluid navbar">
           <div className="row">
 
             <div className="col-sm-4">
               <div>
                 <Router history={history}>
-                  <Link to="/"><img src="/favicons/apple-touch-icon.png" 
+                  <Link to="/"><img src="/logo.png" 
                     alt="" className="img-navbar" />
                   </Link>
                 </Router>
@@ -108,15 +108,16 @@ class Navbar extends Component {
                 </div>
               }
               {!firebaseUser &&
-                <table style={{width: "100%"}}><tbody><tr>
-                <td style={{width: "50%"}}></td>
-                <td style={{width: "50%"}}>
-                  <DmButton text="SIGN IN" loading={this.state.loading}
-                  onClick={() => this.props.history.push("/profile")}
-                  style={{padding: "7px 0", border: "1px solid #555",
-                  background: "transparent", color: "#333"}} />
-                </td>
-                </tr></tbody></table>
+                <table style={{width: "100%"}}>
+                  <tbody><tr>
+                    <td style={{width: "50%"}}></td>
+                    <td style={{width: "50%"}}>
+                      <DmButton text="SIGN IN" loading={this.state.loading}
+                      onClick={() => this.props.history.push("/profile")}
+                      icon="" theme="border-small" />
+                    </td>
+                  </tr></tbody>
+                </table>
               }
             </div>
 

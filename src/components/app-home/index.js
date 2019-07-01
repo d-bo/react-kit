@@ -4,8 +4,9 @@ import { firebaseLogOut } from '../../redux/actions';
 import DmButton from '../shared/DmButton';
 import DmFolderWidget from '../shared/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
-import { FaRegStar, FaCommentAlt, FaCartPlus } from "react-icons/fa";
+import { FaRegStar, FaCommentAlt } from "react-icons/fa";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import ProdWidget from './ProdWidget';
 
 
 const mapStateToProps = state => state.firebaseAuth;
@@ -13,21 +14,6 @@ const mapDispatchToProps = dispatch => ({
   firebaseLogOut: () => dispatch(firebaseLogOut())
 });
 
-const ProdWidget = () => {
-  return (
-    <table style={{width: '100%', margin: "10px 0"}}><tbody><tr>
-      <td style={{width: '50%'}}>
-        <DmButton text={<FaRegThumbsUp />}
-        click={() => null}
-        className="margin-top-10 button-transparent" />
-      </td>
-      <td style={{width: '50%'}}>
-        <DmButton text={<FaCartPlus />} 
-        click={() => null}
-        className="margin-top-10 button-grey" />
-      </td>
-    </tr></tbody></table>);
-};
 
 class Home extends Component {
 
@@ -47,7 +33,8 @@ class Home extends Component {
         <div className="row">
           <div className="col-sm-2">
             <DmFolderWidget title="Утюг Tefal CV-901"
-            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
+            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, 
+            отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
             style={{textAlign: "center"}}>
 
             <ProdWidget />
@@ -62,7 +49,9 @@ class Home extends Component {
             </DmFolderWidget>
           </div>
           <div className="col-sm-2">
-            <DmFolderWidget title="Холодильник SAMSUNG XL-908" desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин" style={{textAlign: "center"}}>
+            <DmFolderWidget title="Холодильник SAMSUNG XL-908" 
+            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин" 
+            style={{textAlign: "center"}}>
 
               <ProdWidget />
 
@@ -76,7 +65,9 @@ class Home extends Component {
           </div>
           <div className="col-sm-2">
             <DmFolderWidget title="Пылесос MUSTANG El Diablo"
-            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
+            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, 
+            отжим: 1000об/мин, класс стирки: A, класс отжима: B, 
+            дисплей, цвет: белый"
             style={{textAlign: "center"}}>
 
               <ProdWidget />
@@ -338,6 +329,75 @@ class Home extends Component {
         <p></p>
 
         <div className="row">
+          <div className="col-sm-2">
+
+            <LazyLoadImage
+              alt=""
+              src="/nude-1.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px product-pic-shadow" />
+              <DmButton text={<FaHeart />} loading={this.state.loading}
+              click={() => this.props.history.push('/profile')} 
+              className="button-grey" />
+
+          </div>
+          <div className="col-sm-2">
+              <LazyLoadImage
+                src="/nude-2.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+              <DmButton text={<FaHeart />} loading={this.state.loading}
+              click={() => this.props.history.push('/profile')} 
+              className="button-grey" />
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title={<FaRegStar />} style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/nude-3.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/nude-4.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/nude-5.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-2">
+            <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
+              <LazyLoadImage
+                src="/nude-6.jpg"
+                alt=""
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px product-pic-shadow" />
+            </DmFolderWidget>
+          </div>
+        </div>
+
+        <p></p>
+
+        <div className="row">
           <div className="col-sm-4">
 
             <DmFolderWidget title="Python Identity Operators">
@@ -425,6 +485,8 @@ class Home extends Component {
           </div>
         </div>
 
+        <p></p>
+
         <div className="row">
           <div className="col-sm-4">
             <DmFolderWidget title="BRAWLcast 261 Data Raven - Renegade Interrupt">
@@ -464,7 +526,9 @@ class Home extends Component {
                 subsequent lines of the multiline conditional.
                 </p>
             </DmFolderWidget>
+
             <p></p>
+
             <DmFolderWidget title="Application">
                 When the conditional part of an if-statement is long enough to require 
                 that it be written across multiple lines, it's worth noting that the 
