@@ -44,7 +44,7 @@ class Home extends Component {
               src="prod-1.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
-              className="fit-in-cover round-border-5px product-pic-shadow" />
+              className="fit-in-cover round-border-5px" />
 
             </DmFolderWidget>
           </div>
@@ -60,7 +60,7 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
             </DmFolderWidget>
           </div>
           <div className="col-sm-2">
@@ -77,7 +77,7 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
             </DmFolderWidget>
           </div>
           <div className="col-sm-2">
@@ -90,7 +90,7 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
             </DmFolderWidget>
           </div>
           <div className="col-sm-2">
@@ -100,7 +100,7 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
 
               <ProdWidget />
 
@@ -116,7 +116,7 @@ class Home extends Component {
                 alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
             </DmFolderWidget>
           </div>
 
