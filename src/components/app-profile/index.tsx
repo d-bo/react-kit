@@ -1,6 +1,6 @@
 import "./style.scss";
 import { connect } from "react-redux";
-import React, { Component } from "react";
+import React, { Component, SyntheticEvent } from "react";
 import * as firebase from "firebase/app";
 import DmButton from "../shared/DmButton";
 import DmInput from "../shared/DmInput";
@@ -9,31 +9,54 @@ import { firebaseLogOut, setProfileImgUrl } from "../../redux/actions";
 import { MdClear, MdDone } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
+import { any } from "prop-types";
 
 
-const mapStateToProps = state => state.firebaseAuth;
-const mapDispatchToProps = dispatch => ({
+const mapStateToProps = (state: any) => state.firebaseAuth;
+const mapDispatchToProps = (dispatch: any) => ({
   firebaseLogOut: () => dispatch(firebaseLogOut()),
-  setProfileImgUrl: (img_url) => dispatch(setProfileImgUrl(img_url)),
+  setProfileImgUrl: (img_url: string) => dispatch(setProfileImgUrl(img_url)),
 });
 
+type ProfileProps = {
+  history: any,
+  setProfileImgUrl: any,
+  firebaseLogOut: any,
+};
 
-class Profile extends Component {
+type ProfileState = {
+  country: string | null,
+  city: string | null,
+  user: firebase.User | null,
+  loading: boolean,
+  loadingExit: boolean,
+  loadingImg: boolean,
+  verifyLinkSent: boolean,
+  imgFile: File | null,
+  uploadedImg: string | ArrayBuffer | null,
+  showSaveImgDialog: boolean,
+  errors: string,
+};
 
-  constructor(props) {
+class Profile extends React.Component<ProfileProps, ProfileState> {
+
+  constructor(props: ProfileProps) {
     // Firebase user instance
     var logged_user = firebase.auth().currentUser;
     // Not authenticated ? Redirect to signin
     if (!logged_user) props.history.push("/auth/signin");
     super(props);
     this.state = {
+      city: null,
+      country: null,
+      errors: "",
       user: logged_user,
       loading: false,
       loadingExit: false,
       loadingImg: false,
       verifyLinkSent: false,
-      imgFile: "",
-      uploadedImg: "",
+      imgFile: null,
+      uploadedImg: null,
       showSaveImgDialog: false
     };
 
@@ -73,30 +96,33 @@ class Profile extends Component {
     self.setState({
       loading: true
     });
-    firebase.auth().currentUser.sendEmailVerification({
-      url: "http://localhost:3000/"
-    }).then(function() {
-      self.setState({
-        verifyLinkSent: true
+    const currentUser = firebase.auth().currentUser;
+    if (currentUser != null) {
+      currentUser.sendEmailVerification({
+        url: "http://localhost:3000/"
+      }).then(function() {
+        self.setState({
+          verifyLinkSent: true
+        });
+        self.forceUpdate();
+      }).catch(function(error) {
+        self.setState({
+          errors: error.message,
+          loading: false
+        });
       });
-      self.forceUpdate();
-    }).catch(function(error) {
-      self.setState({
-        errors: error.message,
-        loading: false
-      });
+    }
+  }
+
+  handleCityChange(city: string | null) {
+    this.setState({
+      city,
     });
   }
 
-  handleCityChange(e) {
+  handleCountryChange(country: string | null) {
     this.setState({
-      city: e
-    });
-  }
-
-  handleCountryChange(e) {
-    this.setState({
-      country: e
+      country,
     });
   }
 
@@ -105,44 +131,51 @@ class Profile extends Component {
     self.setState({
       loading: true
     });
-    firebase.firestore().collection("users")
-      .doc(firebase.auth().currentUser.uid)
-      .set({
-        city: this.props.city,
-        country: this.props.country,
-        profileImgUrl: this.props.profileImgUrl,
-      }, {merge: true}).then(function(e) {
-        self.setState({
-          errors: "",
-          loading: false,
+    const currentUser = firebase.auth().currentUser;
+    if (currentUser != null) {
+      firebase.firestore().collection("users")
+        .doc(currentUser.uid)
+        .set({
+          city: this.state.city,
+          country: this.state.country,
+          profileImgUrl: this.state.uploadedImg,
+        }, {merge: true}).then(function(e) {
+          self.setState({
+            errors: "",
+            loading: false,
+          });
+        }).catch(function(error) {
+          self.setState({
+            errors: error.message,
+            loading: false,
+          });
         });
-      }).catch(function(error) {
-        self.setState({
-          errors: error.message,
-          loading: false,
-        });
-      });
+    }
   }
 
-  handleImageChange(e) {
+  handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     this.setState({loadingImg: true});
     let reader = new FileReader();
-    let file = e.target.files[0];
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      this.setState({
-        imgFile: file,
-        showSaveImgDialog: true,
-        uploadedImg: reader.result,
-        loadingImg: false
-      });
-      //this.props.setProfileImgUrl(reader.result);
+    if (e.target != null) {
+      if (e.target.files != null) {
+        let file = e.target.files[0];
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          this.setState({
+            imgFile: file,
+            showSaveImgDialog: true,
+            uploadedImg: reader.result,
+            loadingImg: false
+          });
+        }
+      }
     }
   }
 
   handleUploadClick() {
-    document.getElementById("img-file-upload").click();
+    let el: HTMLElement = document.getElementById("img-file-upload") as HTMLElement;
+    el.click();
   }
 
   handleSaveImage() {
@@ -150,54 +183,77 @@ class Profile extends Component {
     self.setState({
       loadingImg: true
     });
-    if (this.state.imgFile !== "") {
+    const imgFile = this.state.imgFile;
+    if (imgFile) {
 
+      let extension;    // file extension
+      let fileName;
+      let imgRef: firebase.storage.Reference | null = null;
       const storageRef = firebase.storage().ref();
-      const extension = this.state.imgFile.name.split(".").pop().toLowerCase();
-      const fileName = `users/${firebase.auth().currentUser.uid}.${extension}`;
-      const imgRef = storageRef.child(fileName);
+      const name = imgFile.name;
+
+      if (name) {
+        let __extension = name.split(".");
+        let extension = __extension.pop();
+        if (extension) {
+          extension = extension.toLowerCase();
+        }
+      }
+      const currentUser = firebase.auth().currentUser;
+      if (currentUser) {
+        fileName = `users/${currentUser.uid}.${extension}`;
+      }
+      if (fileName) {
+        imgRef = storageRef.child(fileName);
+      }
       const user = firebase.auth().currentUser;
 
       // Upload file to firebase
       // Get uploaded file url
       // Cache url to localStorage
       // Update firebase user profile
-      imgRef.put(this.state.imgFile)
-        .then(snapshot => {
-            imgRef.getDownloadURL().then((url) => {
-              self.props.setProfileImgUrl(url);
-              user.updateProfile({
-                photoURL: url
-              }).then(function() {
+      if (imgRef) {
+        imgRef.put(this.state.imgFile)
+          .then((snapshot) => {
+            if (imgRef) {
+              imgRef.getDownloadURL().then((url: string) => {
+                self.props.setProfileImgUrl(url);
+                if (user) {
+                  user.updateProfile({
+                    photoURL: url
+                  }).then(function() {
+                    self.setState({
+                      loadingImg: false,
+                      showSaveImgDialog: false,
+                      imgFile: null,
+                    });
+                  }).catch(function(error) {
+                    self.setState({
+                      errors: error.message,
+                      loading: false,
+                    });
+                  });
+                }
+              }).catch((e: any) => {
                 self.setState({
-                  loadingImg: false,
-                  showSaveImgDialog: false,
-                  imgFile: "",
-                });
-              }).catch(function(error) {
-                self.setState({
-                  errors: error.message,
+                  errors: e.message,
                   loading: false,
                 });
               });
-            }).catch((e) => {
-              self.setState({
-                errors: e.message,
-                loading: false,
-              });
-            });
-        }).catch((e) => {
-              self.setState({
-                errors: e.message,
-                loading: false,
-              });
-        });
+            }
+          }).catch((e) => {
+                self.setState({
+                  errors: e.message,
+                  loading: false,
+                });
+          });
+      }
     }
   }
 
   cancelImgUpload() {
     this.setState({
-      imgFile: "",
+      imgFile: null,
       showSaveImgDialog: false,
       uploadedImg: "",
     });
@@ -213,10 +269,12 @@ class Profile extends Component {
     if (logged_user) {
       firebase.firestore().collection("users").doc(logged_user.uid)
         .onSnapshot(function(doc) {
+          /*
           self.setState({
             ...doc.data()
           });
           console.log(doc.data());
+          */
           // Get profile image URL
           /*
           var photoRef = firebase.storage().ref(`${doc.data().photo}`);
@@ -252,7 +310,6 @@ class Profile extends Component {
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
                       src={firebaseUser.photoURL}
-                      alt=""
                       placeholderSrc="/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px" />
@@ -264,8 +321,7 @@ class Profile extends Component {
                 <>
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
-                      src={uploadedImg}
-                      alt=""
+                      src={uploadedImg as string}
                       placeholderSrc="/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px" />
@@ -287,8 +343,7 @@ class Profile extends Component {
                 <>
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
-                      src={uploadedImg}
-                      alt=""
+                      src={uploadedImg as string}
                       placeholderSrc="/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px" />

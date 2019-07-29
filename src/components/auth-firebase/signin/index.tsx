@@ -12,19 +12,32 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 
-const mapStateToProps = state => state.firebaseAuth;
-const mapDispatchToProps = dispatch => ({
-  firebaseAuth: firebaseUser => dispatch(firebaseAuth(firebaseUser))
+const mapStateToProps = (state: any) => state.firebaseAuth;
+const mapDispatchToProps = (dispatch: any) => ({
+  firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser))
 });
 
+interface ISigninProps {
+  history: any;
+  firebaseAuth: any;
+  style: any;
+};
 
-class SignIn extends Component {
+interface ISigninState {
+  loading: boolean;
+  errors: string | null;
+  email: string;
+  password: string;
+};
 
-  constructor(props) {
+
+class SignIn extends React.Component<ISigninProps, ISigninState> {
+
+  constructor(props: any) {
     super(props);
     this.state = {
       loading: false,
-      errorSignIn: null,
+      errors: null,
       email: "",
       password: "",
     };
@@ -87,13 +100,13 @@ class SignIn extends Component {
       });
   }
 
-  handlePasswordChange(e) {
+  handlePasswordChange(e: any) {
     this.setState({
       password: e
     });
   }
 
-  handleEmailChange(e) {
+  handleEmailChange(e: any) {
     this.setState({
       email: e
     });
@@ -135,6 +148,7 @@ class SignIn extends Component {
   render() {
 
     const firebaseUser = this.context;
+    const {style} = this.props;
 
     return (
       <>
@@ -146,7 +160,7 @@ class SignIn extends Component {
           <div className="vertical-center">
             <DmFolderWidget title="Sign In" className="fade-in-fx">
               {!firebaseUser &&
-              <div style={this.props.style}>
+              <div style={style}>
 
                 <DmInput type="text" value={this.state.email} 
                 placeholder="EMAIL" onChange={this.handleEmailChange} />
@@ -160,7 +174,7 @@ class SignIn extends Component {
                   <div className="error-message round-border-5px">{this.state.errors}</div>}
 
                 <div className="margin-top custom-a">
-                  <table width="100%"><tbody><tr>
+                  <table className="full-width"><tbody><tr>
                   <td style={{textAlign: 'left'}}>
                       <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
                   </td>
@@ -171,7 +185,7 @@ class SignIn extends Component {
                 </div>
 
                 <div className="margin-top custom-a">
-                  <table width="100%"><tbody><tr>
+                  <table className="full-width"><tbody><tr>
                   <td>
                     <DmButton text={<FaGithub />} loading={this.state.loading} 
                     onClick={this.handleGithub} className="button-grey" />

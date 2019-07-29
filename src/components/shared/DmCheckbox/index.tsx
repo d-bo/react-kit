@@ -1,7 +1,7 @@
 import React from 'react';
 
 class DmCheckbox extends React.Component {
-	constructor() {
+	constructor(props: any) {
 		super(props);
 	}
 

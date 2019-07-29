@@ -2,10 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import './style.css';
 
-const mapStateToProps = state => state;
+const mapStateToProps = (state: any) => state;
 
-class DmInput extends React.Component {
-	constructor(props) {
+type DmInputProps = {
+	type: any,
+	value: any,
+	placeholder: any,
+	onChange: any,
+	className?: any,
+	style?: any,
+};
+
+type DmInputState = {
+	value: any,
+};
+
+class DmInput extends React.Component<DmInputProps, DmInputState> {
+	constructor(props: any) {
 		super(props);
 		this.state = {
 			value: props.value
@@ -13,7 +26,7 @@ class DmInput extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	handleChange(e) {
+	handleChange(e: any) {
 		this.setState({
 			value: e.target.value
 		});

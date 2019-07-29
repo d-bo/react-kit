@@ -1,7 +1,7 @@
 import './style.scss';
 import React from 'react';
 
-const Footer = props => 
+const Footer = (props: any) => 
 	<>
 		<div className="footer">
       <div className="container fade-in-fx">

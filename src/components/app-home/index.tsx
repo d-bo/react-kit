@@ -6,18 +6,33 @@ import DmFolderWidget from '../shared/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
 import { FaRegStar, FaCommentAlt } from "react-icons/fa";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import ProdWidget from './ProdWidget';
+import ButtonWidget from './ButtonWidget';
 
 
-const mapStateToProps = state => state.firebaseAuth;
-const mapDispatchToProps = dispatch => ({
+const mapStateToProps = (state: any) => state.firebaseAuth;
+const mapDispatchToProps = (dispatch: any) => ({
   firebaseLogOut: () => dispatch(firebaseLogOut())
 });
 
+const Counter = (props: any) => <span style={{ paddingRight: "10px", fontSize: "18px" }}>{props.itemId}</span>;
+const LikeCounter = (props: any) =>
+  <DmButton text={<><Counter itemId={props.itemId} /><FaRegThumbsUp /></>}
+  click={() => null} className="margin-top-10 button-grey" />;
 
-class Home extends Component {
+interface IHomeProps {
+  history: any;
+};
 
-  constructor(props) {
+interface IHomeState {
+  loading: boolean;
+  loadingExit: boolean;
+  verifyLinkSent: boolean;
+};
+
+
+class Home extends React.Component<IHomeProps, IHomeState> {
+
+  constructor(props: any) {
     super(props);
     this.state = {
       loading: false,
@@ -31,139 +46,241 @@ class Home extends Component {
       <div className="container-fluid fade-in-fx">
 
         <div className="row">
-          <div className="col-sm-2">
+
+          <div className="col-sm-4 col-lg-2">
             <DmFolderWidget title="Утюг Tefal CV-901"
             desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, 
             отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
             style={{textAlign: "center"}}>
 
-            <ProdWidget />
+            <ButtonWidget />
 
             <LazyLoadImage
-              alt=""
               src="prod-1.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
-              className="fit-in-cover round-border-5px" />
+              className="fit-in-cover-product round-border-3px" />
+
+            <h2 className="price">{<FaRegStar/>} 233 $</h2>
 
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
+
+          <div className="col-sm-4 col-lg-2">
             <DmFolderWidget title="Холодильник SAMSUNG XL-908" 
             desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, отжим: 1000об/мин" 
             style={{textAlign: "center"}}>
 
-              <ProdWidget />
+              <ButtonWidget />
 
               <LazyLoadImage
                 src="/prod-2.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px" />
+                className="fit-in-cover-product round-border-3px" />
+
+              <h2 className="price">{<FaRegStar/>} 13 $</h2>
+
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
+
+          <div className="col-sm-4 col-lg-2">
             <DmFolderWidget title="Пылесос MUSTANG El Diablo"
             desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, 
             отжим: 1000об/мин, класс стирки: A, класс отжима: B, 
             дисплей, цвет: белый"
             style={{textAlign: "center"}}>
 
-              <ProdWidget />
+              <ButtonWidget />
 
               <LazyLoadImage
                 src="/prod-3.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px" />
+                className="fit-in-cover-product round-border-3px" />
+
+              <h2 className="price">{<FaRegStar/>} 13 $</h2>
+
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
-            <DmFolderWidget title="Стиральная машина LIQUID MOLLY KL-908" style={{textAlign: "center"}}>
 
-              <ProdWidget />
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget title="Стиральная машина LIQUID MOLLY KL-908"
+              style={{textAlign: "center"}}>
+
+              <ButtonWidget />
 
               <LazyLoadImage
                 src="/prod-4.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px" />
+                className="fit-in-cover-product round-border-3px" />
+
+              <h2 className="price">{<FaRegStar/>} 96 $</h2>
+
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
-            <DmFolderWidget title="Телефон NOKIA 3310" style={{textAlign: "center"}}>
+
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget title="Телефон NOKIA 3310"
+              style={{textAlign: "center"}}>
               <LazyLoadImage
                 src="/prod-5.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px" />
+                className="fit-in-cover-product round-border-3px" />
 
-              <ProdWidget />
+              <ButtonWidget />
+
+              <h2 className="price">{<FaRegStar/>} 71 $</h2>
 
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
-            <DmFolderWidget title="Стиральная машина LIQUID MOLLY KL-908" style={{textAlign: "center"}}>
 
-              <ProdWidget />
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget title="Стиральная машина LIQUID MOLLY KL-908"
+              style={{textAlign: "center"}}>
+
+              <ButtonWidget />
 
               <LazyLoadImage
                 src="/prod-6.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px" />
+                className="fit-in-cover-product round-border-3px" />
+
+              <h2 className="price">{<FaRegStar/>} 59.32 $</h2>
+
             </DmFolderWidget>
           </div>
 
         </div>
 
         <p></p>
+        <p></p>
 
         <div className="row">
-          <div className="col-sm-3">
+          <div className="col-sm-4">
+            <DmFolderWidget title="Isabelle Hurst">
+              <DmButton text="PROFILE" loading={this.state.loading} 
+              click={() => this.props.history.push('/profile')} className="margin-bottom" />
+              <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    click={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4">
+            <DmFolderWidget title="Jeffrey Monnaghan">
+              <DmButton text="PROFILE" loading={this.state.loading} 
+              click={() => this.props.history.push('/profile')} className="margin-bottom" />
+              <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    click={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4">
+            <DmFolderWidget title="Nina Ricci">
+              <DmButton text="PROFILE" loading={this.state.loading} 
+              click={() => this.props.history.push('/profile')} className="margin-bottom" />
+              <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    click={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  click={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+        </div>
+
+        <p></p>
+
+        <div className="row">
+          <div className="col-sm-4 col-lg-3">
             <DmFolderWidget title="Mercedes ZX180" style={{textAlign: "center"}}>
-            <ProdWidget />
+            <ButtonWidget />
             <LazyLoadImage
-              alt=""
               src="avto-1.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px product-pic-shadow" />
             </DmFolderWidget>
           </div>
-          <div className="col-sm-3">
+          <div className="col-sm-4 col-lg-3">
             <DmFolderWidget title="Toyota RAV102" style={{textAlign: "center"}}>
-              <ProdWidget />
+              <ButtonWidget />
               <LazyLoadImage
                 src="/avto-2.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
             </DmFolderWidget>
           </div>
-          <div className="col-sm-3">
+          <div className="col-sm-4 col-lg-3">
             <DmFolderWidget title="LADA 540 El Diablo" style={{textAlign: "center"}}>
-              <ProdWidget />
+              <ButtonWidget />
               <LazyLoadImage
                 src="/avto-3.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
             </DmFolderWidget>
           </div>
-          <div className="col-sm-3">
+          <div className="col-sm-4 col-lg-3">
             <DmFolderWidget title="BMW Z3 Autotesting" style={{textAlign: "center"}}>
-              <ProdWidget />
+              <ButtonWidget />
               <LazyLoadImage
                 src="/avto-4.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -177,12 +294,10 @@ class Home extends Component {
           <div className="col-sm-3">
             <DmFolderWidget title="Shailene Woodley" style={{textAlign: "center"}}>
             <LazyLoadImage
-              alt=""
               src="/bio_4.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
-
               <DmButton text={<FaHeart />} loading={this.state.loading}
               click={() => this.props.history.push('/profile')} 
               className="margin-top-10 button-grey margin-top" />
@@ -192,7 +307,6 @@ class Home extends Component {
             <DmFolderWidget title="Ashley judd" style={{textAlign: "center"}}>
               <LazyLoadImage
                 src="/ashley_judd.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -216,7 +330,6 @@ class Home extends Component {
             <DmFolderWidget title="Brie Larson" style={{textAlign: "center"}}>
               <LazyLoadImage
                 src="/brie_larson.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -243,7 +356,6 @@ class Home extends Component {
             <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
               <LazyLoadImage
                 src="/natasha_henstridge.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -251,11 +363,12 @@ class Home extends Component {
           </div>
         </div>
 
+        <p></p>
+
         <div className="row">
           <div className="col-sm-3">
             <DmFolderWidget title="Shailene Woodley" style={{textAlign: "center"}}>
             <LazyLoadImage
-              alt=""
               src="/nude-1.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
@@ -269,7 +382,6 @@ class Home extends Component {
             <DmFolderWidget desc="Njkbvwiueg wewiugfuwgeuwg" title="Ashley judd" style={{textAlign: "center"}}>
               <LazyLoadImage
                 src="/nude-2.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -291,7 +403,6 @@ class Home extends Component {
             <DmFolderWidget title={<FaRegStar />} style={{textAlign: "center"}}>
               <LazyLoadImage
                 src="/nude-3.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -318,7 +429,6 @@ class Home extends Component {
             <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
               <LazyLoadImage
                 src="/nude-4.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -329,68 +439,247 @@ class Home extends Component {
         <p></p>
 
         <div className="row">
-          <div className="col-sm-2">
-
-            <LazyLoadImage
-              alt=""
-              src="/nude-1.jpg"
-              placeholderSrc="/no-image-slide.png"
-              effect="blur"
-              className="fit-in-cover round-border-5px product-pic-shadow" />
-              <DmButton text={<FaHeart />} loading={this.state.loading}
-              click={() => this.props.history.push('/profile')} 
-              className="button-grey" />
-
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-1.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="46" />
+            </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
               <LazyLoadImage
                 src="/nude-2.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
-              <DmButton text={<FaHeart />} loading={this.state.loading}
-              click={() => this.props.history.push('/profile')} 
-              className="button-grey" />
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="12" />
+            </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
-            <DmFolderWidget title={<FaRegStar />} style={{textAlign: "center"}}>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
               <LazyLoadImage
                 src="/nude-3.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="69" />
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
-            <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
               <LazyLoadImage
                 src="/nude-4.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="19" />
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
-            <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
               <LazyLoadImage
                 src="/nude-5.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="76" />
             </DmFolderWidget>
           </div>
-          <div className="col-sm-2">
-            <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
               <LazyLoadImage
                 src="/nude-6.jpg"
-                alt=""
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
-                className="fit-in-cover round-border-5px product-pic-shadow" />
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="84" />
+            </DmFolderWidget>
+          </div>
+        </div>
+
+        <p></p>
+
+        <div className="row">
+          <div className="col-sm-4 col-lg-2">
+            <LazyLoadImage
+              src="/nude-7.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px" />
+            <LikeCounter itemId="59" />
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <LazyLoadImage
+              src="/nude-8.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px" />
+            <LikeCounter itemId="97" />
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <LazyLoadImage
+              src="/nude-9.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px" />
+            <LikeCounter itemId="62" />
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <LazyLoadImage
+              src="/nude-10.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px" />
+            <LikeCounter itemId="5" />
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <LazyLoadImage
+              src="/nude-11.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px" />
+            <LikeCounter itemId="37" />
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <LazyLoadImage
+              src="/nude-12.jpg"
+              placeholderSrc="/no-image-slide.png"
+              effect="blur"
+              className="fit-in-cover round-border-5px" />
+            <LikeCounter itemId="55" />
+          </div>
+        </div>
+
+        <p></p>
+
+        <div className="row">
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-13.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="46" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-14.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="12" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-15.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="69" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-16.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="19" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-17.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="76" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-18.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="84" />
+            </DmFolderWidget>
+          </div>
+        </div>
+
+        <p></p>
+
+        <div className="row">
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-19.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="46" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-20.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="12" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-21.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="69" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-22.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="19" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-23.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="76" />
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4 col-lg-2">
+            <DmFolderWidget>
+              <LazyLoadImage
+                src="/nude-24.jpg"
+                placeholderSrc="/no-image-slide.png"
+                effect="blur"
+                className="fit-in-cover round-border-5px" />
+              <LikeCounter itemId="84" />
             </DmFolderWidget>
           </div>
         </div>
@@ -399,12 +688,10 @@ class Home extends Component {
 
         <div className="row">
           <div className="col-sm-4">
-
             <DmFolderWidget title="Python Identity Operators">
                 <div style={{textAlign: 'center', marginBottom: '14px'}}>
                 <LazyLoadImage
                   src="/bio_1.jpg"
-                  alt=""
                   placeholderSrc="/no-image-slide.png"
                   effect="blur"
                   className="round-border-5px" />
@@ -492,7 +779,7 @@ class Home extends Component {
             <DmFolderWidget title="BRAWLcast 261 Data Raven - Renegade Interrupt">
               <LazyLoadImage
                 src="/cast_1.jpg"
-                alt=""
+                
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="in-folder-img round-border-50" />
@@ -514,7 +801,7 @@ class Home extends Component {
             <DmFolderWidget title="Rave girl 303">
               <LazyLoadImage
                 src="/bio_3.jpg"
-                alt=""
+                
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="in-folder-img round-border-50" />

@@ -11,16 +11,34 @@ import DmFolderWidget from '../../shared/DmFolderWidget';
 import { Router } from 'react-router-dom';
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
 };
-const mapDispatchToProps = dispatch => ({
-  firebaseAuth: firebaseUser => dispatch(firebaseAuth(firebaseUser))
+
+const mapDispatchToProps = (dispatch: any) => ({
+  firebaseAuth: (firebaseUser: firebase.User) => dispatch(firebaseAuth(firebaseUser))
 });
 
-class Register extends Component {
+type RegisterProps = {
+  firebaseAuth: any,
+  history: any,
+  style: any,
+};
 
-  constructor(props) {
+type RegisterState = {
+  errors: string | null,
+  email: "",
+  password: "",
+  displayName: "",
+  verifyLinkSent: false,
+  user: firebase.User | null,
+  loading: boolean,
+};
+
+
+class Register extends React.Component<RegisterProps, RegisterState> {
+
+  constructor(props: any) {
     if (firebase.auth().currentUser) props.history.push('/');
     super(props);
     this.state = {
@@ -30,6 +48,7 @@ class Register extends Component {
       displayName: "",
       verifyLinkSent: false,
       user: props.user,
+      loading: false,
     };
     this.handleRegister = this.handleRegister.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
@@ -38,15 +57,16 @@ class Register extends Component {
     this.handleKeyboardEnter = this.handleKeyboardEnter.bind(this);
   }
 
-  handleKeyboardEnter (e) {
-    alert(e);
+  handleKeyboardEnter (e: any) {
     if (e.key === 'Enter') {
-      this.handleRegister();
+      this.handleRegister(e);
     }
   };
 
-  handleRegister(e) {
+  handleRegister(e: any) {
     if (this.state.loading) return;
+
+    const currentUser = firebase.auth().currentUser;
 
     // Validate email
     var re = /\S+@\S+\.\S+/;
@@ -88,22 +108,23 @@ class Register extends Component {
 
         self.props.firebaseAuth(firebase.auth().currentUser);
         // Send email verify
-        firebase.auth().currentUser.sendEmailVerification({
-          url: 'http://localhost:3000/'
-        }).then(function() {
-          self.setState({
-            loading: false
+        if (currentUser) {
+          currentUser.sendEmailVerification({
+            url: 'http://localhost:3000/'
+          }).then(function() {
+            self.setState({
+              loading: false
+            });
+            // User created and email verify sent
+            self.props.history.push('/');
+          })
+          .catch(function(error) {
+            self.setState({
+              errors: error.message,
+              loading: false
+            });
           });
-          // User created and email verify sent
-          self.props.history.push('/');
-        })
-        .catch(function(error) {
-          self.setState({
-            errors: error.message,
-            loading: false
-          });
-        });
-
+        }
       }).catch(function(error) {
 
         var errorMessage = error.message;
@@ -115,19 +136,19 @@ class Register extends Component {
       });
   }
 
-  handlePasswordChange(e) {
+  handlePasswordChange(e: any) {
     this.setState({
       password: e
     });
   }
 
-  handleEmailChange(e) {
+  handleEmailChange(e: any) {
     this.setState({
       email: e
     });
   }
 
-  handleNameChange(e) {
+  handleNameChange(e: any) {
     this.setState({
       displayName: e
     });
@@ -164,7 +185,7 @@ class Register extends Component {
 
                 <Router history={this.props.history}>
                   <div className="margin-top custom-a">
-                    <table width="100%"><tbody><tr>
+                    <table className="full-width"><tbody><tr>
                     <td style={{textAlign: 'left'}}>
                         <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
                     </td>

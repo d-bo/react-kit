@@ -8,12 +8,23 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 
-const mapStateToProps = state => state.firebaseAuth;
+const mapStateToProps = (state: any) => state.firebaseAuth;
+
+interface INavbarProps {
+  history: any;
+  profileImgUrl?: string;
+};
+
+interface INavbarState {
+  loading: boolean;
+  loadingExit: boolean;
+  verifyLinkSent: boolean;
+};
 
 
-class Navbar extends Component {
+class Navbar extends React.Component<INavbarProps, INavbarState> {
 
-  constructor(props) {
+  constructor(props: any) {
     super(props);
     this.state = {
       loading: false,
@@ -67,7 +78,6 @@ class Navbar extends Component {
                       <>
                         <LazyLoadImage
                           src={firebaseUser.photoURL}
-                          alt=""
                           placeholderSrc="/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />
@@ -85,7 +95,6 @@ class Navbar extends Component {
                       <>
                         <LazyLoadImage
                           src={profileImgUrl}
-                          alt=""
                           placeholderSrc="/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />
@@ -96,7 +105,6 @@ class Navbar extends Component {
                       <>
                         <LazyLoadImage
                           src={profileImgUrl}
-                          alt=""
                           placeholderSrc="/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />

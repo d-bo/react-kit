@@ -8,24 +8,34 @@ const BorderSmall = {
 	color: "#333",
 };
 
-const DmButton = props => 
+const DmButton = (props: any) => 
 		<>
 			{props.theme === "border-small" &&
+
 				<div className={`dm-button round-border-5px ${props.className}`}
-				onClick={props.onClick} onKeyPress={props.onKeyPress} style={{...props.style, ...BorderSmall}}>
+					onClick={props.onClick} onKeyPress={props.onKeyPress}
+					style={{...props.style, ...BorderSmall}}>
+
 				{props.icon &&
 					<span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
 				}
+
 				{props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
+				
 				</div>
 			}
+
 			{!props.theme &&
 				<div className={`dm-button round-border-5px ${props.className}`}
-				onClick={props.onClick} onKeyPress={props.onKeyPress} style={props.style}>
+					onClick={props.onClick} onKeyPress={props.onKeyPress} 
+					style={props.style}>
+
 				{props.icon &&
 					<span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
 				}
+
 				{props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
+
 				</div>
 			}
 		</>;

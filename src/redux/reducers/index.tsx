@@ -31,7 +31,7 @@ const getInitState = () => {
 }
 
 // Each time save state to localStorage
-const storeState = function (state) {
+const storeState = function (state: any) {
 	const localAppCurrentUserID = localStorage.getItem('localAppCurrentUserID');
 	if (localAppCurrentUserID) {
 		const stateName = `localAppState${localAppCurrentUserID}`;
@@ -40,7 +40,7 @@ const storeState = function (state) {
   return state;
 }
 
-const firebaseAuth = (state = getInitState(), action) => {
+const firebaseAuth = (state = getInitState(), action: any) => {
 	switch(action.type) {
 
 		case actionTypes.AUTH_FIREBASE:

@@ -10,16 +10,33 @@ import { Link } from 'react-router-dom';
 import DmFolderWidget from '../../shared/DmFolderWidget';
 import { Router } from 'react-router-dom';
 
-const mapStateToProps = state => {
+
+const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
 };
-const mapDispatchToProps = dispatch => ({
-  firebaseAuth: firebaseUser => dispatch(firebaseAuth(firebaseUser))
+
+const mapDispatchToProps = (dispatch: any) => ({
+  firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser))
 });
 
-class Reset extends Component {
+interface IResetProps {
+  history: any;
+  style: any;
+};
 
-  constructor(props) {
+interface IResetState {
+  loading: boolean;
+  errors: string | null;
+  email: string;
+  password: string | null;
+  resetSent: boolean;
+  user: firebase.User | null;
+};
+
+
+class Reset extends React.Component<IResetProps, IResetState> {
+
+  constructor(props: any) {
     if (firebase.auth().currentUser) props.history.push('/');
     super(props);
     this.state = {
@@ -35,6 +52,8 @@ class Reset extends Component {
   }
 
   handleReset() {
+    const { email } = this.state;
+
     if (this.state.loading) return;
     this.setState({
       loading: true,
@@ -42,7 +61,7 @@ class Reset extends Component {
     });
     var self = this;
     firebase.auth().sendPasswordResetEmail(
-        this.state.email, 
+        email,
         {url: 'http://localhost:3000'}
       ).then(function() {
       self.setState({
@@ -57,13 +76,14 @@ class Reset extends Component {
     });
   }
 
-  handleEmailChange(e) {
+  handleEmailChange(e: any) {
     this.setState({
       email: e
     });
   }
 
   render() {
+    const {style} = this.props;
     return (
       <>
       <div className="container">
@@ -74,7 +94,7 @@ class Reset extends Component {
           <div className="vertical-center">
             <DmFolderWidget title="Reset password" className="fade-in-fx">
               {!this.state.user &&
-              <div style={this.props.style}>
+              <div style={style}>
                 {!this.state.resetSent &&
                   <>
                   <div className="action-message round-border-3px">
@@ -100,7 +120,7 @@ class Reset extends Component {
                 }
                 <Router history={this.props.history}>
                   <div className="margin-top custom-a">
-                    <table width="100%"><tbody><tr>
+                    <table className="full-width"><tbody><tr>
                     <td style={{textAlign: 'left'}}>
                         <Link to="/auth/signin">SIGN IN</Link>
                     </td>

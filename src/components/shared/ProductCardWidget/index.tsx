@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ProductCardWidget = props => 
+const ProductCardWidget = (props: any) => 
 	<div className={`s${props.className}`} style={props.style}>
 	  <div>
 	  	{props.title &&
@@ -23,4 +23,4 @@ const ProductCardWidget = props =>
 	  </div>
   </div>;
 
-export default DmFolderWidget;
+export default ProductCardWidget;

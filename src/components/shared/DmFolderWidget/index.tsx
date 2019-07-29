@@ -1,6 +1,15 @@
 import React from 'react';
 
-const DmFolderWidget = props => 
+interface WidgetProps {
+  style?: any;
+  className?: any;
+  icon?: any;
+  title?: any;
+  children?: any;
+  desc?: any;
+};
+
+const DmFolderWidget = (props: WidgetProps) => 
 	<div className={`shadow-right-bottom ${props.className}`} style={props.style}>
 	  <div className="folder-center">
 	  	{props.title &&
