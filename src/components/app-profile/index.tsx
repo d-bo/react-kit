@@ -18,29 +18,30 @@ const mapDispatchToProps = (dispatch: any) => ({
   setProfileImgUrl: (img_url: string) => dispatch(setProfileImgUrl(img_url)),
 });
 
-type ProfileProps = {
-  history: any,
-  setProfileImgUrl: any,
-  firebaseLogOut: any,
+interface IProfileProps {
+  history: any;
+  setProfileImgUrl: any;
+  firebaseLogOut: any;
 };
 
-type ProfileState = {
-  country: string | null,
-  city: string | null,
-  user: firebase.User | null,
-  loading: boolean,
-  loadingExit: boolean,
-  loadingImg: boolean,
-  verifyLinkSent: boolean,
-  imgFile: File | null,
-  uploadedImg: string | ArrayBuffer | null,
-  showSaveImgDialog: boolean,
-  errors: string,
+interface IProfileState {
+  country: string | null;
+  city: string | null;
+  user: firebase.User | null;
+  loading: boolean;
+  loadingExit: boolean;
+  loadingImg: boolean;
+  verifyLinkSent: boolean;
+  imgFile: File | null;
+  uploadedImg: string | ArrayBuffer | null;
+  showSaveImgDialog: boolean;
+  errors: string;
 };
 
-class Profile extends React.Component<ProfileProps, ProfileState> {
 
-  constructor(props: ProfileProps) {
+class Profile extends React.Component<IProfileProps, IProfileState> {
+
+  constructor(props: IProfileProps) {
     // Firebase user instance
     var logged_user = firebase.auth().currentUser;
     // Not authenticated ? Redirect to signin
@@ -305,7 +306,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             <DmFolderWidget title="Profile" className="fade-in-fx">
             {(firebaseUser && firebaseUser.hasOwnProperty('photoURL')) &&
               <>
-              {(firebaseUser.photoURL && uploadedImg === "") &&
+              {(firebaseUser.photoURL && !uploadedImg) &&
                 <>
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
@@ -317,7 +318,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 </>
               }
 
-              {(firebaseUser.photoURL && uploadedImg !== "") &&
+              {(firebaseUser.photoURL && uploadedImg) &&
                 <>
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
@@ -330,7 +331,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
               }
 
               { // No image uploaded
-                (!firebaseUser.photoURL && uploadedImg === "") &&
+                (!firebaseUser.photoURL && !uploadedImg) &&
                 <>
                   <div style={{textAlign: "center"}}>
                     <img src="/no-user.png" alt="" />
@@ -339,7 +340,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
               }
 
               {
-                (!firebaseUser.photoURL && uploadedImg !== "") &&
+                (!firebaseUser.photoURL && uploadedImg) &&
                 <>
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
