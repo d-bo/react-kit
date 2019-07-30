@@ -11,7 +11,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
 interface INavbarProps {
-  history: any;
+  history?: any;
   profileImgUrl?: string;
 };
 
@@ -24,7 +24,7 @@ interface INavbarState {
 
 class Navbar extends React.Component<INavbarProps, INavbarState> {
 
-  constructor(props: any) {
+  constructor(props: INavbarProps) {
     super(props);
     this.state = {
       loading: false,

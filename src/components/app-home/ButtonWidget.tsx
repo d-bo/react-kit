@@ -3,17 +3,17 @@ import DmButton from '../shared/DmButton';
 import { FaRegThumbsUp, FaCartPlus } from "react-icons/fa";
 
 
-const ButtonWidget = () => {
+const ButtonWidget: React.SFC = () => {
   return (
     <table style={{width: '100%', margin: "5px 0"}}><tbody><tr>
       <td style={{width: '50%'}}>
         <DmButton text={<FaRegThumbsUp />}
-        click={() => null}
+        onClick={() => null}
         className="margin-top-10 button-transparent" />
       </td>
       <td style={{width: '50%'}}>
         <DmButton text={<FaCartPlus />}
-        click={() => null}
+        onClick={() => null}
         className="margin-top-10 button-transparent" />
       </td>
     </tr></tbody></table>);

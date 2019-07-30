@@ -26,20 +26,20 @@ interface ISigninProps {
 interface ISigninState {
   loading: boolean;
   errors: string | null;
-  email: string;
-  password: string;
+  email: string | null;
+  password: string | null;
 };
 
 
 class SignIn extends React.Component<ISigninProps, ISigninState> {
 
-  constructor(props: any) {
+  constructor(props: ISigninProps) {
     super(props);
     this.state = {
       loading: false,
       errors: null,
-      email: "",
-      password: "",
+      email: null,
+      password: null,
     };
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleGithub = this.handleGithub.bind(this);
@@ -51,9 +51,11 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   handleSignIn() {
     if (this.state.loading) return;
     
+    const self = this;
+    const {password} = this.state;
     // Validate email
     var re = /\S+@\S+\.\S+/;
-    if (!re.test(this.state.email)) {
+    if (!re.test(this.state.email as string)) {
       this.setState({
         errors: "Incorrect email",
         loading: false,
@@ -61,7 +63,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
       return;
     }
     // Validate password
-    if (this.state.password.length < 6) {
+    if (password && password.length < 6) {
       this.setState({
         errors: "Password min 6 symbols length",
         loading: false
@@ -74,10 +76,9 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
       loading: true
     });
 
-    const self = this;
     firebase.auth().signInWithEmailAndPassword(
-        this.state.email, 
-        this.state.password
+        this.state.email as string, 
+        this.state.password as string
       ).then(() => {
         self.props.firebaseAuth(firebase.auth().currentUser);
         self.props.history.push('/');
@@ -163,12 +164,12 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
               <div style={style}>
 
                 <DmInput type="text" value={this.state.email} 
-                placeholder="EMAIL" onChange={this.handleEmailChange} />
+                  placeholder="EMAIL" onChange={this.handleEmailChange} />
                 <DmInput type="password" value={this.state.password} 
-                onChange={this.handlePasswordChange} placeholder="PASSWORD" />
+                  onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
                 <DmButton text="OK" loading={this.state.loading} 
-                onClick={this.handleSignIn} style={{marginTop: '35px'}} />
+                  onClick={this.handleSignIn} style={{marginTop: '35px'}} />
 
                 {this.state.errors && 
                   <div className="error-message round-border-5px">{this.state.errors}</div>}
@@ -188,11 +189,11 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
                   <table className="full-width"><tbody><tr>
                   <td>
                     <DmButton text={<FaGithub />} loading={this.state.loading} 
-                    onClick={this.handleGithub} className="button-grey" />
+                      onClick={this.handleGithub} className="button-grey" />
                   </td>
                   <td>
                     <DmButton text={<FaGoogle />} loading={this.state.loading} 
-                    onClick={this.handleGithub} className="button-grey" />
+                      onClick={this.handleGithub} className="button-grey" />
                   </td>
                   </tr></tbody></table>
                 </div>

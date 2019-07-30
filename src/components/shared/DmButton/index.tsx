@@ -1,43 +1,55 @@
 import React from 'react';
 import './style.css';
 
-const BorderSmall = {
+const BorderSmall: React.CSSProperties = {
 	padding: "7px 0",
 	border: "1px solid #555",
 	background: "transparent",
 	color: "#333",
 };
 
-const DmButton = (props: any) => 
-		<>
-			{props.theme === "border-small" &&
+interface IDMButtonProps {
+  theme?: string;
+  onClick?: any;
+  className?: string;
+  onKeyPress?: any;
+  style?: any;
+  text?: undefined | React.ReactElement | string;
+  icon?: any;
+  loading?: boolean;
+};
 
-				<div className={`dm-button round-border-5px ${props.className}`}
-					onClick={props.onClick} onKeyPress={props.onKeyPress}
-					style={{...props.style, ...BorderSmall}}>
 
-				{props.icon &&
-					<span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
-				}
+const DmButton = (props: IDMButtonProps) => 
+  <>
+    {props.theme === "border-small" &&
 
-				{props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
-				
-				</div>
-			}
+      <div className={`dm-button round-border-5px ${props.className}`}
+        onClick={props.onClick} onKeyPress={props.onKeyPress}
+        style={{...props.style, ...BorderSmall}}>
 
-			{!props.theme &&
-				<div className={`dm-button round-border-5px ${props.className}`}
-					onClick={props.onClick} onKeyPress={props.onKeyPress} 
-					style={props.style}>
+      {props.icon &&
+        <span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
+      }
 
-				{props.icon &&
-					<span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
-				}
+      {props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
+      
+      </div>
+    }
 
-				{props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
+    {!props.theme &&
+      <div className={`dm-button round-border-5px ${props.className}`}
+        onClick={props.onClick} onKeyPress={props.onKeyPress} 
+        style={props.style}>
 
-				</div>
-			}
-		</>;
+      {props.icon &&
+        <span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
+      }
+
+      {props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
+
+      </div>
+    }
+  </>;
 
 export default DmButton;

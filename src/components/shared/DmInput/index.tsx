@@ -4,21 +4,22 @@ import './style.css';
 
 const mapStateToProps = (state: any) => state;
 
-type DmInputProps = {
-	type: any,
-	value: any,
-	placeholder: any,
-	onChange: any,
-	className?: any,
-	style?: any,
+interface DmInputProps {
+	type: any;
+	value: any;
+	placeholder: any;
+	onChange: any;
+	className?: any;
+	style?: any;
 };
 
-type DmInputState = {
-	value: any,
+interface DmInputState {
+	value: any;
 };
+
 
 class DmInput extends React.Component<DmInputProps, DmInputState> {
-	constructor(props: any) {
+	constructor(props: DmInputProps) {
 		super(props);
 		this.state = {
 			value: props.value

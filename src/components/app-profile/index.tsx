@@ -400,7 +400,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                         Please, verify link from your email address
                       </div>
                       <DmButton text="Send again" loading={this.state.loading} 
-                      onClick={this.sendVerifyLink} class="margin-top" />
+                      onClick={this.sendVerifyLink} className="margin-top" />
                     </>
                   }
                   <p/>

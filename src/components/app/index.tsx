@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 interface IAppProps {
   firebaseLogOut?: any;
-  history: any;
+  history?: any;
 };
 
 interface IAppState {
@@ -34,7 +34,7 @@ interface IAppState {
 
 class App extends React.Component<IAppProps, IAppState> {
 
-  constructor(props: any) {
+  constructor(props: IAppProps) {
     super(props);
     this.state = {
       errors: null,

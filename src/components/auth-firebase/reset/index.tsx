@@ -22,12 +22,15 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface IResetProps {
   history: any;
   style: any;
+  email: string | null;
+  password: string | null;
+  user: firebase.User | null;
 };
 
 interface IResetState {
   loading: boolean;
   errors: string | null;
-  email: string;
+  email: string | null;
   password: string | null;
   resetSent: boolean;
   user: firebase.User | null;
@@ -36,7 +39,7 @@ interface IResetState {
 
 class Reset extends React.Component<IResetProps, IResetState> {
 
-  constructor(props: any) {
+  constructor(props: IResetProps) {
     if (firebase.auth().currentUser) props.history.push('/');
     super(props);
     this.state = {
@@ -61,7 +64,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
     });
     var self = this;
     firebase.auth().sendPasswordResetEmail(
-        email,
+        email as string,
         {url: 'http://localhost:3000'}
       ).then(function() {
       self.setState({

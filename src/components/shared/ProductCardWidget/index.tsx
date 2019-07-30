@@ -1,6 +1,16 @@
 import React from 'react';
 
-const ProductCardWidget = (props: any) => 
+interface IProductCardWidgetProps {
+  className?: any;
+  style?: any;
+  desc?: any;
+  title?: string;
+  icon?: string;
+  children?: any;
+};
+
+
+const ProductCardWidget = (props: IProductCardWidgetProps) => 
 	<div className={`s${props.className}`} style={props.style}>
 	  <div>
 	  	{props.title &&

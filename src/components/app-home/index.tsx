@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 const Counter = (props: any) => <span style={{ paddingRight: "10px", fontSize: "18px" }}>{props.itemId}</span>;
 const LikeCounter = (props: any) =>
   <DmButton text={<><Counter itemId={props.itemId} /><FaRegThumbsUp /></>}
-  click={() => null} className="margin-top-10 button-grey" />;
+  onClick={() => null} className="margin-top-10 button-grey" />;
 
 interface IHomeProps {
   history: any;
@@ -32,7 +32,7 @@ interface IHomeState {
 
 class Home extends React.Component<IHomeProps, IHomeState> {
 
-  constructor(props: any) {
+  constructor(props: IHomeProps) {
     super(props);
     this.state = {
       loading: false,
@@ -44,6 +44,92 @@ class Home extends React.Component<IHomeProps, IHomeState> {
   render() {
     return (
       <div className="container-fluid fade-in-fx">
+
+        <div className="row">
+          <div className="col-sm-4">
+            <DmFolderWidget title="Isabelle Hurst">
+              <DmButton text="PROFILE" loading={this.state.loading} 
+              onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
+              <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    onClick={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4">
+            <DmFolderWidget title="Jeffrey Monnaghan">
+              <DmButton text="PROFILE" loading={this.state.loading} 
+              onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
+              <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    onClick={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4">
+            <DmFolderWidget title="Nina Ricci">
+              <DmButton text="PROFILE" loading={this.state.loading} 
+              onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
+              <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    onClick={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+        </div>
+
+        <p></p>
 
         <div className="row">
 
@@ -156,95 +242,6 @@ class Home extends React.Component<IHomeProps, IHomeState> {
 
         </div>
 
-        <p></p>
-        <p></p>
-
-        <div className="row">
-          <div className="col-sm-4">
-            <DmFolderWidget title="Isabelle Hurst">
-              <DmButton text="PROFILE" loading={this.state.loading} 
-              click={() => this.props.history.push('/profile')} className="margin-bottom" />
-              <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
-              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
-              and sizes thanks to a twelve column system, five default responsive tiers, 
-              Sass variables and mixins, and dozens of predefined classes.</p>
-              <table style={{width: '100%'}}><tbody><tr>
-                <td style={{width: '30%'}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
-                    className="margin-top button-transparent" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-              </tr></tbody></table>
-            </DmFolderWidget>
-          </div>
-          <div className="col-sm-4">
-            <DmFolderWidget title="Jeffrey Monnaghan">
-              <DmButton text="PROFILE" loading={this.state.loading} 
-              click={() => this.props.history.push('/profile')} className="margin-bottom" />
-              <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
-              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
-              and sizes thanks to a twelve column system, five default responsive tiers, 
-              Sass variables and mixins, and dozens of predefined classes.</p>
-              <table style={{width: '100%'}}><tbody><tr>
-                <td style={{width: '30%'}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
-                    className="margin-top button-transparent" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-              </tr></tbody></table>
-            </DmFolderWidget>
-          </div>
-          <div className="col-sm-4">
-            <DmFolderWidget title="Nina Ricci">
-              <DmButton text="PROFILE" loading={this.state.loading} 
-              click={() => this.props.history.push('/profile')} className="margin-bottom" />
-              <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
-              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
-              and sizes thanks to a twelve column system, five default responsive tiers, 
-              Sass variables and mixins, and dozens of predefined classes.</p>
-              <table style={{width: '100%'}}><tbody><tr>
-                <td style={{width: '30%'}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
-                    className="margin-top button-transparent" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-              </tr></tbody></table>
-            </DmFolderWidget>
-          </div>
-        </div>
-
-        <p></p>
-
         <div className="row">
           <div className="col-sm-4 col-lg-3">
             <DmFolderWidget title="Mercedes ZX180" style={{textAlign: "center"}}>
@@ -299,7 +296,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               effect="blur"
               className="fit-in-cover round-border-5px" />
               <DmButton text={<FaHeart />} loading={this.state.loading}
-              click={() => this.props.history.push('/profile')} 
+              onClick={() => this.props.history.push('/profile')} 
               className="margin-top-10 button-grey margin-top" />
             </DmFolderWidget>
           </div>
@@ -314,12 +311,12 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               <table style={{width: '100%'}} className="margin-top"><tbody><tr>
                 <td style={{width: '50%'}}>
                   <DmButton text={<FaRegThumbsUp />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top-10 button-transparent" />
                 </td>
                 <td style={{width: '50%'}}>
                   <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top-10 button-grey" />
                 </td>
               </tr></tbody></table>
@@ -336,17 +333,17 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '30%'}} className="td-pad-10">
                     <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
+                    onClick={() => this.props.history.push('/profile')} 
                     className="margin-top button-transparent" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
                   <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
                   <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
               </tr></tbody></table>
@@ -374,7 +371,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               effect="blur"
               className="fit-in-cover round-border-5px product-pic-shadow" />
               <DmButton text={<FaHeart />} loading={this.state.loading}
-              click={() => this.props.history.push('/profile')} 
+              onClick={() => this.props.history.push('/profile')} 
               className="margin-top-10 button-grey margin-top" />
             </DmFolderWidget>
           </div>
@@ -388,12 +385,12 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               <table style={{width: '100%'}} className="margin-top"><tbody><tr>
                 <td style={{width: '50%'}}>
                   <DmButton text={<FaRegThumbsUp />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top-10 button-transparent" />
                 </td>
                 <td style={{width: '50%'}}>
                   <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top-10 button-grey" />
                 </td>
               </tr></tbody></table>
@@ -409,17 +406,17 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '30%'}} className="td-pad-10">
                     <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
+                    onClick={() => this.props.history.push('/profile')} 
                     className="margin-top button-transparent" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
                   <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
                   <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
               </tr></tbody></table>
@@ -700,17 +697,17 @@ class Home extends React.Component<IHomeProps, IHomeState> {
                 <table style={{width: '100%'}}><tbody><tr>
                   <td style={{width: '35%'}}>
                     <DmButton text={<FaRegThumbsUp />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
+                    onClick={() => this.props.history.push('/profile')} 
                     className="margin-top-10 button-transparent" />
                   </td>
                   <td style={{width: '30%'}} className="td-pad-10">
                     <DmButton text={<FaHeart />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
+                    onClick={() => this.props.history.push('/profile')} 
                     className="margin-top-10 button-red" />
                   </td>
                   <td style={{width: '35%'}}>
                     <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
+                    onClick={() => this.props.history.push('/profile')} 
                     className="margin-top-10 button-transparent" />
                   </td>
                 </tr></tbody></table>
@@ -721,7 +718,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
           <div className="col-sm-4">
             <DmFolderWidget title="Skills">
             <DmButton text="INSTALL" loading={this.state.loading}
-            click={() => this.props.history.push('/profile')} className="margin-bottom" />
+            onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
               <code style={{fontSize: '12px',lineHeight: '10px'}}>
                 # No extra indentation.
                 if (this_is_one_thing and
@@ -746,7 +743,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
           <div className="col-sm-4">
             <DmFolderWidget title={<FaRegStar />}>
               <DmButton text="PROFILE" loading={this.state.loading} 
-              click={() => this.props.history.push('/profile')} className="margin-bottom" />
+              onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
               <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 
@@ -754,17 +751,17 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '30%'}} className="td-pad-10">
                     <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    click={() => this.props.history.push('/profile')} 
+                    onClick={() => this.props.history.push('/profile')} 
                     className="margin-top button-transparent" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
                   <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
                   <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  click={() => this.props.history.push('/profile')} 
+                  onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
               </tr></tbody></table>
