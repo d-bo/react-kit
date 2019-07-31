@@ -10,7 +10,7 @@ interface IProductCardWidgetProps {
 };
 
 
-const ProductCardWidget = (props: IProductCardWidgetProps) => 
+const ProductCardWidget = (props: IProductCardWidgetProps) =>
 	<div className={`s${props.className}`} style={props.style}>
 	  <div>
 	  	{props.title &&

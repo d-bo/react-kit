@@ -44,6 +44,11 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     const firebaseUser = this.context;
     const {profileImgUrl} = this.props;
 
+    // fix profileImgUrl === undefined
+    if (typeof profileImgUrl === "undefined") {
+      const profileImgUrl = "";
+    }
+
     return (
       <div className="navbar-body" style={{marginBottom: "14px"}}>
         <div className="container-fluid navbar">
@@ -74,6 +79,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
 
                   {firebaseUser.hasOwnProperty('photoURL') &&
                     <>
+
                     {firebaseUser.photoURL && profileImgUrl === "" &&
                       <>
                         <LazyLoadImage
@@ -84,13 +90,6 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
                       </>
                     }
 
-                    {!firebaseUser.photoURL && profileImgUrl === "" &&
-                      <>
-                        <img className="img-navbar" src="/no-user.png"
-                        alt="" />
-                      </>
-                    }
-
                     {firebaseUser.photoURL && profileImgUrl !== "" &&
                       <>
                         <LazyLoadImage
@@ -98,6 +97,13 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
                           placeholderSrc="/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />
+                      </>
+                    }
+
+                    {!firebaseUser.photoURL && profileImgUrl === "" &&
+                      <>
+                        <img className="img-navbar" src="/no-user.png"
+                        alt="" />
                       </>
                     }
 

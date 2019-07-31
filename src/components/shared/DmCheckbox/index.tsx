@@ -2,6 +2,7 @@ import React from 'react';
 
 
 class DmCheckbox extends React.Component {
+  
 	constructor(props: any) {
 		super(props);
 	}

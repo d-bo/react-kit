@@ -39,7 +39,7 @@ class DmInput extends React.Component<DmInputProps, DmInputState> {
 			<>
 				<input type={this.props.type} onChange={this.handleChange}
 					className={`dm-input round-border-5px ${this.props.className}`} 
-					value={this.props.value} placeholder={this.props.placeholder} 
+					value={this.props.value || ""} placeholder={this.props.placeholder} 
 					style={this.props.style} />
 			</>
 		);
