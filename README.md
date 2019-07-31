@@ -1,5 +1,7 @@
 # react-kit
 
+[![CircleCI](https://circleci.com/gh/d-bo/react-kit.svg?style=svg)](https://circleci.com/gh/d-bo/react-kit)
+
 ## Firebase config
 
 https://console.firebase.google.com/
