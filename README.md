@@ -1,5 +1,6 @@
 # react-kit
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bc054a78be184800beaff7910cffdc99)](https://app.codacy.com/app/d-bo/react-kit?utm_source=github.com&utm_medium=referral&utm_content=d-bo/react-kit&utm_campaign=Badge_Grade_Dashboard)
 [![CircleCI](https://circleci.com/gh/d-bo/react-kit.svg?style=svg)](https://circleci.com/gh/d-bo/react-kit)
 
 ## Firebase config
