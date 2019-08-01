@@ -48,13 +48,13 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
-  handleSignIn() {
+  private handleSignIn() {
     if (this.state.loading) return;
     
     const self = this;
     const {password} = this.state;
     // Validate email
-    var re = /\S+@\S+\.\S+/;
+    const re = /\S+@\S+\.\S+/;
     if (!re.test(this.state.email as string)) {
       this.setState({
         errors: "Incorrect email",
@@ -101,35 +101,35 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
       });
   }
 
-  handlePasswordChange(e: any) {
+  private handlePasswordChange(e: any) {
     this.setState({
       password: e
     });
   }
 
-  handleEmailChange(e: any) {
+  private handleEmailChange(e: any) {
     this.setState({
       email: e
     });
   }
 
-  handleGithub() {
+  private handleGithub() {
     if (this.state.loading) return;
     this.setState({loading: true});
     // With popup.
-    var self = this;
-    var provider = new firebase.auth.GithubAuthProvider();
+    const self = this;
+    const provider = new firebase.auth.GithubAuthProvider();
      provider.addScope('repo');
-     firebase.auth().signInWithPopup(provider).then(function(result) {
+     firebase.auth().signInWithPopup(provider).then((result) => {
        self.props.firebaseAuth(result.user);
        self.setState({loading: false});
        self.props.history.push('/');
-     }).catch(function(error) {
+     }).catch((error) => {
        self.setState({loading: false, errors: error.message});
      });
   }
 
-  handleGoogle() {
+  private handleGoogle() {
     if (this.state.loading) return;
     this.setState({loading: true});
     // Using a popup.
@@ -137,19 +137,20 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     var provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
-    firebase.auth().signInWithPopup(provider).then(function(result) {
+    firebase.auth().signInWithPopup(provider).then((result) => {
        self.props.firebaseAuth(result.user);
        self.setState({loading: false});
        self.props.history.push('/');
-    }).catch(function(error) {
-       self.setState({loading: false, errors: error.message});
-     });
+    }).catch((error) => {
+      self.setState({loading: false, errors: error.message});
+    });
   }
 
-  render() {
+  public render() {
 
     const firebaseUser = this.context;
     const {style} = this.props;
+    const {errors, email, loading, password} = this.state;
 
     return (
       <>
@@ -163,16 +164,16 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
               {!firebaseUser &&
               <div style={style}>
 
-                <DmInput type="text" value={this.state.email} 
+                <DmInput type="text" value={email} 
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
-                <DmInput type="password" value={this.state.password} 
+                <DmInput type="password" value={password} 
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <DmButton text="OK" loading={this.state.loading} 
+                <DmButton text="OK" loading={loading} 
                   onClick={this.handleSignIn} style={{marginTop: '35px'}} />
 
-                {this.state.errors && 
-                  <div className="error-message round-border-5px">{this.state.errors}</div>}
+                {errors && 
+                  <div className="error-message round-border-5px">{errors}</div>}
 
                 <div className="margin-top custom-a">
                   <table className="full-width"><tbody><tr>
@@ -188,11 +189,11 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
                 <div className="margin-top custom-a">
                   <table className="full-width"><tbody><tr>
                   <td>
-                    <DmButton text={<FaGithub />} loading={this.state.loading} 
+                    <DmButton text={<FaGithub />} loading={loading} 
                       onClick={this.handleGithub} className="button-grey" />
                   </td>
                   <td>
-                    <DmButton text={<FaGoogle />} loading={this.state.loading} 
+                    <DmButton text={<FaGoogle />} loading={loading} 
                       onClick={this.handleGithub} className="button-grey" />
                   </td>
                   </tr></tbody></table>

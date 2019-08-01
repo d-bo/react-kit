@@ -58,20 +58,20 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
     this.handleKeyboardEnter = this.handleKeyboardEnter.bind(this);
   }
 
-  handleKeyboardEnter (e: any) {
+  private handleKeyboardEnter (e: any) {
     if (e.key === 'Enter') {
       this.handleRegister(e);
     }
   };
 
-  handleRegister(e: any) {
+  private handleRegister(e: any) {
     if (this.state.loading) return;
 
     const currentUser = firebase.auth().currentUser;
     const {password, displayName, email} = this.state;
 
     // Validate email
-    var re = /\S+@\S+\.\S+/;
+    const re = /\S+@\S+\.\S+/;
     if (!re.test(this.state.email as string)) {
       this.setState({
         errors: "Incorrect email",
@@ -98,40 +98,38 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
       return;
     }
 
-    var self = this;
     this.setState({
       errors: null,
       loading: true
     });
 
+    const self = this;
     firebase.auth().createUserWithEmailAndPassword(
         email as string, 
         password as string
-      ).then(function(userCredential: firebase.auth.UserCredential) {
+      ).then((userCredential: firebase.auth.UserCredential) => {
 
         self.props.firebaseAuth(currentUser);
         // Send email verify
         if (currentUser) {
           currentUser.sendEmailVerification({
             url: 'http://localhost:3000/'
-          }).then(function() {
+          }).then(() => {
             self.setState({
               loading: false
             });
             // User created and email verify sent
             self.props.history.push('/');
-          })
-          .catch(function(error) {
+          }).catch((error) => {
             self.setState({
               errors: error.message,
               loading: false
             });
           });
         }
-      }).catch(function(error) {
 
-        var errorMessage = error.message;
-
+      }).catch((error) => {
+        const errorMessage = error.message;
         self.setState({
           errors: errorMessage,
           loading: false
@@ -139,28 +137,34 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
       });
   }
 
-  handlePasswordChange(e: any) {
+  private handlePasswordChange(e: any) {
     this.setState({
       password: e
     });
   }
 
-  handleEmailChange(e: any) {
+  private handleEmailChange(e: any) {
     this.setState({
       email: e
     });
   }
 
-  handleNameChange(e: any) {
+  private handleNameChange(e: any) {
     this.setState({
       displayName: e
     });
   }
 
-  render() {
+  public render() {
 
     const {style, history} = this.props;
-    const {displayName, email, password, errors} = this.state;
+    const {
+      displayName,
+      email,
+      password,
+      errors,
+      loading,
+    } = this.state;
 
     return (
       <>
@@ -172,7 +176,7 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
           <div className="vertical-center">
             <DmFolderWidget title="Register" className="fade-in-fx">
               {!this.context &&
-              <div style={this.props.style}>
+              <div style={style}>
 
                 <DmInput type="text" value={displayName} 
                 placeholder="NAME" onChange={this.handleNameChange} />
@@ -183,11 +187,11 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
                 <DmInput type="password" value={password}
                 onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <DmButton text="Ok" loading={this.state.loading} 
+                <DmButton text="Ok" loading={loading} 
                 onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter}
                 style={{marginTop: '35px'}} />
 
-                {this.state.errors && 
+                {errors && 
                   <div className="error-message round-border-5px">{errors}</div>}
 
                 <Router history={history}>

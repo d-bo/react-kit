@@ -9,6 +9,7 @@ import { firebaseAuth } from '../../../redux/actions';
 import { Link } from 'react-router-dom';
 import DmFolderWidget from '../../shared/DmFolderWidget';
 import { Router } from 'react-router-dom';
+import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 
 const mapStateToProps = (state: any) => {
@@ -54,24 +55,26 @@ class Reset extends React.Component<IResetProps, IResetState> {
     this.handleEmailChange = this.handleEmailChange.bind(this);
   }
 
-  handleReset() {
-    const { email } = this.state;
+  private handleReset() {
 
-    if (this.state.loading) return;
+    const self = this;
+    const {email, loading} = this.state;
+
+    if (loading) return;
     this.setState({
       loading: true,
       errors: null
     });
-    var self = this;
+    
     firebase.auth().sendPasswordResetEmail(
         email as string,
         {url: 'http://localhost:3000'}
-      ).then(function() {
+      ).then(() => {
       self.setState({
         resetSent: true,
         loading: false
       });
-    }).catch(function(error) {
+    }).catch((error) => {
       self.setState({
         errors: error.message,
         loading: false
@@ -79,14 +82,18 @@ class Reset extends React.Component<IResetProps, IResetState> {
     });
   }
 
-  handleEmailChange(e: any) {
+  private handleEmailChange(e: any) {
     this.setState({
       email: e
     });
   }
 
-  render() {
-    const {style} = this.props;
+  public render() {
+
+    const {style, history} = this.props;
+    const firebaseUser = this.context;
+    const {email, errors, resetSent, loading} = this.state;
+
     return (
       <>
       <div className="container">
@@ -96,32 +103,32 @@ class Reset extends React.Component<IResetProps, IResetState> {
 
           <div className="vertical-center">
             <DmFolderWidget title="Reset password" className="fade-in-fx">
-              {!this.state.user &&
+              {!firebaseUser &&
               <div style={style}>
-                {!this.state.resetSent &&
+                {!resetSent &&
                   <>
                   <div className="action-message round-border-3px">
                   Enter your email address. We will send you reset link.
                   </div>
 
-                  <DmInput type="text" value={this.state.email} 
+                  <DmInput type="text" value={email} 
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
 
-                  <DmButton text="Ok" loading={this.state.loading} 
+                  <DmButton text="Ok" loading={loading} 
                   onClick={this.handleReset} style={{marginTop: '35px'}} />
 
-                  {this.state.errors && 
-                    <div className="error-message round-border-3px">{this.state.errors}</div>}
+                  {errors && 
+                    <div className="error-message round-border-3px">{errors}</div>}
                   </>
                 }
-                {this.state.resetSent &&
+                {resetSent &&
                   <>
                   <div className="action-message round-border-5px">
                     Check your email. We have send you reset link.
                   </div>
                   </>
                 }
-                <Router history={this.props.history}>
+                <Router history={history}>
                   <div className="margin-top custom-a">
                     <table className="full-width"><tbody><tr>
                     <td style={{textAlign: 'left'}}>
@@ -146,5 +153,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
     );
   }
 }
+
+Reset.contextType = FirebaseUserContext;
 
 export default connect(mapStateToProps, mapDispatchToProps)(Reset);
