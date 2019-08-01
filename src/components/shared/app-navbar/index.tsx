@@ -34,11 +34,11 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     this.redirectProfile = this.redirectProfile.bind(this);
   }
 
-  redirectProfile() {
+  private redirectProfile() {
     this.props.history.push("/profile");
   }
 
-  render() {
+  public render() {
 
     const {history} = this.props;
     const firebaseUser = this.context;

@@ -46,17 +46,17 @@ class App extends React.Component<IAppProps, IAppState> {
     this.sendVerifyLink = this.sendVerifyLink.bind(this);
   }
 
-  handleLogOut() {
+  private handleLogOut() {
     var self = this;
     self.setState({
       loadingExit: true
     });
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(() => {
       self.setState({loadingExit: false});
       self.props.firebaseLogOut();
       localStorage.removeItem("localAppCurrentUserID");
       self.props.history.push("/auth/signin");
-    }).catch(function(error) {
+    }).catch((error) => {
       var errorMessage = error.message;
       self.setState({
         errors: errorMessage,
@@ -65,8 +65,8 @@ class App extends React.Component<IAppProps, IAppState> {
     });
   }
 
-  sendVerifyLink() {
-    var self = this;
+  private sendVerifyLink() {
+    const self = this;
     self.setState({
       loading: true
     });
@@ -74,13 +74,13 @@ class App extends React.Component<IAppProps, IAppState> {
     if (currentUser) {
       currentUser.sendEmailVerification({
         url: "http://localhost:3000/"
-      }).then(function() {
+      }).then(() => {
         self.setState({
           verifyLinkSent: true
         });
         self.forceUpdate();
       })
-      .catch(function(error) {
+      .catch((error) => {
         self.setState({
           errors: error.message,
           loading: false
@@ -89,7 +89,7 @@ class App extends React.Component<IAppProps, IAppState> {
     }
   }
 
-  render() {
+  public render() {
     return (
       <>
         <Navbar {...this.props} />
