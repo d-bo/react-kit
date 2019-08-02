@@ -6,7 +6,7 @@ import DmFolderWidget from '../shared/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
 import { FaRegStar, FaCommentAlt } from "react-icons/fa";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import ButtonWidget from './ButtonWidget';
+import ButtonWidget from '../shared/ButtonWidget/ButtonWidget';
 
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
@@ -42,31 +42,34 @@ class Home extends React.Component<IHomeProps, IHomeState> {
   }
 
   public render() {
+
+    const {loading} = this.state;
+
     return (
-      <div className="container-fluid fade-in-fx">
+      <div className="container fade-in-fx">
 
         <div className="row">
           <div className="col-sm-4">
             <DmFolderWidget title="Isabelle Hurst">
-              <DmButton text="PROFILE" loading={this.state.loading} 
-              onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
+              <DmButton text="PROFILE" loading={loading} 
+              onClick={() => this.props.history.push('/person/58758ff')} className="margin-bottom" />
               <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 
               Sass variables and mixins, and dozens of predefined classes.</p>
               <table style={{width: '100%'}}><tbody><tr>
                 <td style={{width: '30%'}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    <DmButton text={<FaEnvelope />} loading={loading} 
                     onClick={() => this.props.history.push('/profile')} 
                     className="margin-top button-transparent" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  <DmButton text={<FaRegStar />} loading={loading} 
                   onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
                 <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  <DmButton text={<FaCommentAlt />} loading={loading} 
                   onClick={() => this.props.history.push('/profile')} 
                   className="margin-top button-grey" />
                 </td>
@@ -76,7 +79,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
           <div className="col-sm-4">
             <DmFolderWidget title="Jeffrey Monnaghan">
               <DmButton text="PROFILE" loading={this.state.loading} 
-              onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
+              onClick={() => this.props.history.push('/person/87g8787')} className="margin-bottom" />
               <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 
@@ -103,7 +106,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
           <div className="col-sm-4">
             <DmFolderWidget title="Nina Ricci">
               <DmButton text="PROFILE" loading={this.state.loading} 
-              onClick={() => this.props.history.push('/profile')} className="margin-bottom" />
+              onClick={() => this.props.history.push('/person/ricci.ui')} className="margin-bottom" />
               <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 

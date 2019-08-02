@@ -1,5 +1,5 @@
 import React from 'react';
-import DmButton from '../shared/DmButton';
+import DmButton from '../DmButton';
 import { FaRegThumbsUp, FaCartPlus } from "react-icons/fa";
 
 

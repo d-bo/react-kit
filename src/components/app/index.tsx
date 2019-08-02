@@ -8,6 +8,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import Reset from "../auth-firebase/reset";
 import SignIn from "../auth-firebase/signin";
 import Profile from "../app-profile";
+import Person from "../app-person";
 import Register from "../auth-firebase/register";
 import Home from "../app-home";
 import { NotFound404 } from "../app-404/NotFound404";
@@ -90,6 +91,7 @@ class App extends React.Component<IAppProps, IAppState> {
   }
 
   public render() {
+    const {history} = this.props;
     return (
       <>
         <Navbar {...this.props} />
@@ -97,6 +99,7 @@ class App extends React.Component<IAppProps, IAppState> {
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/profile" component={Profile} />
+              <Route path="/person/:id" component={Person} />
               <Route path="/auth/signin" component={SignIn} />
               <Route path="/auth/register" component={Register} />
               <Route path="/auth/reset" component={Reset} />

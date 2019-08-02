@@ -51,7 +51,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
 
     return (
       <div className="navbar-body" style={{marginBottom: "14px"}}>
-        <div className="container-fluid navbar">
+        <div className="container navbar">
           <div className="row">
 
             <div className="col-sm-4">
