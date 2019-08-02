@@ -41,7 +41,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
     };
   }
 
-  render() {
+  public render() {
     return (
       <div className="container-fluid fade-in-fx">
 

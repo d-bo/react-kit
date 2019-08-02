@@ -84,8 +84,8 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
         self.props.history.push('/');
       }).catch((error) => {
 
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
         if (errorCode === 'auth/wrong-password') {
           self.setState({
@@ -133,8 +133,8 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     if (this.state.loading) return;
     this.setState({loading: true});
     // Using a popup.
-    var self = this;
-    var provider = new firebase.auth.GoogleAuthProvider();
+    const self = this;
+    const provider = new firebase.auth.GoogleAuthProvider();
     provider.addScope('profile');
     provider.addScope('email');
     firebase.auth().signInWithPopup(provider).then((result) => {

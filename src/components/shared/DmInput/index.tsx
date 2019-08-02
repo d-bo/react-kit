@@ -36,6 +36,9 @@ class DmInput extends React.Component<DmInputProps, DmInputState> {
   }
 
   public render() {
+
+    const {className, value, style, placeholder} = this.props;
+    
     return (
       <>
         <input type={this.props.type} onChange={this.handleChange}

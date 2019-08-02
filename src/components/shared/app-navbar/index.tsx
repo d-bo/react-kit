@@ -40,9 +40,9 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
 
   public render() {
 
-    const {history} = this.props;
+    const {history, profileImgUrl} = this.props;
     const firebaseUser = this.context;
-    const {profileImgUrl} = this.props;
+    const {loading} = this.state;
 
     // fix profileImgUrl === undefined
     if (typeof profileImgUrl === "undefined") {
@@ -126,7 +126,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
                   <tbody><tr>
                     <td style={{width: "50%"}}></td>
                     <td style={{width: "50%"}}>
-                      <DmButton text="SIGN IN" loading={this.state.loading}
+                      <DmButton text="SIGN IN" loading={loading}
                       onClick={() => this.props.history.push("/profile")}
                       icon="" theme="border-small" />
                     </td>
