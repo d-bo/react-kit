@@ -84,7 +84,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
       self.props.firebaseLogOut();
       self.props.history.push("/auth/signin");
     }).catch((error) => {
-      var errorMessage = error.message;
+      const errorMessage = error.message;
       self.setState({
         errors: errorMessage,
         loadingExit: false,
@@ -264,8 +264,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
   // Cache it to the local storage
   // Call this once after the new image accepted
   private syncFirebaseUserProfile() {
-    var logged_user = firebase.auth().currentUser;
-    var self = this;
+    const logged_user = this.context;
+    const self = this;
 
     if (logged_user) {
       firebase.firestore().collection("users").doc(logged_user.uid)
@@ -278,7 +278,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
           */
           // Get profile image URL
           /*
-          var photoRef = firebase.storage().ref(`${doc.data().photo}`);
+          const photoRef = firebase.storage().ref(`${doc.data().photo}`);
           photoRef.getDownloadURL().then((url) => {
             this.props.setProfileImgUrl(url);
             self.setState({

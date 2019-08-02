@@ -47,7 +47,7 @@ class App extends React.Component<IAppProps, IAppState> {
   }
 
   private handleLogOut() {
-    var self = this;
+    const self = this;
     self.setState({
       loadingExit: true
     });
@@ -57,7 +57,7 @@ class App extends React.Component<IAppProps, IAppState> {
       localStorage.removeItem("localAppCurrentUserID");
       self.props.history.push("/auth/signin");
     }).catch((error) => {
-      var errorMessage = error.message;
+      const errorMessage = error.message;
       self.setState({
         errors: errorMessage,
         loadingExit: false
