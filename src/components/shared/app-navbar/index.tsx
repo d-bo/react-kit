@@ -45,9 +45,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     const {loading} = this.state;
 
     // fix profileImgUrl === undefined
-    if (typeof profileImgUrl === "undefined") {
-      const profileImgUrl = "";
-    }
+    console.log("CONTEXT:", firebaseUser, "IMG:", this.props.profileImgUrl);
 
     return (
       <div className="navbar-body" style={{marginBottom: "14px"}}>

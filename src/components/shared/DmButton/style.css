@@ -7,13 +7,12 @@
   display: inline-block;
   padding: 21px;
   color: #fff;
-  background: #626dff;
+  background: #5998d2;
   cursor: pointer;
   border-radius:3px;
   -moz-border-radius:3px;
   -webkit-border-radius:3px;
   transition: all 0.5s ease;
-  border: 1px solid #5c66e9;
 }
 
 .dm-button:hover {

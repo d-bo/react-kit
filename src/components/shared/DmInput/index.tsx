@@ -4,23 +4,23 @@ import './style.css';
 
 const mapStateToProps = (state: any) => state;
 
-interface DmInputProps {
+interface IDmInputProps {
   type: any;
   value: any;
-  placeholder: any;
-  onChange: any;
+  placeholder?: any;
+  onChange?: any;
   className?: any;
   style?: any;
 };
 
-interface DmInputState {
-  value: any;
+interface IDmInputState {
+  value: string;
 };
 
 
-class DmInput extends React.Component<DmInputProps, DmInputState> {
+class DmInput extends React.Component<IDmInputProps, IDmInputState> {
 
-  constructor(props: DmInputProps) {
+  constructor(props: IDmInputProps) {
     super(props);
     this.state = {
       value: props.value
@@ -37,14 +37,15 @@ class DmInput extends React.Component<DmInputProps, DmInputState> {
 
   public render() {
 
-    const {className, value, style, placeholder} = this.props;
+    const {value} = this.state;
+    const {className, style, placeholder, type} = this.props;
     
     return (
       <>
-        <input type={this.props.type} onChange={this.handleChange}
-          className={`dm-input round-border-5px ${this.props.className}`} 
-          value={this.props.value || ""} placeholder={this.props.placeholder} 
-          style={this.props.style} />
+        <input type={type} onChange={this.handleChange}
+          className={`dm-input round-border-5px ${className}`} 
+          value={value || ""} placeholder={placeholder} 
+          style={style} />
       </>
     );
   }

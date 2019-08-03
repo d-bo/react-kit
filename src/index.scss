@@ -1,12 +1,13 @@
 $font-stack: 'Montserrat', sans-serif;
-$bg-color: #fafafa;
+$bg-color: #fdfdfd;
 $app-color: #555;
-$bg-widget: #f5f5f5;
+$bg-widget: #fafafa;
 $bg-error: #ff6161;
+$widget-border: #f7f7f7;
 
 body {
   font-family: $font-stack;
-  background: url(/noise-bg.png) $bg-color;
+  background: $bg-color;
 }
 
 .round-border-3px {
@@ -70,13 +71,6 @@ body {
   color: #333;
 }
 
-.login-body {
-  padding: 7px;
-	background: $bg-widget;
-  color: #555;
-  border-bottom: 1px solid #f0f0f0;
-}
-
 .fade-in-fx {
   animation: custom_fadein 0.5s;
 }
@@ -102,8 +96,15 @@ body {
   padding: 7px 14px;
   background: $bg-widget;
   color: #555;
-
+  border: 1px solid $widget-border;
   border-bottom: 0;
+}
+
+.login-body {
+  padding: 7px;
+	background: $bg-widget;
+  color: #555;
+  border: 1px solid $widget-border;
 }
 
 .folder-center {
@@ -171,9 +172,7 @@ body {
 }
 
 .shadow-right-bottom {
-  -webkit-box-shadow: -10px 10px 5px -5px rgba(242,242,242,1);
-  -moz-box-shadow: -10px 10px 5px -5px rgba(242,242,242,1);
-  box-shadow: -10px 10px 5px -5px rgba(242,242,242,1);
+
 }
 
 .product-pic-shadow {

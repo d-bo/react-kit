@@ -5,7 +5,7 @@ import * as firebase from "firebase/app";
 import DmButton from "../shared/DmButton";
 import DmInput from "../shared/DmInput";
 import DmFolderWidget from "../shared/DmFolderWidget";
-import { firebaseLogOut, setProfileImgUrl } from "../../redux/actions";
+import { firebaseLogOut, setProfileImgUrl, setUserFirestoreData } from "../../redux/actions";
 import { MdClear, MdDone } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
@@ -16,12 +16,15 @@ const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
   firebaseLogOut: () => dispatch(firebaseLogOut()),
   setProfileImgUrl: (img_url: string) => dispatch(setProfileImgUrl(img_url)),
+  setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
 interface IProfileProps {
   history: any;
   setProfileImgUrl: any;
   firebaseLogOut: any;
+  setUserFirestoreData: any;
+  userData: any;
 };
 
 interface IProfileState {
@@ -72,7 +75,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     this.cancelImgUpload = this.cancelImgUpload.bind(this);
   }
 
-  private handleLogOut() {
+  private handleLogOut(): void {
     const self = this;
     self.setState({
       loadingExit: true
@@ -92,12 +95,12 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     });
   }
 
-  private sendVerifyLink() {
+  private sendVerifyLink(): void {
     const self = this;
-    self.setState({
+    const currentUser = firebase.auth().currentUser;
+    this.setState({
       loading: true
     });
-    const currentUser = firebase.auth().currentUser;
     if (currentUser != null) {
       currentUser.sendEmailVerification({
         url: "http://localhost:3000/"
@@ -115,32 +118,36 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
   }
 
-  private handleCityChange(city: string | null) {
+  private handleCityChange(city: string | null): void {
     this.setState({
       city,
     });
   }
 
-  private handleCountryChange(country: string | null) {
+  private handleCountryChange(country: string | null): void {
     this.setState({
       country,
     });
   }
 
-  private handleUpdateUser() {
+  // Save additional user data to firestore
+  private handleUpdateUser(): void {
     const self = this;
-    self.setState({
-      loading: true
-    });
+    const {userData, setUserFirestoreData} = this.props;
+    const {city, country} = this.state;
     const currentUser = firebase.auth().currentUser;
+    const _userData = {
+      city,
+      country,
+    };
+    setUserFirestoreData(_userData);
+    this.setState({
+      loading: true,
+    });
     if (currentUser != null) {
       firebase.firestore().collection("users")
         .doc(currentUser.uid)
-        .set({
-          city: this.state.city,
-          country: this.state.country,
-          profileImgUrl: this.state.uploadedImg,
-        }, {merge: true}).then((e) => {
+        .set(_userData, {merge: true}).then((e) => {
           self.setState({
             errors: "",
             loading: false,
@@ -154,7 +161,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
   }
 
-  private handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void {
     e.preventDefault();
     this.setState({loadingImg: true});
     let reader = new FileReader();
@@ -174,25 +181,25 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
   }
 
-  private handleUploadClick() {
+  private handleUploadClick(): void {
     let el: HTMLElement = document.getElementById("img-file-upload") as HTMLElement;
     el.click();
   }
 
-  private handleSaveImage() {
+  private handleSaveImage(): void {
     const self = this;
+    const currentUser = firebase.auth().currentUser;
+    const {imgFile} = this.state;
+    const storageRef = firebase.storage().ref();
     self.setState({
       loadingImg: true
     });
-    const imgFile = this.state.imgFile;
+  
     if (imgFile) {
-
-      let extension;    // file extension
+      let extension;
       let fileName;
       let imgRef: firebase.storage.Reference | null = null;
-      const storageRef = firebase.storage().ref();
       const name = imgFile.name;
-
       if (name) {
         let __extension = name.split(".");
         let extension = __extension.pop();
@@ -200,7 +207,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
           extension = extension.toLowerCase();
         }
       }
-      const currentUser = firebase.auth().currentUser;
+      
       if (currentUser) {
         fileName = `users/${currentUser.uid}.${extension}`;
       }
@@ -242,7 +249,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 });
               });
             }
-          }).catch((e) => {
+          }).catch((e: any) => {
                 self.setState({
                   errors: e.message,
                   loading: false,
@@ -252,7 +259,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     }
   }
 
-  private cancelImgUpload() {
+  private cancelImgUpload(): void {
     this.setState({
       imgFile: null,
       showSaveImgDialog: false,
@@ -260,40 +267,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     });
   }
 
-  // Retrieve firebase profile img url
-  // Cache it to the local storage
-  // Call this once after the new image accepted
-  private syncFirebaseUserProfile() {
-    const logged_user = this.context;
-    const self = this;
+  public render(): JSX.Element {
 
-    if (logged_user) {
-      firebase.firestore().collection("users").doc(logged_user.uid)
-        .onSnapshot(function(doc) {
-          /*
-          self.setState({
-            ...doc.data()
-          });
-          console.log(doc.data());
-          */
-          // Get profile image URL
-          /*
-          const photoRef = firebase.storage().ref(`${doc.data().photo}`);
-          photoRef.getDownloadURL().then((url) => {
-            this.props.setProfileImgUrl(url);
-            self.setState({
-              profileImgUrl: url
-            });
-          }).catch((e) => {
-            console.log("ERR", e);
-          });
-          */
-        });
-    }
-  }
-
-  public render() {
-
+    const {userData} = this.props;
     const {uploadedImg} = this.state;
     const firebaseUser = this.context;
     const {
@@ -388,16 +364,22 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Settings" className="fade-in-fx">
-
+              <p></p>
               <table style={{width: "100%"}}><tbody><tr>
               <td>
-                <h3>Country</h3>
-                <DmInput type="text" value={country}
+                <div style={{textAlign: "center"}}>
+                  <b>Country</b>
+                </div>
+                <DmInput type="text"
+                value={userData ? userData.country : ""}
                 placeholder="Enter your city ..." onChange={this.handleCountryChange} />
               </td>
               <td>
-                <h3>City</h3>
-                <DmInput type="text" value={city}
+              <div style={{textAlign: "center"}}>
+                  <b>City</b>
+                </div>
+                <DmInput type="text"
+                value={userData ? userData.city : ""}
                 placeholder="Enter your city ..." onChange={this.handleCityChange} />
               </td>
               </tr></tbody></table>
@@ -421,8 +403,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                     </div>
                   }
 
-                  <DmButton text="SAVE" loading={loading} onClick={this.handleUpdateUser}
-                  style={{ marginTop: "35px", fontSize: "14px"}} className="button-grey" />
+                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />}
+                  loading={loading} onClick={this.handleUpdateUser}
+                  style={{ marginTop: "35px",}} className="button-grey" />
 
                   <DmButton text="EXIT" loading={loadingExit} onClick={this.handleLogOut}
                   style={{ marginTop: "7px"}} />

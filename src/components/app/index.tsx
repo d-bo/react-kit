@@ -95,7 +95,7 @@ class App extends React.Component<IAppProps, IAppState> {
     return (
       <>
         <Navbar {...this.props} />
-          <Router history={this.props.history}>
+          <Router history={history}>
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/profile" component={Profile} />

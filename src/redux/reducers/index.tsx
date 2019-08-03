@@ -1,8 +1,18 @@
 import { combineReducers } from 'redux';
 import { actionTypes } from '../actions';
 
+type InitState = {
+  loading: boolean,
+  email: string,
+  password: string,
+  displayName: string,
+  city: string,
+  country: string,
+  profileImgUrl: string,
+  userData: {},
+};
 
-let initState = {
+const initState: InitState = {
   loading: false,   // global state lock ?? mutex like
   email: "",
   password: "",
@@ -10,12 +20,12 @@ let initState = {
   city: "",
   country: "",
   profileImgUrl: "",
+  userData: {},
 };
 
 // Local state snapshot ?
 const getInitState = () => {
   const localAppCurrentUserID = localStorage.getItem('localAppCurrentUserID');
-
   if (localAppCurrentUserID) {
     const stateName = `localAppState${localAppCurrentUserID}`;
     const localState = localStorage.getItem(stateName);
@@ -25,10 +35,10 @@ const getInitState = () => {
     }
   }
 
-  return null;
+  return initState;
 }
 
-// Each time save state to localStorage
+// State to localStorage wrapper
 const storeState = function (state: any) {
   const localAppCurrentUserID = localStorage.getItem('localAppCurrentUserID');
   if (localAppCurrentUserID) {
@@ -42,25 +52,52 @@ const firebaseAuth = (state = getInitState(), action: any) => {
   switch(action.type) {
 
     case actionTypes.AUTH_FIREBASE:
-      return storeState({...state, firebaseUser: action.firebaseUser});
+      return storeState({
+        ...state,
+        firebaseUser: action.firebaseUser,
+      });
 
     case actionTypes.SET_EMAIL:
-      return storeState({...state, email: action.email});
+      return storeState({
+        ...state,
+        email: action.email,
+      });
 
     case actionTypes.SET_PASSWORD:
-      return storeState({...state, password: action.password});
+      return storeState({
+        ...state,
+        password: action.password,
+      });
 
     case actionTypes.SET_NAME:
-      return storeState({...state, displayName: action.displayName});
+      return storeState({
+        ...state,
+        displayName: action.displayName,
+      });
 
     case actionTypes.LOADING:
-      return storeState({...state, loading: action.loading});
+      return storeState({
+        ...state,
+        loading: action.loading,
+      });
 
     case actionTypes.LOGOUT:
-      return storeState({...state, firebaseUser: null});
+      return storeState({
+        ...state,
+        firebaseUser: null,
+      });
 
     case actionTypes.SET_PROFILE_IMG_URL:
-      return storeState({...state, profileImgUrl: action.profileImgUrl});
+      return storeState({
+        ...state,
+        profileImgUrl: action.profileImgUrl,
+      });
+
+    case actionTypes.SET_USER_FIRESTORE_DATA:
+      return storeState({
+        ...state,
+        userData: action.userData,
+      });
 
     default:
       return state;

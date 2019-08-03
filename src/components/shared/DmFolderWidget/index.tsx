@@ -11,7 +11,7 @@ interface WidgetProps {
 
 
 const DmFolderWidget = (props: WidgetProps) => 
-  <div className={`shadow-right-bottom ${props.className} margin-top-10`} style={props.style}>
+  <div className={`nice-border shadow-right-bottom ${props.className} margin-top-10`} style={props.style}>
     <div className="folder-center">
       {props.title &&
         <div className="folder-right round-border-5px-only-top">

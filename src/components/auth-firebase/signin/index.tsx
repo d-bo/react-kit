@@ -5,7 +5,7 @@ import DmButton from '../../shared/DmButton';
 import DmInput from '../../shared/DmInput';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase/app';
-import { firebaseAuth } from '../../../redux/actions';
+import { firebaseAuth, setProfileImgUrl, setUserFirestoreData } from '../../../redux/actions';
 import { Link } from 'react-router-dom';
 import DmFolderWidget from '../../shared/DmFolderWidget';
 import { FaGithub, FaGoogle } from "react-icons/fa";
@@ -14,13 +14,17 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
-  firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser))
+  firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser)),
+  setProfileImgUrl: (url: string) => dispatch(setProfileImgUrl(url)),
+  setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
 interface ISigninProps {
   history: any;
   firebaseAuth: any;
   style: any;
+  setProfileImgUrl: any;
+  setUserFirestoreData: any;
 };
 
 interface ISigninState {
@@ -48,11 +52,11 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
-  private handleSignIn() {
+  private handleSignIn(): void {
     if (this.state.loading) return;
-    
     const self = this;
-    const {password} = this.state;
+    const {password, email} = this.state;
+    const {firebaseAuth, history} = this.props;
     // Validate email
     const re = /\S+@\S+\.\S+/;
     if (!re.test(this.state.email as string)) {
@@ -77,11 +81,12 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     });
 
     firebase.auth().signInWithEmailAndPassword(
-        this.state.email as string, 
+        email as string, 
         this.state.password as string
       ).then(() => {
-        self.props.firebaseAuth(firebase.auth().currentUser);
-        self.props.history.push('/');
+        firebaseAuth(firebase.auth().currentUser);
+        this.setUserGlobalData(firebase.auth().currentUser as firebase.User);
+        history.push('/');
       }).catch((error) => {
 
         const errorCode = error.code;
@@ -101,19 +106,46 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
       });
   }
 
-  private handlePasswordChange(e: any) {
+  // Update storage user data after success sign in
+  private setUserGlobalData(firebaseUser: firebase.User | null): void {
+    const {setProfileImgUrl} = this.props;
+    if (firebaseUser) {
+      // User avatar
+      if (firebaseUser.photoURL) {
+        setProfileImgUrl(firebaseUser.photoURL);
+      } else {
+        setProfileImgUrl("");
+      }
+      // Additional user data
+      this.getUserFirestoreData(firebaseUser);
+    }
+  }
+
+  // Update user additional profile data
+  // From firestore user storage by uid
+  private getUserFirestoreData(firebaseUser: firebase.User | null): void {
+    const {setUserFirestoreData} = this.props;
+    if (firebaseUser) {
+      firebase.firestore().collection("users").doc(firebaseUser.uid)
+        .onSnapshot((doc) => {
+          setUserFirestoreData(doc.data());
+        });
+    }
+  }
+
+  private handlePasswordChange(e: any): void {
     this.setState({
       password: e
     });
   }
 
-  private handleEmailChange(e: any) {
+  private handleEmailChange(e: any): void {
     this.setState({
       email: e
     });
   }
 
-  private handleGithub() {
+  private handleGithub(): void {
     if (this.state.loading) return;
     this.setState({loading: true});
     // With popup.
@@ -122,6 +154,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
      provider.addScope('repo');
      firebase.auth().signInWithPopup(provider).then((result) => {
        self.props.firebaseAuth(result.user);
+       this.setUserGlobalData(result.user);
        self.setState({loading: false});
        self.props.history.push('/');
      }).catch((error) => {
@@ -129,7 +162,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
      });
   }
 
-  private handleGoogle() {
+  private handleGoogle(): void {
     if (this.state.loading) return;
     this.setState({loading: true});
     // Using a popup.
@@ -139,6 +172,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     provider.addScope('email');
     firebase.auth().signInWithPopup(provider).then((result) => {
        self.props.firebaseAuth(result.user);
+       this.setUserGlobalData(result.user);
        self.setState({loading: false});
        self.props.history.push('/');
     }).catch((error) => {
@@ -146,12 +180,10 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     });
   }
 
-  public render() {
-
+  public render(): JSX.Element {
     const firebaseUser = this.context;
     const {style} = this.props;
     const {errors, email, loading, password} = this.state;
-
     return (
       <>
       <div className="container">
