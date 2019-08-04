@@ -171,14 +171,12 @@ body {
   text-align: center;
 }
 
-.shadow-right-bottom {
-
+.product-pic-shadow {
+  box-shadow: 0px 0px 5px 3px rgba(235,235,235,1);
 }
 
-.product-pic-shadow {
-  -webkit-box-shadow: 0px 0px 5px 3px rgba(235,235,235,1);
-  -moz-box-shadow: 0px 0px 5px 3px rgba(235,235,235,1);
-  box-shadow: 0px 0px 5px 3px rgba(235,235,235,1);
+.soft-left-bottom-shadow {
+  box-shadow: -10px 10px 15px -20px #999;
 }
 
 .row {

@@ -1,15 +1,15 @@
-import Navbar from "../shared/app-navbar";
-import Footer from "../shared/app-footer";
+import Navbar from "../app-navbar";
+import Footer from "../app-footer";
 import { connect } from "react-redux";
 import * as firebase from "firebase/app";
 import React, { Component } from "react";
 import { firebaseLogOut } from "../../redux/actions";
 import { Router, Route, Switch } from "react-router-dom";
-import Reset from "../auth-firebase/reset";
-import SignIn from "../auth-firebase/signin";
+import Reset from "../app-auth/reset";
+import SignIn from "../app-auth/signin";
 import Profile from "../app-profile";
 import Person from "../app-person";
-import Register from "../auth-firebase/register";
+import Register from "../app-auth/register";
 import Home from "../app-home";
 import { NotFound404 } from "../app-404/NotFound404";
 

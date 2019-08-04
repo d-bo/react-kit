@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as firebase from 'firebase/app';
 import React, { Component } from 'react';
-import DmInput from '../../shared/DmInput';
-import DmButton from '../../shared/DmButton';
+import DmInput from '../../shared/elements/DmInput';
+import DmButton from '../../shared/elements/DmButton';
 import { firebaseAuth } from '../../../redux/actions';
-import DmFolderWidget from '../../shared/DmFolderWidget';
+import DmFolderWidget from '../../shared/widgets/DmFolderWidget';
 import { Router } from 'react-router-dom';
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 

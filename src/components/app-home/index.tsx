@@ -1,12 +1,13 @@
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import React, { Component, ComponentClass, FunctionComponent } from 'react';
 import { firebaseLogOut } from '../../redux/actions';
-import DmButton from '../shared/DmButton';
-import DmFolderWidget from '../shared/DmFolderWidget';
+import DmButton from '../shared/elements/DmButton';
+import DmFolderWidget from '../shared/widgets/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
 import { FaRegStar, FaCommentAlt } from "react-icons/fa";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import ButtonWidget from '../shared/ButtonWidget/ButtonWidget';
+import ButtonWidget from '../shared/widgets/ButtonWidget';
+import { withRouter } from "react-router";
 
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
@@ -49,85 +50,58 @@ class Home extends React.Component<IHomeProps, IHomeState> {
       <div className="container fade-in-fx">
 
         <div className="row">
-          <div className="col-sm-4">
-            <DmFolderWidget title="Isabelle Hurst">
-              <DmButton text="PROFILE" loading={loading} 
-              onClick={() => this.props.history.push('/person/58758ff')} className="margin-bottom" />
-              <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
+          <div className="col-sm-6 col-lg-4">
+            <DmFolderWidget title="Python" shadow="soft-left-bottom-shadow">
+              <p></p>
+              <img src="/python-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 
               Sass variables and mixins, and dozens of predefined classes.</p>
-              <table style={{width: '100%'}}><tbody><tr>
-                <td style={{width: '30%'}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />} loading={loading} 
-                    onClick={() => this.props.history.push('/profile')} 
-                    className="margin-top button-transparent" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />} loading={loading} 
-                  onClick={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />} loading={loading} 
-                  onClick={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-              </tr></tbody></table>
             </DmFolderWidget>
           </div>
-          <div className="col-sm-4">
-            <DmFolderWidget title="Jeffrey Monnaghan">
-              <DmButton text="PROFILE" loading={this.state.loading} 
-              onClick={() => this.props.history.push('/person/87g8787')} className="margin-bottom" />
-              <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
+          <div className="col-sm-6 col-lg-4">
+            <DmFolderWidget title="Javascript" shadow="soft-left-bottom-shadow">
+              <p></p>
+              <img src="/js-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 
               Sass variables and mixins, and dozens of predefined classes.</p>
-              <table style={{width: '100%'}}><tbody><tr>
-                <td style={{width: '30%'}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    onClick={() => this.props.history.push('/profile')} 
-                    className="margin-top button-transparent" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  onClick={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  onClick={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-              </tr></tbody></table>
             </DmFolderWidget>
           </div>
-          <div className="col-sm-4">
-            <DmFolderWidget title="Nina Ricci">
-              <DmButton text="PROFILE" loading={this.state.loading} 
-              onClick={() => this.props.history.push('/person/ricci.ui')} className="margin-bottom" />
-              <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
+          <div className="col-sm-6 col-lg-4">
+            <DmFolderWidget title="Go" shadow="soft-left-bottom-shadow">
+              <p></p>
+              <img src="/Go-Logo_Blue.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 
               Sass variables and mixins, and dozens of predefined classes.</p>
-              <table style={{width: '100%'}}><tbody><tr>
-                <td style={{width: '30%'}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
-                    onClick={() => this.props.history.push('/profile')} 
-                    className="margin-top button-transparent" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
-                  onClick={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-                <td style={{width: '35%'}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
-                  onClick={() => this.props.history.push('/profile')} 
-                  className="margin-top button-grey" />
-                </td>
-              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-6 col-lg-4">
+            <DmFolderWidget title="Rust" shadow="soft-left-bottom-shadow">
+              <p></p>
+              <img src="/rust-logo.png" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-6 col-lg-4">
+            <DmFolderWidget title="C++" shadow="soft-left-bottom-shadow">
+              <p></p>
+              <img src="/c-plus-plus-logo.png" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-6 col-lg-4">
+            <DmFolderWidget title="C" shadow="soft-left-bottom-shadow">
+              <p></p>
+              <img src="/c-logo.png" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
             </DmFolderWidget>
           </div>
         </div>
@@ -135,8 +109,8 @@ class Home extends React.Component<IHomeProps, IHomeState> {
         <p></p>
 
         <div className="row">
-          <div className="col-sm-6">
-            <DmFolderWidget title="Isabelle Hurst">
+          <div className="col-sm-4">
+            <DmFolderWidget title="Isabelle Hurst" shadow="soft-left-bottom-shadow">
               <DmButton text="PROFILE" loading={loading} 
               onClick={() => this.props.history.push('/person/58758ff')} className="margin-bottom" />
               <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
@@ -162,11 +136,38 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               </tr></tbody></table>
             </DmFolderWidget>
           </div>
-          <div className="col-sm-6">
-            <DmFolderWidget title="Jeffrey Monnaghan">
+          <div className="col-sm-4">
+            <DmFolderWidget title="Jeffrey Monnaghan" shadow="soft-left-bottom-shadow">
               <DmButton text="PROFILE" loading={this.state.loading} 
               onClick={() => this.props.history.push('/person/87g8787')} className="margin-bottom" />
               <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
+              <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
+              and sizes thanks to a twelve column system, five default responsive tiers, 
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: '100%'}}><tbody><tr>
+                <td style={{width: '30%'}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={this.state.loading} 
+                    onClick={() => this.props.history.push('/profile')} 
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: '35%'}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={this.state.loading} 
+                  onClick={() => this.props.history.push('/profile')} 
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
+            </DmFolderWidget>
+          </div>
+          <div className="col-sm-4">
+            <DmFolderWidget title="Nina Ricci" shadow="soft-left-bottom-shadow">
+              <DmButton text="PROFILE" loading={this.state.loading} 
+              onClick={() => this.props.history.push('/person/ricci.ui')} className="margin-bottom" />
+              <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes 
               and sizes thanks to a twelve column system, five default responsive tiers, 
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -890,4 +891,4 @@ class Home extends React.Component<IHomeProps, IHomeState> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default withRouter((connect(mapStateToProps, mapDispatchToProps)(Home)) as any);

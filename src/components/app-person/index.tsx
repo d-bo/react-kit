@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { firebaseLogOut } from '../../redux/actions';
-import DmButton from '../shared/DmButton';
-import DmFolderWidget from '../shared/DmFolderWidget';
+import DmButton from '../shared/elements/DmButton';
+import DmFolderWidget from '../shared/widgets/DmFolderWidget';
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
 import { FaRegStar, FaCommentAlt } from "react-icons/fa";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import ButtonWidget from '../shared/ButtonWidget/ButtonWidget';
+import ButtonWidget from '../shared/widgets/ButtonWidget';
 
 
 const mapStateToProps = (state: any) => state.firebaseAuth;

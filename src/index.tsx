@@ -5,7 +5,7 @@ import "firebase/firestore";
 import "firebase/storage";
 import React from "react";
 import ReactDOM from "react-dom";
-import store from "./redux/store";
+import store from "./redux/stores/store";
 import App from "./components/app";
 import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";

@@ -1,13 +1,13 @@
 import './style.scss';
 import 'firebase/auth';
 import React, { Component } from 'react';
-import DmButton from '../../shared/DmButton';
-import DmInput from '../../shared/DmInput';
+import DmButton from '../../shared/elements/DmButton';
+import DmInput from '../../shared/elements/DmInput';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase/app';
 import { firebaseAuth, setProfileImgUrl, setUserFirestoreData } from '../../../redux/actions';
 import { Link } from 'react-router-dom';
-import DmFolderWidget from '../../shared/DmFolderWidget';
+import DmFolderWidget from '../../shared/widgets/DmFolderWidget';
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 

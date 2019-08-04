@@ -2,10 +2,10 @@ import "./style.scss";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
-import DmButton from "../DmButton";
+import DmButton from "../shared/elements/DmButton";
 import { Router } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
+import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
@@ -48,7 +48,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     console.log("CONTEXT:", firebaseUser, "IMG:", this.props.profileImgUrl);
 
     return (
-      <div className="navbar-body" style={{marginBottom: "14px"}}>
+      <div className="navbar-body soft-left-bottom-shadow" style={{marginBottom: "14px"}}>
         <div className="container navbar">
           <div className="row">
 
