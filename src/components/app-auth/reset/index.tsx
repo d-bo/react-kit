@@ -1,23 +1,23 @@
-import './style.css';
-import React, { Component } from 'react';
-import DmButton from '../../shared/elements/DmButton';
-import DmInput from '../../shared/elements/DmInput';
-import { connect } from 'react-redux';
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-import { firebaseAuth } from '../../../redux/actions';
-import { Link } from 'react-router-dom';
-import DmFolderWidget from '../../shared/widgets/DmFolderWidget';
-import { Router } from 'react-router-dom';
+import "./style.css";
+import React, { Component } from "react";
+import DmButton from "../../shared/elements/DmButton";
+import DmInput from "../../shared/elements/DmInput";
+import { connect } from "react-redux";
+import firebase from "firebase/app";
+import "firebase/auth";
+import { firebaseAuth } from "../../../redux/actions";
+import { Link } from "react-router-dom";
+import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
+import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
-
+import { withRouter } from "react-router";
 
 const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
-  firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser))
+  firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser)),
 });
 
 interface IResetProps {
@@ -26,7 +26,8 @@ interface IResetProps {
   email: string | null;
   password: string | null;
   user: firebase.User | null;
-};
+  location: any;
+}
 
 interface IResetState {
   loading: boolean;
@@ -35,74 +36,41 @@ interface IResetState {
   password: string | null;
   resetSent: boolean;
   user: firebase.User | null;
-};
-
+}
 
 class Reset extends React.Component<IResetProps, IResetState> {
 
   constructor(props: IResetProps) {
-    if (firebase.auth().currentUser) props.history.push('/');
+    if (firebase.auth().currentUser) {
+      props.history.push("/");
+    }
     super(props);
     this.state = {
-      loading: false,
-      errors: null,
       email: props.email,
+      errors: null,
+      loading: false,
       password: props.password,
       resetSent: false,
-      user: props.user
+      user: props.user,
     };
     this.handleReset = this.handleReset.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
   }
 
-  private handleReset() {
-
-    const self = this;
-    const {email, loading} = this.state;
-
-    if (loading) return;
-    this.setState({
-      loading: true,
-      errors: null
-    });
-    
-    firebase.auth().sendPasswordResetEmail(
-        email as string,
-        {url: 'http://localhost:3000'}
-      ).then(() => {
-      self.setState({
-        resetSent: true,
-        loading: false
-      });
-    }).catch((error) => {
-      self.setState({
-        errors: error.message,
-        loading: false
-      });
-    });
-  }
-
-  private handleEmailChange(e: any) {
-    this.setState({
-      email: e
-    });
-  }
-
-  public render() {
-
+  public render(): JSX.Element {
     const {style, history} = this.props;
     const firebaseUser = this.context;
     const {email, errors, resetSent, loading} = this.state;
-
     return (
       <>
       <div className="container">
         <div className="row">
-          <div className="col-sm-3"></div>
-          <div className="col-sm-6 px-xl-5">
+          <div className="col-sm-2 col-lg-4"></div>
+          <div className="col-sm-8 col-lg-4">
 
           <div className="vertical-center">
-            <DmFolderWidget title="Reset password" className="fade-in-fx">
+            <DmFolderWidget title="Reset password" className="fade-in-fx"
+              shadow="soft-left-bottom-shadow">
               {!firebaseUser &&
               <div style={style}>
                 {!resetSent &&
@@ -115,7 +83,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
 
                   <DmButton text="Ok" loading={loading} 
-                  onClick={this.handleReset} style={{marginTop: '35px'}} />
+                  onClick={this.handleReset} style={{marginTop: "35px"}} />
 
                   {errors && 
                     <div className="error-message round-border-3px">{errors}</div>}
@@ -131,10 +99,10 @@ class Reset extends React.Component<IResetProps, IResetState> {
                 <Router history={history}>
                   <div className="margin-top custom-a">
                     <table className="full-width"><tbody><tr>
-                    <td style={{textAlign: 'left'}}>
+                    <td style={{textAlign: "left"}}>
                         <Link to="/auth/signin">SIGN IN</Link>
                     </td>
-                    <td style={{textAlign: 'right'}}>
+                    <td style={{textAlign: "right"}}>
                         <Link to="/auth/register">REGISTER</Link>
                     </td>
                     </tr></tbody></table>
@@ -146,14 +114,54 @@ class Reset extends React.Component<IResetProps, IResetState> {
           </div>
 
           </div>
-        <div className="col-sm-3"></div>
+        <div className="col-sm-2 col-lg-4"></div>
       </div>
     </div>
     </>
     );
   }
+
+  public componentDidUpdate(prevProps: IResetProps) {
+    if (this.props.location !== prevProps.location) {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  private handleReset() {
+
+    const self = this;
+    const {email, loading} = this.state;
+
+    if (loading) {
+      return;
+    }
+    this.setState({
+      errors: null,
+      loading: true,
+    });
+    firebase.auth().sendPasswordResetEmail(
+        email as string,
+        {url: "http://localhost:3000"}
+      ).then(() => {
+      self.setState({
+        loading: false,
+        resetSent: true,
+      });
+    }).catch((error) => {
+      self.setState({
+        errors: error.message,
+        loading: false,
+      });
+    });
+  }
+
+  private handleEmailChange(e: any) {
+    this.setState({
+      email: e,
+    });
+  }
 }
 
 Reset.contextType = FirebaseUserContext;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Reset);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Reset) as any);

@@ -22,6 +22,7 @@ const LikeCounter = (props: any) =>
 
 interface IHomeProps {
   history: any;
+  location?: any;
 };
 
 interface IHomeState {
@@ -40,6 +41,12 @@ class Home extends React.Component<IHomeProps, IHomeState> {
       loadingExit: false,
       verifyLinkSent: false,
     };
+  }
+
+  componentDidUpdate(prevProps: IHomeProps) {
+    if (this.props.location !== prevProps.location) {
+      window.scrollTo(0, 0)
+    }
   }
 
   public render() {
