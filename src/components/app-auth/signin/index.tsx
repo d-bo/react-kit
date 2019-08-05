@@ -53,8 +53,9 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   }
 
   public componentDidUpdate(prevProps: ISigninProps): void {
-    if (this.props.location !== prevProps.location) {
-      window.scrollTo(0, 0)
+    const {location} = this.props;
+    if (location !== prevProps.location) {
+      window.scrollTo(0, 0);
     }
   }
 

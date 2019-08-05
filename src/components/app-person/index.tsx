@@ -1,20 +1,21 @@
-import { connect } from 'react-redux';
-import React, { Component } from 'react';
-import { firebaseLogOut } from '../../redux/actions';
-import DmButton from '../shared/elements/DmButton';
-import DmFolderWidget from '../shared/widgets/DmFolderWidget';
+import { connect } from "react-redux";
+import React, { Component } from "react";
+import { firebaseLogOut } from "../../redux/actions";
+import DmButton from "../shared/elements/DmButton";
+import DmFolderWidget from "../shared/widgets/DmFolderWidget";
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
-import { FaRegStar, FaCommentAlt } from "react-icons/fa";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import ButtonWidget from '../shared/widgets/ButtonWidget';
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { withRouter } from "react-router";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
-  firebaseLogOut: () => dispatch(firebaseLogOut())
+  firebaseLogOut: () => dispatch(firebaseLogOut()),
 });
 
-const Counter = (props: any) => <span style={{ paddingRight: "10px", fontSize: "18px" }}>{props.itemId}</span>;
+const Counter = (props: any) => <span
+  style={{ paddingRight: "10px", fontSize: "18px" }}>
+  {props.itemId}</span>;
+
 const LikeCounter = (props: any) =>
   <DmButton text={<><Counter itemId={props.itemId} /><FaRegThumbsUp /></>}
   onClick={() => null} className="margin-top-10 button-grey" />;
@@ -22,14 +23,14 @@ const LikeCounter = (props: any) =>
 interface IHomeProps {
   history: any;
   match: any;
-};
+  location?: any;
+}
 
 interface IHomeState {
   loading: boolean;
   loadingExit: boolean;
   verifyLinkSent: boolean;
-};
-
+}
 
 class Person extends React.Component<IHomeProps, IHomeState> {
 
@@ -42,13 +43,18 @@ class Person extends React.Component<IHomeProps, IHomeState> {
     };
   }
 
+  public componentDidUpdate(prevProps: IHomeProps): void {
+    const {location} = this.props;
+    if (location !== prevProps.location) {
+      window.scrollTo(0, 0);
+    }
+  }
+
   public render() {
-
     const { match: { params } } = this.props;
-
     return (
       <>
-      <div style={{"textAlign": "center"}}>{params.id}</div>
+      <div style={{textAlign: "center"}}>{params.id}</div>
       <div className="container fade-in-fx">
 
         <div className="row">
@@ -77,13 +83,12 @@ class Person extends React.Component<IHomeProps, IHomeState> {
             <DmFolderWidget title="Rave girl 303">
               <LazyLoadImage
                 src="/bio_3.jpg"
-                
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="in-folder-img round-border-50" />
                 <p>
                 When the conditional part of an if-statement is long enough to require 
-                that it be written across multiple lines, it's worth noting that the 
+                that it be written across multiple lines, it"s worth noting that the 
                 combination of a two character keyword (i.e. if), plus a single space, 
                 plus an opening parenthesis creates a natural 4-space indent for the 
                 subsequent lines of the multiline conditional.
@@ -94,7 +99,7 @@ class Person extends React.Component<IHomeProps, IHomeState> {
 
             <DmFolderWidget title="Application">
                 When the conditional part of an if-statement is long enough to require 
-                that it be written across multiple lines, it's worth noting that the 
+                that it be written across multiple lines, it"s worth noting that the 
                 combination of a two character keyword (i.e. if), plus a single space, 
                 plus an opening parenthesis creates a natural 4-space indent for the 
                 subsequent lines of the multiline conditional.
@@ -108,4 +113,4 @@ class Person extends React.Component<IHomeProps, IHomeState> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Person);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Person) as any);

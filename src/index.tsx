@@ -13,24 +13,22 @@ import * as serviceWorker from "./serviceWorker";
 import firebase_config from "./config/firebase.config";
 import { FirebaseUserContext } from "./contexts/FirebaseUserContext";
 
-
 // Init firebase account
 firebase.initializeApp(firebase_config);
 
 // Firebase auth email + some widgets i18n
-firebase.auth().languageCode = (navigator.languages && 
+firebase.auth().languageCode = (navigator.languages &&
   navigator.languages.length) ? navigator.languages[0] : navigator.language;
 
 // Router history
 const history = createBrowserHistory();
 
-
 // Render app when user acquired
 firebase.auth().onAuthStateChanged((firebaseUser) => {
-	// Multi-user local storage support
-	if (firebaseUser && firebaseUser.hasOwnProperty('uid')) {
-		localStorage.setItem('localAppCurrentUserID', firebaseUser.uid);
-	}
+  // Multi-user local storage support
+  if (firebaseUser && firebaseUser.hasOwnProperty("uid")) {
+    localStorage.setItem("localAppCurrentUserID", firebaseUser.uid);
+  }
   ReactDOM.render(
     <FirebaseUserContext.Provider value={firebaseUser}>
       <Provider store={store}>

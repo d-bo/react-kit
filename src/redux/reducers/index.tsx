@@ -1,31 +1,31 @@
-import { combineReducers } from 'redux';
-import { actionTypes } from '../actions';
+import { combineReducers } from "redux";
+import { actionTypes } from "../actions";
 
-type InitState = {
-  loading: boolean,
-  email: string,
-  password: string,
-  displayName: string,
-  city: string,
-  country: string,
-  profileImgUrl: string,
-  userData: {},
-};
+interface IInitState {
+  loading: boolean;
+  email: string;
+  password: string;
+  displayName: string;
+  city: string;
+  country: string;
+  profileImgUrl: string;
+  userData: {};
+}
 
-const initState: InitState = {
-  loading: false,   // global state lock ?? mutex like
-  email: "",
-  password: "",
-  displayName: "",
+const initState: IInitState = {
   city: "",
   country: "",
+  displayName: "",
+  email: "",
+  loading: false,   // global state lock ?? mutex like
+  password: "",
   profileImgUrl: "",
   userData: {},
 };
 
 // Local state snapshot ?
 const getInitState = () => {
-  const localAppCurrentUserID = localStorage.getItem('localAppCurrentUserID');
+  const localAppCurrentUserID = localStorage.getItem("localAppCurrentUserID");
   if (localAppCurrentUserID) {
     const stateName = `localAppState${localAppCurrentUserID}`;
     const localState = localStorage.getItem(stateName);
@@ -36,20 +36,20 @@ const getInitState = () => {
   }
 
   return initState;
-}
+};
 
 // State to localStorage wrapper
-const storeState = function (state: any) {
-  const localAppCurrentUserID = localStorage.getItem('localAppCurrentUserID');
+const storeState = (state: any) => {
+  const localAppCurrentUserID = localStorage.getItem("localAppCurrentUserID");
   if (localAppCurrentUserID) {
     const stateName = `localAppState${localAppCurrentUserID}`;
     localStorage.setItem(stateName, JSON.stringify(state));
   }
   return state;
-}
+};
 
 const firebaseAuth = (state = getInitState(), action: any) => {
-  switch(action.type) {
+  switch (action.type) {
 
     case actionTypes.AUTH_FIREBASE:
       return storeState({

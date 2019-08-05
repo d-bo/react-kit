@@ -62,7 +62,8 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
   }
 
   public componentDidUpdate(prevProps: IRegisterProps): void {
-    if (this.props.location !== prevProps.location) {
+    const {location} = this.props;
+    if (location !== prevProps.location) {
       window.scrollTo(0, 0);
     }
   }
@@ -91,16 +92,16 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
               {!this.context &&
               <div style={style}>
 
-                <DmInput type="text" value={displayName} 
+                <DmInput type="text" value={displayName}
                 placeholder="NAME" onChange={this.handleNameChange} />
 
-                <DmInput type="text" value={email} 
+                <DmInput type="text" value={email}
                 placeholder="EMAIL" onChange={this.handleEmailChange} />
 
                 <DmInput type="password" value={password}
                 onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <DmButton text="Ok" loading={loading} 
+                <DmButton text="Ok" loading={loading}
                 onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter}
                 style={{marginTop: "35px"}} />
 
@@ -133,19 +134,20 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
     );
   }
 
-  private handleKeyboardEnter (e: any) {
+  private handleKeyboardEnter(e: any): void {
     if (e.key === "Enter") {
       this.handleRegister();
     }
   }
 
-  private handleRegister() {
+  private handleRegister(): void {
     if (this.state.loading) {
       return;
     }
     const self = this;
     const currentUser = firebase.auth().currentUser;
     const {password, displayName, email} = this.state;
+
     // Validate email
     const re = /\S+@\S+\.\S+/;
     if (!re.test(this.state.email as string)) {
@@ -212,19 +214,19 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
       });
   }
 
-  private handlePasswordChange(e: any) {
+  private handlePasswordChange(e: any): void {
     this.setState({
       password: e,
     });
   }
 
-  private handleEmailChange(e: any) {
+  private handleEmailChange(e: any): void {
     this.setState({
       email: e,
     });
   }
 
-  private handleNameChange(e: any) {
+  private handleNameChange(e: any): void {
     this.setState({
       displayName: e,
     });

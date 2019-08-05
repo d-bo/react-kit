@@ -1,61 +1,61 @@
 export const actionTypes = {
-	AUTH_FIREBASE: "AUTH_FIREBASE",
-	SET_EMAIL: "SET_EMAIL",
-	SET_PASSWORD: "SET_PASSWORD",
-	SET_NAME: "SET_NAME",
-	LOGOUT: "LOGOUT",
-	LOADING: "LOADING",
-	SET_PROFILE_IMG_URL: "SET_PROFILE_IMG_URL",
-	SET_USER_FIRESTORE_DATA: "SET_USER_FIRESTORE_DATA",
+  AUTH_FIREBASE: "AUTH_FIREBASE",
+  LOADING: "LOADING",
+  LOGOUT: "LOGOUT",
+  SET_EMAIL: "SET_EMAIL",
+  SET_NAME: "SET_NAME",
+  SET_PASSWORD: "SET_PASSWORD",
+  SET_PROFILE_IMG_URL: "SET_PROFILE_IMG_URL",
+  SET_USER_FIRESTORE_DATA: "SET_USER_FIRESTORE_DATA",
 };
 
 interface IReduxAction {
-	type: string,
-	userData?: object | null,
-	profileImgUrl?: string,
-	firebaseUser?: firebase.User | null,
-	email?: string,
-	password?: string,
-	loading?: boolean,
-	displayName?: string,
+  type: string;
+  userData?: object | null;
+  profileImgUrl?: string;
+  firebaseUser?: firebase.User | null;
+  email?: string;
+  password?: string;
+  loading?: boolean;
+  displayName?: string;
 }
 
 export const setUserFirestoreData = (userData: object | null): IReduxAction => ({
-	type: actionTypes.SET_USER_FIRESTORE_DATA,
-	userData,
+  type: actionTypes.SET_USER_FIRESTORE_DATA,
+  userData,
 });
 
 export const setProfileImgUrl = (profileImgUrl: string): IReduxAction => ({
-	type: actionTypes.SET_PROFILE_IMG_URL,
-	profileImgUrl,
+  profileImgUrl,
+  type: actionTypes.SET_PROFILE_IMG_URL,
 });
 
 export const firebaseAuth = (firebaseUser: firebase.User | null): IReduxAction => ({
-	type: actionTypes.AUTH_FIREBASE,
-	firebaseUser,
+  firebaseUser,
+  type: actionTypes.AUTH_FIREBASE,
 });
 
 export const firebaseSetEmail = (email: string): IReduxAction => ({
-	type: actionTypes.SET_EMAIL,
-	email,
+  email,
+  type: actionTypes.SET_EMAIL,
 });
 
 export const firebaseSetPassword = (password: string): IReduxAction => ({
-	type: actionTypes.SET_PASSWORD,
-	password,
+  password,
+  type: actionTypes.SET_PASSWORD,
 });
 
 export const firebaseLoading = (loading: boolean): IReduxAction => ({
-	type: actionTypes.LOADING,
-	loading,
+  loading,
+  type: actionTypes.LOADING,
 });
 
 export const firebaseSetName = (displayName: string): IReduxAction => ({
-	type: actionTypes.SET_NAME,
-	displayName,
+  displayName,
+  type: actionTypes.SET_NAME,
 });
 
 export const firebaseLogOut = (): IReduxAction => ({
-	type: actionTypes.LOGOUT,
-	firebaseUser: null,
+  firebaseUser: null,
+  type: actionTypes.LOGOUT,
 });

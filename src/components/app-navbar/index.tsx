@@ -7,20 +7,18 @@ import { Router } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 
-
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
 interface INavbarProps {
   history?: any;
   profileImgUrl?: string;
-};
+}
 
 interface INavbarState {
   loading: boolean;
   loadingExit: boolean;
   verifyLinkSent: boolean;
-};
-
+}
 
 class Navbar extends React.Component<INavbarProps, INavbarState> {
 
@@ -34,19 +32,10 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     this.redirectProfile = this.redirectProfile.bind(this);
   }
 
-  private redirectProfile() {
-    this.props.history.push("/profile");
-  }
-
   public render() {
-
     const {history, profileImgUrl} = this.props;
     const firebaseUser = this.context;
     const {loading} = this.state;
-
-    // fix profileImgUrl === undefined
-    console.log("CONTEXT:", firebaseUser, "IMG:", this.props.profileImgUrl);
-
     return (
       <div className="navbar-body soft-left-bottom-shadow" style={{marginBottom: "14px"}}>
         <div className="container navbar">
@@ -75,7 +64,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
                     <b>{firebaseUser.email}</b>
                   }
 
-                  {firebaseUser.hasOwnProperty('photoURL') &&
+                  {firebaseUser.hasOwnProperty("photoURL") &&
                     <>
 
                     {firebaseUser.photoURL && profileImgUrl === "" &&
@@ -137,6 +126,10 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
         </div>
       </div>
     );
+  }
+
+  private redirectProfile(): void {
+    this.props.history.push("/profile");
   }
 }
 

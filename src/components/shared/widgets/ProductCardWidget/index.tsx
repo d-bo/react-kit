@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface IProductCardWidgetProps {
   className?: any;
@@ -7,8 +7,7 @@ interface IProductCardWidgetProps {
   title?: string;
   icon?: string;
   children?: any;
-};
-
+}
 
 const ProductCardWidget = (props: IProductCardWidgetProps) =>
   <div className={`s${props.className}`} style={props.style}>

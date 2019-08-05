@@ -1,7 +1,7 @@
 import "./style.scss";
 import { connect } from "react-redux";
 import React, { Component, SyntheticEvent } from "react";
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import DmButton from "../shared/elements/DmButton";
 import DmInput from "../shared/elements/DmInput";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
@@ -9,13 +9,12 @@ import { firebaseLogOut, setProfileImgUrl, setUserFirestoreData } from "../../re
 import { MdClear, MdDone } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
-import { any } from "prop-types";
-
+import { withRouter } from "react-router";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
   firebaseLogOut: () => dispatch(firebaseLogOut()),
-  setProfileImgUrl: (img_url: string) => dispatch(setProfileImgUrl(img_url)),
+  setProfileImgUrl: (imgUrl: string) => dispatch(setProfileImgUrl(imgUrl)),
   setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
@@ -25,7 +24,8 @@ interface IProfileProps {
   firebaseLogOut: any;
   setUserFirestoreData: any;
   userData: any;
-};
+  location?: any;
+}
 
 interface IProfileState {
   country: string | null;
@@ -39,29 +39,30 @@ interface IProfileState {
   uploadedImg: string | ArrayBuffer | null;
   showSaveImgDialog: boolean;
   errors: string;
-};
-
+}
 
 class Profile extends React.Component<IProfileProps, IProfileState> {
 
   constructor(props: IProfileProps) {
     // Firebase user instance
-    const logged_user = firebase.auth().currentUser;
+    const loggedUser = firebase.auth().currentUser;
     // Not authenticated ? Redirect to signin
-    if (!logged_user) props.history.push("/auth/signin");
+    if (!loggedUser) {
+      props.history.push("/auth/signin");
+    }
     super(props);
     this.state = {
       city: null,
       country: null,
       errors: "",
-      user: logged_user,
+      imgFile: null,
       loading: false,
       loadingExit: false,
       loadingImg: false,
-      verifyLinkSent: false,
-      imgFile: null,
+      showSaveImgDialog: false,
       uploadedImg: null,
-      showSaveImgDialog: false
+      user: loggedUser,
+      verifyLinkSent: false,
     };
 
     this.handleLogOut = this.handleLogOut.bind(this);
@@ -75,196 +76,11 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     this.cancelImgUpload = this.cancelImgUpload.bind(this);
   }
 
-  private handleLogOut(): void {
-    const self = this;
-    self.setState({
-      loadingExit: true
-    });
-    firebase.auth().signOut().then(() => {
-      self.setState({user: null, loadingExit: false});
-      localStorage.removeItem('localAppCurrentUserID');
-      self.props.setProfileImgUrl("");
-      self.props.firebaseLogOut();
-      self.props.history.push("/auth/signin");
-    }).catch((error) => {
-      const errorMessage = error.message;
-      self.setState({
-        errors: errorMessage,
-        loadingExit: false,
-      });
-    });
-  }
-
-  private sendVerifyLink(): void {
-    const self = this;
-    const currentUser = firebase.auth().currentUser;
-    this.setState({
-      loading: true
-    });
-    if (currentUser != null) {
-      currentUser.sendEmailVerification({
-        url: "http://localhost:3000/"
-      }).then(() => {
-        self.setState({
-          verifyLinkSent: true
-        });
-        self.forceUpdate();
-      }).catch((error) => {
-        self.setState({
-          errors: error.message,
-          loading: false,
-        });
-      });
+  public componentDidUpdate(prevProps: IProfileProps): void {
+    const {location} = this.props;
+    if (location !== prevProps.location) {
+      window.scrollTo(0, 0);
     }
-  }
-
-  private handleCityChange(city: string | null): void {
-    this.setState({
-      city,
-    });
-  }
-
-  private handleCountryChange(country: string | null): void {
-    this.setState({
-      country,
-    });
-  }
-
-  // Save additional user data to firestore
-  private handleUpdateUser(): void {
-    const self = this;
-    const {userData, setUserFirestoreData} = this.props;
-    const {city, country} = this.state;
-    const currentUser = firebase.auth().currentUser;
-    const _userData = {
-      city,
-      country,
-    };
-    setUserFirestoreData(_userData);
-    this.setState({
-      loading: true,
-    });
-    if (currentUser != null) {
-      firebase.firestore().collection("users")
-        .doc(currentUser.uid)
-        .set(_userData, {merge: true}).then((e) => {
-          self.setState({
-            errors: "",
-            loading: false,
-          });
-        }).catch((error) => {
-          self.setState({
-            errors: error.message,
-            loading: false,
-          });
-        });
-    }
-  }
-
-  private handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    e.preventDefault();
-    this.setState({loadingImg: true});
-    let reader = new FileReader();
-    if (e.target != null) {
-      if (e.target.files != null) {
-        let file = e.target.files[0];
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          this.setState({
-            imgFile: file,
-            loadingImg: false,
-            showSaveImgDialog: true,
-            uploadedImg: reader.result,
-          });
-        }
-      }
-    }
-  }
-
-  private handleUploadClick(): void {
-    let el: HTMLElement = document.getElementById("img-file-upload") as HTMLElement;
-    el.click();
-  }
-
-  private handleSaveImage(): void {
-    const self = this;
-    const currentUser = firebase.auth().currentUser;
-    const {imgFile} = this.state;
-    const storageRef = firebase.storage().ref();
-    self.setState({
-      loadingImg: true
-    });
-  
-    if (imgFile) {
-      let extension;
-      let fileName;
-      let imgRef: firebase.storage.Reference | null = null;
-      const name = imgFile.name;
-      if (name) {
-        let __extension = name.split(".");
-        let extension = __extension.pop();
-        if (extension) {
-          extension = extension.toLowerCase();
-        }
-      }
-      
-      if (currentUser) {
-        fileName = `users/${currentUser.uid}.${extension}`;
-      }
-      if (fileName) {
-        imgRef = storageRef.child(fileName);
-      }
-      const user = firebase.auth().currentUser;
-
-      // Upload file to firebase
-      // Get uploaded file url
-      // Cache url to localStorage
-      // Update firebase user profile
-      if (imgRef) {
-        imgRef.put(this.state.imgFile)
-          .then((snapshot) => {
-            if (imgRef) {
-              imgRef.getDownloadURL().then((url: string) => {
-                self.props.setProfileImgUrl(url);
-                if (user) {
-                  user.updateProfile({
-                    photoURL: url
-                  }).then(() => {
-                    self.setState({
-                      loadingImg: false,
-                      showSaveImgDialog: false,
-                      imgFile: null,
-                    });
-                  }).catch((error) => {
-                    self.setState({
-                      errors: error.message,
-                      loading: false,
-                    });
-                  });
-                }
-              }).catch((e: any) => {
-                self.setState({
-                  errors: e.message,
-                  loading: false,
-                });
-              });
-            }
-          }).catch((e: any) => {
-                self.setState({
-                  errors: e.message,
-                  loading: false,
-                });
-          });
-      }
-    }
-  }
-
-  private cancelImgUpload(): void {
-    this.setState({
-      imgFile: null,
-      showSaveImgDialog: false,
-      uploadedImg: "",
-    });
   }
 
   public render(): JSX.Element {
@@ -290,7 +106,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Profile" className="fade-in-fx">
-            {(firebaseUser && firebaseUser.hasOwnProperty('photoURL')) &&
+            {(firebaseUser && firebaseUser.hasOwnProperty("photoURL")) &&
               <>
               {(firebaseUser.photoURL && !uploadedImg) &&
                 <>
@@ -344,19 +160,19 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 showSaveImgDialog &&
                 <table style={{width: "100%"}}><tbody><tr>
                 <td>
-                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={loadingImg} 
+                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={loadingImg}
                     className="margin-top button-grey" onClick={this.handleSaveImage} />
                 </td>
                 <td>
-                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={loadingImg} 
+                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={loadingImg}
                     className="margin-top button-grey" onClick={this.cancelImgUpload} />
                 </td>
                 </tr></tbody></table>
               }
 
-              <input type="file" className="input-hidden" 
+              <input type="file" className="input-hidden"
               onChange={this.handleImageChange} id="img-file-upload" />
-              <DmButton text="CHANGE PROFILE IMAGE" loading={loadingImg} 
+              <DmButton text="CHANGE PROFILE IMAGE" loading={loadingImg}
                 className="margin-top" onClick={this.handleUploadClick} />
 
             </DmFolderWidget>
@@ -384,20 +200,20 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
               </td>
               </tr></tbody></table>
 
-              {firebaseUser && 
+              {firebaseUser &&
                 <>
                   {(!firebaseUser.emailVerified && !verifyLinkSent) &&
                     <>
                       <div className="action-message round-border-5px">
                         Please, verify link from your email address
                       </div>
-                      <DmButton text="Send again" loading={loading} 
+                      <DmButton text="Send again" loading={loading}
                       onClick={this.sendVerifyLink} className="margin-top" />
                     </>
                   }
                   <p/>
 
-                  {errors && 
+                  {errors &&
                     <div className="error-message round-border-5px">
                       {errors}
                     </div>
@@ -405,10 +221,10 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
                   <DmButton icon={<MdDone style={{fontSize: "32px"}} />}
                   loading={loading} onClick={this.handleUpdateUser}
-                  style={{ marginTop: "35px",}} className="button-grey" />
+                  style={{marginTop: "35px"}} className="button-grey" />
 
                   <DmButton text="EXIT" loading={loadingExit} onClick={this.handleLogOut}
-                  style={{ marginTop: "7px"}} />
+                  style={{marginTop: "7px"}} />
                 </>
               }
 
@@ -419,8 +235,199 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     </>
     );
   }
+
+  private handleLogOut(): void {
+    const self = this;
+    self.setState({
+      loadingExit: true,
+    });
+    firebase.auth().signOut().then(() => {
+      self.setState({user: null, loadingExit: false});
+      localStorage.removeItem("localAppCurrentUserID");
+      self.props.setProfileImgUrl("");
+      self.props.firebaseLogOut();
+      self.props.history.push("/auth/signin");
+    }).catch((error) => {
+      const errorMessage = error.message;
+      self.setState({
+        errors: errorMessage,
+        loadingExit: false,
+      });
+    });
+  }
+
+  private sendVerifyLink(): void {
+    const self = this;
+    const currentUser = firebase.auth().currentUser;
+    this.setState({
+      loading: true,
+    });
+    if (currentUser != null) {
+      currentUser.sendEmailVerification({
+        url: "http://localhost:3000/",
+      }).then(() => {
+        self.setState({
+          verifyLinkSent: true,
+        });
+        self.forceUpdate();
+      }).catch((error) => {
+        self.setState({
+          errors: error.message,
+          loading: false,
+        });
+      });
+    }
+  }
+
+  private handleCityChange(city: string | null): void {
+    this.setState({
+      city,
+    });
+  }
+
+  private handleCountryChange(country: string | null): void {
+    this.setState({
+      country,
+    });
+  }
+
+  // Save additional user data to firestore
+  private handleUpdateUser(): void {
+    const self = this;
+    const {userData, setUserFirestoreData} = this.props;
+    const {city, country} = this.state;
+    const currentUser = firebase.auth().currentUser;
+    const userDataTemp = {
+      city,
+      country,
+    };
+    setUserFirestoreData(userDataTemp);
+    this.setState({
+      loading: true,
+    });
+    if (currentUser != null) {
+      firebase.firestore().collection("users")
+        .doc(currentUser.uid)
+        .set(userDataTemp, {merge: true}).then((e) => {
+          self.setState({
+            errors: "",
+            loading: false,
+          });
+        }).catch((error) => {
+          self.setState({
+            errors: error.message,
+            loading: false,
+          });
+        });
+    }
+  }
+
+  private handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    e.preventDefault();
+    this.setState({loadingImg: true});
+    const reader = new FileReader();
+    if (e.target != null) {
+      if (e.target.files != null) {
+        const file = e.target.files[0];
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          this.setState({
+            imgFile: file,
+            loadingImg: false,
+            showSaveImgDialog: true,
+            uploadedImg: reader.result,
+          });
+        }
+      }
+    }
+  }
+
+  private handleUploadClick(): void {
+    const el: HTMLElement = document.getElementById("img-file-upload") as HTMLElement;
+    el.click();
+  }
+
+  private handleSaveImage(): void {
+    const self = this;
+    const currentUser = firebase.auth().currentUser;
+    const {imgFile} = this.state;
+    const storageRef = firebase.storage().ref();
+    self.setState({
+      loadingImg: true,
+    });
+    if (imgFile) {
+      let fileName;
+      let extension;
+      let imgRef: firebase.storage.Reference | null = null;
+      const name = imgFile.name;
+      if (name) {
+        const ext = name.split(".");
+        const extpop = ext.pop();
+        if (extpop) {
+          extension = extpop.toLowerCase();
+        }
+      }
+
+      if (currentUser) {
+        fileName = `users/${currentUser.uid}.${extension}`;
+      }
+      if (fileName) {
+        imgRef = storageRef.child(fileName);
+      }
+      const user = firebase.auth().currentUser;
+
+      // Upload file to firebase
+      // Get uploaded file url
+      // Cache url to localStorage
+      // Update firebase user profile
+      if (imgRef) {
+        imgRef.put(this.state.imgFile)
+          .then((snapshot) => {
+            if (imgRef) {
+              imgRef.getDownloadURL().then((url: string) => {
+                self.props.setProfileImgUrl(url);
+                if (user) {
+                  user.updateProfile({
+                    photoURL: url,
+                  }).then(() => {
+                    self.setState({
+                      imgFile: null,
+                      loadingImg: false,
+                      showSaveImgDialog: false,
+                    });
+                  }).catch((error) => {
+                    self.setState({
+                      errors: error.message,
+                      loading: false,
+                    });
+                  });
+                }
+              }).catch((e: any) => {
+                self.setState({
+                  errors: e.message,
+                  loading: false,
+                });
+              });
+            }
+          }).catch((e: any) => {
+                self.setState({
+                  errors: e.message,
+                  loading: false,
+                });
+          });
+      }
+    }
+  }
+
+  private cancelImgUpload(): void {
+    this.setState({
+      imgFile: null,
+      showSaveImgDialog: false,
+      uploadedImg: "",
+    });
+  }
 }
 
 Profile.contextType = FirebaseUserContext;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile) as any);

@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-interface WidgetProps {
+interface IWidgetProps {
   style?: any;
   className?: any;
   icon?: any;
@@ -8,11 +8,10 @@ interface WidgetProps {
   children?: any;
   desc?: any;
   shadow?: string;
-};
+}
 
-
-const DmFolderWidget = (props: WidgetProps) => 
-  <div className={`nice-border shadow-right-bottom ${props.className} 
+const DmFolderWidget = (props: IWidgetProps) =>
+  <div className={`nice-border shadow-right-bottom ${props.className}
     margin-top-10 ${props.shadow}`} style={props.style}>
     <div className="folder-center">
       {props.title &&

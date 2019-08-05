@@ -1,13 +1,12 @@
-import React from 'react';
-
+import React from "react";
 
 class DmCheckbox extends React.Component {
-  
+
   constructor(props: any) {
     super(props);
   }
 
-  render() {
+  public render() {
     return(
       <>
         <input type="checkbox" className="dm-checkbox" />

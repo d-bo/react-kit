@@ -57,6 +57,13 @@ class Reset extends React.Component<IResetProps, IResetState> {
     this.handleEmailChange = this.handleEmailChange.bind(this);
   }
 
+  public componentDidUpdate(prevProps: IResetProps): void {
+    const {location} = this.props;
+    if (location !== prevProps.location) {
+      window.scrollTo(0, 0);
+    }
+  }
+
   public render(): JSX.Element {
     const {style, history} = this.props;
     const firebaseUser = this.context;
@@ -121,17 +128,9 @@ class Reset extends React.Component<IResetProps, IResetState> {
     );
   }
 
-  public componentDidUpdate(prevProps: IResetProps) {
-    if (this.props.location !== prevProps.location) {
-      window.scrollTo(0, 0);
-    }
-  }
-
-  private handleReset() {
-
+  private handleReset(): void {
     const self = this;
     const {email, loading} = this.state;
-
     if (loading) {
       return;
     }
@@ -155,7 +154,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
     });
   }
 
-  private handleEmailChange(e: any) {
+  private handleEmailChange(e: any): void {
     this.setState({
       email: e,
     });

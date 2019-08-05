@@ -1,17 +1,16 @@
-import React from 'react';
-import DmButton from '../../elements/DmButton';
+import React from "react";
+import DmButton from "../../elements/DmButton";
 import { FaRegThumbsUp, FaCartPlus } from "react-icons/fa";
-
 
 const ButtonWidget: React.SFC = () => {
   return (
-    <table style={{width: '100%', margin: "5px 0"}}><tbody><tr>
-      <td style={{width: '50%'}}>
+    <table style={{width: "100%", margin: "5px 0"}}><tbody><tr>
+      <td style={{width: "50%"}}>
         <DmButton text={<FaRegThumbsUp />}
         onClick={() => null}
         className="margin-top-10 button-transparent" />
       </td>
-      <td style={{width: '50%'}}>
+      <td style={{width: "50%"}}>
         <DmButton text={<FaCartPlus />}
         onClick={() => null}
         className="margin-top-10 button-transparent" />

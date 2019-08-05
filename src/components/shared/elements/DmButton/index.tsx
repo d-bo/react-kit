@@ -1,11 +1,11 @@
-import React from 'react';
-import './style.css';
+import React from "react";
+import "./style.css";
 
 const BorderSmall: React.CSSProperties = {
-	padding: "7px 0",
-	border: "1px solid #555",
-	background: "transparent",
-	color: "#333",
+  background: "transparent",
+  border: "1px solid #555",
+  color: "#333",
+  padding: "7px 0",
 };
 
 interface IDMButtonProps {
@@ -17,10 +17,9 @@ interface IDMButtonProps {
   text?: undefined | React.ReactElement | string;
   icon?: any;
   loading?: boolean;
-};
+}
 
-
-const DmButton = (props: IDMButtonProps) => 
+const DmButton = (props: IDMButtonProps) =>
   <>
     {props.theme === "border-small" &&
 
@@ -29,21 +28,21 @@ const DmButton = (props: IDMButtonProps) =>
         style={{...props.style, ...BorderSmall}}>
 
       {props.icon &&
-        <span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
+        <span style={props.text ? {marginRight: "7px"} : {}}>{props.icon}</span>
       }
 
       {props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
-      
+
       </div>
     }
 
     {!props.theme &&
       <div className={`dm-button round-border-5px ${props.className}`}
-        onClick={props.onClick} onKeyPress={props.onKeyPress} 
+        onClick={props.onClick} onKeyPress={props.onKeyPress}
         style={props.style}>
 
       {props.icon &&
-        <span style={props.text ? {marginRight: '7px'} : {}}>{props.icon}</span>
+        <span style={props.text ? {marginRight: "7px"} : {}}>{props.icon}</span>
       }
 
       {props.loading ? <img src="/loading-button.gif" alt="" /> : props.text}
