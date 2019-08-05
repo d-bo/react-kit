@@ -239,8 +239,8 @@ class Home extends React.Component<IHomeProps, IHomeState> {
 
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget title="Пылесос MUSTANG El Diablo"
-            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг, 
-            отжим: 1000об/мин, класс стирки: A, класс отжима: B, 
+            desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг,
+            отжим: 1000об/мин, класс стирки: A, класс отжима: B,
             дисплей, цвет: белый"
             style={{textAlign: "center"}}>
 

@@ -86,13 +86,13 @@ class Reset extends React.Component<IResetProps, IResetState> {
                   Enter your email address. We will send you reset link.
                   </div>
 
-                  <DmInput type="text" value={email} 
+                  <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
 
-                  <DmButton text="Ok" loading={loading} 
+                  <DmButton text="Ok" loading={loading}
                   onClick={this.handleReset} style={{marginTop: "35px"}} />
 
-                  {errors && 
+                  {errors &&
                     <div className="error-message round-border-3px">{errors}</div>}
                   </>
                 }

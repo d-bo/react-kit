@@ -18,11 +18,11 @@ declare module 'react-lazy-load-image-component' {
     }>;
     enum DelayMethod {
       debounce = "debounce", 
-      throttle = "throttle"
+      throttle = "throttle",
     };
-    interface LazyComponentProps { 
+    interface LazyComponentProps {
       delayMethod: DelayMethod;
-      delayTime: number
+      delayTime: number;
     };
     export const trackWindowScroll: (BaseComponent: React.ComponentType<P>) => BaseComponent<P & LazyComponentProps, S>;
     export const LazyLoadComponent: React.FunctionComponent<{
@@ -35,4 +35,4 @@ declare module 'react-lazy-load-image-component' {
       visibleByDefault?: boolean,
       children: ReactNode
     }>;
-  };
+  }

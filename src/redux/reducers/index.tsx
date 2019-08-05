@@ -102,7 +102,7 @@ const firebaseAuth = (state = getInitState(), action: any) => {
     default:
       return state;
   }
-}
+};
 
 const rootReducer = combineReducers({firebaseAuth});
 

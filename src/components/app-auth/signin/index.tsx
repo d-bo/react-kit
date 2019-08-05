@@ -76,15 +76,15 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
               {!firebaseUser &&
               <div style={style}>
 
-                <DmInput type="text" value={email} 
+                <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
-                <DmInput type="password" value={password} 
+                <DmInput type="password" value={password}
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <DmButton text="OK" loading={loading} 
+                <DmButton text="OK" loading={loading}
                   onClick={this.handleSignIn} style={{marginTop: "35px"}} />
 
-                {errors && 
+                {errors &&
                   <div className="error-message round-border-5px">{errors}</div>}
 
                 <div className="margin-top custom-a">
@@ -101,11 +101,11 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
                 <div className="margin-top custom-a">
                   <table className="full-width"><tbody><tr>
                   <td>
-                    <DmButton text={<FaGithub />} loading={loading} 
+                    <DmButton text={<FaGithub />} loading={loading}
                       onClick={this.handleGithub} className="button-grey" />
                   </td>
                   <td>
-                    <DmButton text={<FaGoogle />} loading={loading} 
+                    <DmButton text={<FaGoogle />} loading={loading}
                       onClick={this.handleGithub} className="button-grey" />
                   </td>
                   </tr></tbody></table>

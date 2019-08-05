@@ -87,10 +87,10 @@ class Person extends React.Component<IHomeProps, IHomeState> {
                 effect="blur"
                 className="in-folder-img round-border-50" />
                 <p>
-                When the conditional part of an if-statement is long enough to require 
-                that it be written across multiple lines, it"s worth noting that the 
-                combination of a two character keyword (i.e. if), plus a single space, 
-                plus an opening parenthesis creates a natural 4-space indent for the 
+                When the conditional part of an if-statement is long enough to require
+                that it be written across multiple lines, it"s worth noting that the
+                combination of a two character keyword (i.e. if), plus a single space,
+                plus an opening parenthesis creates a natural 4-space indent for the
                 subsequent lines of the multiline conditional.
                 </p>
             </DmFolderWidget>
@@ -98,10 +98,10 @@ class Person extends React.Component<IHomeProps, IHomeState> {
             <p></p>
 
             <DmFolderWidget title="Application">
-                When the conditional part of an if-statement is long enough to require 
-                that it be written across multiple lines, it"s worth noting that the 
-                combination of a two character keyword (i.e. if), plus a single space, 
-                plus an opening parenthesis creates a natural 4-space indent for the 
+                When the conditional part of an if-statement is long enough to require
+                that it be written across multiple lines, it"s worth noting that the
+                combination of a two character keyword (i.e. if), plus a single space,
+                plus an opening parenthesis creates a natural 4-space indent for the
                 subsequent lines of the multiline conditional.
             </DmFolderWidget>
           </div>
