@@ -11,7 +11,6 @@ import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";
 import * as serviceWorker from "./serviceWorker";
 import firebase_config from "./config/firebase.config";
-import { FirebaseUserContext } from "./contexts/FirebaseUserContext";
 
 // Init firebase account
 firebase.initializeApp(firebase_config);
@@ -30,11 +29,9 @@ firebase.auth().onAuthStateChanged((firebaseUser) => {
     localStorage.setItem("localAppCurrentUserID", firebaseUser.uid);
   }
   ReactDOM.render(
-    <FirebaseUserContext.Provider value={firebaseUser}>
-      <Provider store={store}>
-        <App history={history} />
-      </Provider>
-    </FirebaseUserContext.Provider>
+    <Provider store={store}>
+      <App history={history} firebaseUser={firebaseUser} />
+    </Provider>
     , document.getElementById("root"));
   serviceWorker.unregister();
 });

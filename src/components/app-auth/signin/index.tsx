@@ -60,7 +60,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   }
 
   public render(): JSX.Element {
-    const firebaseUser = this.context;
+    const firebaseUser = this.context.currentFirebaseUser;
     const {style} = this.props;
     const {errors, email, loading, password} = this.state;
     return (
@@ -125,6 +125,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   }
 
   private handleSignIn(): void {
+    const {contextSetFirebaseUser} = this.context;
     if (this.state.loading) {
       return;
     }
@@ -158,7 +159,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
         email as string,
         this.state.password as string,
       ).then(() => {
-        firebaseAuth(firebase.auth().currentUser);
+        contextSetFirebaseUser(firebase.auth().currentUser);
         this.setUserGlobalData(firebase.auth().currentUser as firebase.User);
         history.push("/");
       }).catch((error) => {
@@ -220,6 +221,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   }
 
   private handleGithub(): void {
+    const {contextSetFirebaseUser} = this.context;
     if (this.state.loading) {
       return;
     }
@@ -229,7 +231,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     const provider = new firebase.auth.GithubAuthProvider();
     provider.addScope("repo");
     firebase.auth().signInWithPopup(provider).then((result) => {
-      self.props.firebaseAuth(result.user);
+      contextSetFirebaseUser(result.user);
       this.setUserGlobalData(result.user);
       self.setState({loading: false});
       self.props.history.push("/");
@@ -242,6 +244,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     if (this.state.loading) {
       return;
     }
+    const {contextSetFirebaseUser} = this.context;
     this.setState({loading: true});
     // Using a popup.
     const self = this;
@@ -249,10 +252,10 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     provider.addScope("profile");
     provider.addScope("email");
     firebase.auth().signInWithPopup(provider).then((result) => {
-       self.props.firebaseAuth(result.user);
-       this.setUserGlobalData(result.user);
-       self.setState({loading: false});
-       self.props.history.push("/");
+      contextSetFirebaseUser(result.user);
+      this.setUserGlobalData(result.user);
+      self.setState({loading: false});
+      self.props.history.push("/");
     }).catch((error) => {
       self.setState({loading: false, errors: error.message});
     });

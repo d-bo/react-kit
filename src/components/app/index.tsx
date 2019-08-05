@@ -12,6 +12,7 @@ import Person from "../app-person";
 import Register from "../app-auth/register";
 import Home from "../app-home";
 import { NotFound404 } from "../app-404/NotFound404";
+import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -20,10 +21,12 @@ const mapDispatchToProps = (dispatch: any) => ({
 
 interface IAppProps {
   firebaseLogOut?: any;
+  firebaseUser: firebase.User | null;
   history?: any;
 }
 
 interface IAppState {
+  firebaseUser: firebase.User | null;
   errors: string | null;
   loading: boolean;
   loadingExit: boolean;
@@ -36,31 +39,46 @@ class App extends React.Component<IAppProps, IAppState> {
     super(props);
     this.state = {
       errors: null,
+      firebaseUser: this.props.firebaseUser,
       loading: false,
       loadingExit: false,
       verifyLinkSent: false,
     };
     this.handleLogOut = this.handleLogOut.bind(this);
     this.sendVerifyLink = this.sendVerifyLink.bind(this);
+    this.contextSetFirebaseUser = this.contextSetFirebaseUser.bind(this);
+  }
+
+  // Dynamically set user from child components
+  public contextSetFirebaseUser(firebaseUser: firebase.User | null) {
+    this.setState({
+      firebaseUser,
+    });
   }
 
   public render() {
     const {history} = this.props;
+    const {firebaseUser} = this.state;
     return (
       <>
-        <Navbar {...this.props} />
-          <Router history={history}>
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/profile" component={Profile} />
-              <Route path="/person/:id" component={Person} />
-              <Route path="/auth/signin" component={SignIn} />
-              <Route path="/auth/register" component={Register} />
-              <Route path="/auth/reset" component={Reset} />
-              <Route component={NotFound404} />
-            </Switch>
-          </Router>
-        <Footer />
+        <FirebaseUserContext.Provider value={{
+          contextSetFirebaseUser: this.contextSetFirebaseUser,
+          firebaseUser,
+        }}>
+          <Navbar {...this.props} />
+            <Router history={history}>
+              <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/profile" component={Profile} />
+                <Route path="/person/:id" component={Person} />
+                <Route path="/auth/signin" component={SignIn} />
+                <Route path="/auth/register" component={Register} />
+                <Route path="/auth/reset" component={Reset} />
+                <Route component={NotFound404} />
+              </Switch>
+            </Router>
+          <Footer />
+        </FirebaseUserContext.Provider>
       </>
     );
   }

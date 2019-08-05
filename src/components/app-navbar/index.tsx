@@ -34,7 +34,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
 
   public render() {
     const {history, profileImgUrl} = this.props;
-    const firebaseUser = this.context;
+    const {firebaseUser} = this.context;
     const {loading} = this.state;
     return (
       <div className="navbar-body soft-left-bottom-shadow" style={{marginBottom: "14px"}}>
