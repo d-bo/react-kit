@@ -2,29 +2,19 @@ import "./style.css";
 import "firebase/auth";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import * as firebase from "firebase/app";
+import firebase from "firebase/app";
 import React from "react";
 import DmInput from "../../shared/elements/DmInput";
 import DmButton from "../../shared/elements/DmButton";
-import { firebaseAuth } from "../../../redux/actions";
 import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
 import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 
-const mapStateToProps = (state: any) => {
-  return state.firebaseAuth;
-};
-
-const mapDispatchToProps = (dispatch: any) => ({
-  firebaseAuth: (firebaseUser: firebase.User) => dispatch(firebaseAuth(firebaseUser)),
-});
-
 interface IRegisterProps {
   firebaseAuth: any;
   history: any;
   style: any;
-  user: firebase.User | null;
   location: any;
 }
 
@@ -34,16 +24,12 @@ interface IRegisterState {
   password: string | null;
   displayName: string | null;
   verifyLinkSent: false;
-  user: firebase.User | null;
   loading: boolean;
 }
 
 class Register extends React.Component<IRegisterProps, IRegisterState> {
 
   constructor(props: IRegisterProps) {
-    if (firebase.auth().currentUser) {
-      props.history.push("/");
-    }
     super(props);
     this.state = {
       displayName: null,
@@ -51,7 +37,6 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
       errors: null,
       loading: false,
       password: null,
-      user: props.user,
       verifyLinkSent: false,
     };
     this.handleRegister = this.handleRegister.bind(this);
@@ -59,6 +44,12 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleKeyboardEnter = this.handleKeyboardEnter.bind(this);
+  }
+
+  public componentDidMount() {
+    if (this.context.firebaseUser) {
+      this.props.history.push("/profile");
+    }
   }
 
   public componentDidUpdate(prevProps: IRegisterProps): void {
@@ -89,7 +80,7 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
           <div className="vertical-center">
             <DmFolderWidget title="Register" className="fade-in-fx"
               shadow="soft-left-bottom-shadow">
-              {!this.context &&
+              {!this.context.firebaseUser &&
               <div style={style}>
 
                 <DmInput type="text" value={displayName}
@@ -145,8 +136,9 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
       return;
     }
     const self = this;
-    const currentUser = firebase.auth().currentUser;
+    const {history} = this.props;
     const {password, displayName, email} = this.state;
+    const {contextSetFirebaseUser} = this.context;
 
     // Validate email
     const re = /\S+@\S+\.\S+/;
@@ -185,18 +177,19 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
         email as string,
         password as string,
       ).then(() => {
-
-        self.props.firebaseAuth(currentUser);
+        const currentUser = firebase.auth().currentUser;
         // Send email verify
         if (currentUser) {
+          contextSetFirebaseUser(currentUser);
+          const url = `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`;
           currentUser.sendEmailVerification({
-            url: "http://localhost:3000/",
+            url,
           }).then(() => {
             self.setState({
               loading: false,
             });
             // User created and email verify sent
-            self.props.history.push("/");
+            history.push("/");
           }).catch((error) => {
             self.setState({
               errors: error.message,
@@ -235,4 +228,4 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
 
 Register.contextType = FirebaseUserContext;
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Register as any) as any);
+export default withRouter(Register as any);

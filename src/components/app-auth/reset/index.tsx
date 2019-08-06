@@ -66,7 +66,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
 
   public render(): JSX.Element {
     const {style, history} = this.props;
-    const firebaseUser = this.context;
+    const {firebaseUser} = this.context;
     const {email, errors, resetSent, loading} = this.state;
     return (
       <>
@@ -140,7 +140,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
     });
     firebase.auth().sendPasswordResetEmail(
         email as string,
-        {url: "http://localhost:3000"}
+        {url: `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`},
       ).then(() => {
       self.setState({
         loading: false,

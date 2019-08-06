@@ -1,6 +1,5 @@
 import { connect } from "react-redux";
 import React, { Component, ComponentClass, FunctionComponent } from "react";
-import { firebaseLogOut } from "../../redux/actions";
 import DmButton from "../shared/elements/DmButton";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
@@ -8,11 +7,6 @@ import { FaRegStar, FaCommentAlt } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import ButtonWidget from "../shared/widgets/ButtonWidget";
 import { withRouter } from "react-router";
-
-const mapStateToProps = (state: any) => state.firebaseAuth;
-const mapDispatchToProps = (dispatch: any) => ({
-  firebaseLogOut: () => dispatch(firebaseLogOut()),
-});
 
 const Counter = (props: any) => <span style={{ paddingRight: "10px", fontSize: "18px" }}>{props.itemId}</span>;
 const LikeCounter = (props: any) =>
@@ -894,4 +888,4 @@ class Home extends React.Component<IHomeProps, IHomeState> {
   }
 }
 
-export default withRouter((connect(mapStateToProps, mapDispatchToProps)(Home)) as any);
+export default withRouter(Home as any);

@@ -14,13 +14,7 @@ import Home from "../app-home";
 import { NotFound404 } from "../app-404/NotFound404";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 
-const mapStateToProps = (state: any) => state.firebaseAuth;
-const mapDispatchToProps = (dispatch: any) => ({
-  firebaseLogOut: () => dispatch(firebaseLogOut()),
-});
-
 interface IAppProps {
-  firebaseLogOut?: any;
   firebaseUser: firebase.User | null;
   history?: any;
 }
@@ -44,12 +38,11 @@ class App extends React.Component<IAppProps, IAppState> {
       loadingExit: false,
       verifyLinkSent: false,
     };
-    this.handleLogOut = this.handleLogOut.bind(this);
-    this.sendVerifyLink = this.sendVerifyLink.bind(this);
     this.contextSetFirebaseUser = this.contextSetFirebaseUser.bind(this);
   }
 
   // Dynamically set user from child components
+  // Setting null as a logout
   public contextSetFirebaseUser(firebaseUser: firebase.User | null) {
     this.setState({
       firebaseUser,
@@ -82,49 +75,6 @@ class App extends React.Component<IAppProps, IAppState> {
       </>
     );
   }
-
-  private handleLogOut(): void {
-    const self = this;
-    self.setState({
-      loadingExit: true,
-    });
-    firebase.auth().signOut().then(() => {
-      self.setState({loadingExit: false});
-      self.props.firebaseLogOut();
-      localStorage.removeItem("localAppCurrentUserID");
-      self.props.history.push("/auth/signin");
-    }).catch((error) => {
-      const errorMessage = error.message;
-      self.setState({
-        errors: errorMessage,
-        loadingExit: false,
-      });
-    });
-  }
-
-  private sendVerifyLink(): void {
-    const self = this;
-    self.setState({
-      loading: true,
-    });
-    const currentUser = firebase.auth().currentUser;
-    if (currentUser) {
-      currentUser.sendEmailVerification({
-        url: "http://localhost:3000/",
-      }).then(() => {
-        self.setState({
-          verifyLinkSent: true,
-        });
-        self.forceUpdate();
-      })
-      .catch((error) => {
-        self.setState({
-          errors: error.message,
-          loading: false,
-        });
-      });
-    }
-  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

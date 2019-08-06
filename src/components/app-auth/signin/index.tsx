@@ -5,7 +5,7 @@ import DmButton from "../../shared/elements/DmButton";
 import DmInput from "../../shared/elements/DmInput";
 import { connect } from "react-redux";
 import firebase from "firebase/app";
-import { firebaseAuth, setProfileImgUrl, setUserFirestoreData } from "../../../redux/actions";
+import { setProfileImgUrl, setUserFirestoreData } from "../../../redux/actions";
 import { Link } from "react-router-dom";
 import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
 import { FaGithub, FaGoogle } from "react-icons/fa";
@@ -14,14 +14,12 @@ import { withRouter } from "react-router";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
-  firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser)),
   setProfileImgUrl: (url: string) => dispatch(setProfileImgUrl(url)),
   setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
 interface ISigninProps {
   history: any;
-  firebaseAuth: any;
   style: any;
   setProfileImgUrl: any;
   setUserFirestoreData: any;
@@ -52,6 +50,12 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
+  public componentDidMount() {
+    if (this.context.firebaseUser) {
+      this.props.history.push("/profile");
+    }
+  }
+
   public componentDidUpdate(prevProps: ISigninProps): void {
     const {location} = this.props;
     if (location !== prevProps.location) {
@@ -60,7 +64,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   }
 
   public render(): JSX.Element {
-    const firebaseUser = this.context.currentFirebaseUser;
+    const {firebaseUser} = this.context;
     const {style} = this.props;
     const {errors, email, loading, password} = this.state;
     return (
@@ -125,13 +129,13 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   }
 
   private handleSignIn(): void {
-    const {contextSetFirebaseUser} = this.context;
+    const {contextSetFirebaseUser, firebaseUser} = this.context;
     if (this.state.loading) {
       return;
     }
     const self = this;
     const {password, email} = this.state;
-    const {firebaseAuth, history} = this.props;
+    const {history} = this.props;
     // Validate email
     const re = /\S+@\S+\.\S+/;
     if (!re.test(this.state.email as string)) {
@@ -189,7 +193,7 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
       if (firebaseUser.photoURL) {
         setProfileImgUrl(firebaseUser.photoURL);
       } else {
-        setProfileImgUrl("");
+        setProfileImgUrl(null);
       }
       // Additional user data
       this.getUserFirestoreData(firebaseUser);
