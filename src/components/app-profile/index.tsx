@@ -36,6 +36,7 @@ interface IProfileState {
   imgFile: File | null;
   uploadedImg: string | ArrayBuffer | null;
   showSaveImgDialog: boolean;
+  showDropImgDialog: boolean;
   errors: string;
 }
 
@@ -51,6 +52,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
       loading: false,
       loadingExit: false,
       loadingImg: false,
+      showDropImgDialog: false,
       showSaveImgDialog: false,
       uploadedImg: null,
       verifyLinkSent: false,
@@ -65,6 +67,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     this.handleUploadClick = this.handleUploadClick.bind(this);
     this.handleSaveImage = this.handleSaveImage.bind(this);
     this.cancelImgUpload = this.cancelImgUpload.bind(this);
+    this.handleDropImage = this.handleDropImage.bind(this);
+    this.handleDropImageDialog = this.handleDropImageDialog.bind(this);
+    this.cancelDropImg = this.cancelDropImg.bind(this);
   }
 
   public componentDidMount() {
@@ -93,6 +98,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
       errors,
       loading,
       loadingExit,
+      showDropImgDialog,
     } = this.state;
 
     return (
@@ -102,6 +108,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
           <div className="col-sm-6 px-xl-5">
             <DmFolderWidget title="Profile" className="fade-in-fx">
+
+            <p></p>
+
             {(firebaseUser && firebaseUser.hasOwnProperty("photoURL")) &&
               <>
               {(firebaseUser.photoURL && !uploadedImg) &&
@@ -154,16 +163,22 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
             { // Cancel image upload or save dialog
               showSaveImgDialog &&
-              <table style={{width: "100%"}}><tbody><tr>
-              <td>
-                <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={loadingImg}
-                  className="margin-top button-grey" onClick={this.handleSaveImage} />
-              </td>
-              <td>
-                <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={loadingImg}
-                  className="margin-top button-grey" onClick={this.cancelImgUpload} />
-              </td>
-              </tr></tbody></table>
+              <>
+                <p></p>
+                <div className="action-message text-center round-border-3px">
+                  Are you sure you want to upload image ?
+                </div>
+                <table style={{width: "100%"}}><tbody><tr>
+                <td>
+                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={loadingImg}
+                    className="margin-top button-grey" onClick={this.handleSaveImage} />
+                </td>
+                <td>
+                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={loadingImg}
+                    className="margin-top button-grey" onClick={this.cancelImgUpload} />
+                </td>
+                </tr></tbody></table>
+              </>
             }
 
             <table style={{width: "100%"}}><tbody><tr>
@@ -175,9 +190,30 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
               </td>
               <td style={{width: "80%"}}>
                 <DmButton text={<FaTrashAlt />} loading={loadingImg}
-                    className="margin-top button-transparent" />
+                  className="margin-top button-transparent"
+                  onClick={this.handleDropImageDialog} />
               </td>
             </tr></tbody></table>
+
+            { // Cancel drop image dialog
+              showDropImgDialog &&
+              <>
+                <p></p>
+                <div className="action-message text-center round-border-3px">
+                  Are you sure you want to delete image ?
+                </div>
+                <table style={{width: "100%"}}><tbody><tr>
+                <td>
+                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={loadingImg}
+                    className="margin-top button-grey" onClick={this.handleDropImage} />
+                </td>
+                <td>
+                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={loadingImg}
+                    className="margin-top button-grey" onClick={this.cancelDropImg} />
+                </td>
+                </tr></tbody></table>
+              </>
+            }
 
             </DmFolderWidget>
           </div>
@@ -354,6 +390,38 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     el.click();
   }
 
+  private handleDropImageDialog(): void {
+    this.setState({
+      showDropImgDialog: true,
+    });
+  }
+
+  private handleDropImage(): void {
+    this.setState({
+      loadingImg: true,
+    });
+    const self = this;
+    const {firebaseUser, contextSetFirebaseUser} = this.context;
+    if (firebaseUser) {
+      this.props.setProfileImgUrl("");
+      firebaseUser.updateProfile({
+        photoURL: "",
+      }).then(() => {
+        contextSetFirebaseUser(firebase.auth().currentUser);
+        self.setState({
+          imgFile: null,
+          loadingImg: false,
+          showDropImgDialog: false,
+        });
+      }).catch((error: any) => {
+        self.setState({
+          errors: error.message,
+          loading: false,
+        });
+      });
+    }
+  }
+
   private handleSaveImage(): void {
     const self = this;
     const {firebaseUser} = this.context;
@@ -430,6 +498,12 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
       imgFile: null,
       showSaveImgDialog: false,
       uploadedImg: "",
+    });
+  }
+
+  private cancelDropImg(): void {
+    this.setState({
+      showDropImgDialog: false,
     });
   }
 }

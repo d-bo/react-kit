@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import React, { Component, ComponentClass, FunctionComponent } from "react";
 import DmButton from "../shared/elements/DmButton";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
