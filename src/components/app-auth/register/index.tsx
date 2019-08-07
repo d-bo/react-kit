@@ -1,6 +1,5 @@
 import "./style.css";
 import "firebase/auth";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import firebase from "firebase/app";
 import React from "react";
@@ -19,12 +18,19 @@ interface IRegisterProps {
 }
 
 interface IRegisterState {
+  captchaLoading: boolean;
   errors: string | null;
   email: string | null;
   password: string | null;
   displayName: string | null;
+  showRegisterButtonAfterCaptcha: boolean;
   verifyLinkSent: false;
   loading: boolean;
+}
+
+export interface IWindow extends Window {
+  recaptchaVerifier: any;
+  recaptchaWidgetId: any;
 }
 
 class Register extends React.Component<IRegisterProps, IRegisterState> {
@@ -32,11 +38,13 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
   constructor(props: IRegisterProps) {
     super(props);
     this.state = {
+      captchaLoading: true,
       displayName: null,
       email: null,
       errors: null,
       loading: false,
       password: null,
+      showRegisterButtonAfterCaptcha: false,
       verifyLinkSent: false,
     };
     this.handleRegister = this.handleRegister.bind(this);
@@ -47,6 +55,28 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
   }
 
   public componentDidMount() {
+    const self = this;
+    (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+      "callback": () => {
+        self.setState({
+          captchaLoading: false,
+          showRegisterButtonAfterCaptcha: true,
+        });
+      },
+      "expired-callback": () => {
+        self.setState({
+          errors: "Please, check out the captcha",
+          showRegisterButtonAfterCaptcha: false,
+        });
+      },
+      "size": "big",
+    });
+    (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+      self.setState({
+        captchaLoading: false,
+      });
+      (window as IWindow).recaptchaWidgetId = widgetId;
+    });
     if (this.context.firebaseUser) {
       this.props.history.push("/profile");
     }
@@ -63,11 +93,13 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
 
     const {style, history} = this.props;
     const {
+      captchaLoading,
       displayName,
       email,
       password,
       errors,
       loading,
+      showRegisterButtonAfterCaptcha,
     } = this.state;
 
     return (
@@ -92,12 +124,21 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
                 <DmInput type="password" value={password}
                 onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <DmButton text="Ok" loading={loading}
-                onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter}
-                style={{marginTop: "35px"}} />
+                <div id="recaptcha-container"></div>
 
                 {errors &&
                   <div className="error-message round-border-5px">{errors}</div>}
+
+                { // Is captcha solved ?
+                  showRegisterButtonAfterCaptcha &&
+                    <DmButton text="Ok" loading={loading}
+                    onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter} />
+                }
+
+                { // Captcha loading
+                  captchaLoading &&
+                  <DmButton loading={true} />
+                }
 
                 <Router history={history}>
                   <div className="margin-top custom-a">

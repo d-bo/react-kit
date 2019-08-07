@@ -11,6 +11,7 @@ import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
 import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
+import { IWindow } from "../register";
 
 const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
@@ -30,12 +31,14 @@ interface IResetProps {
 }
 
 interface IResetState {
+  captchaLoading: boolean;
   loading: boolean;
   errors: string | null;
   email: string | null;
   password: string | null;
   resetSent: boolean;
   user: firebase.User | null;
+  showResetSubmitButton: any;
 }
 
 class Reset extends React.Component<IResetProps, IResetState> {
@@ -46,15 +49,45 @@ class Reset extends React.Component<IResetProps, IResetState> {
     }
     super(props);
     this.state = {
+      captchaLoading: true,
       email: props.email,
       errors: null,
       loading: false,
       password: props.password,
       resetSent: false,
+      showResetSubmitButton: false,
       user: props.user,
     };
     this.handleReset = this.handleReset.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
+  }
+
+  public componentDidMount(): void {
+    const self = this;
+    (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+      "callback": () => {
+        self.setState({
+          captchaLoading: false,
+          showResetSubmitButton: true,
+        });
+      },
+      "expired-callback": () => {
+        self.setState({
+          errors: "Please, check out the captcha",
+          showResetSubmitButton: false,
+        });
+      },
+      "size": "big",
+    });
+    (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+      self.setState({
+        captchaLoading: false,
+      });
+      (window as IWindow).recaptchaWidgetId = widgetId;
+    });
+    if (this.context.firebaseUser) {
+      this.props.history.push("/profile");
+    }
   }
 
   public componentDidUpdate(prevProps: IResetProps): void {
@@ -67,17 +100,24 @@ class Reset extends React.Component<IResetProps, IResetState> {
   public render(): JSX.Element {
     const {style, history} = this.props;
     const {firebaseUser} = this.context;
-    const {email, errors, resetSent, loading} = this.state;
+    const {
+      captchaLoading,
+      email,
+      errors,
+      resetSent,
+      loading,
+      showResetSubmitButton,
+    } = this.state;
     return (
       <>
       <div className="container">
         <div className="row">
           <div className="col-sm-2 col-lg-4"></div>
           <div className="col-sm-8 col-lg-4">
-
           <div className="vertical-center">
             <DmFolderWidget title="Reset password" className="fade-in-fx"
               shadow="soft-left-bottom-shadow">
+              <p></p>
               {!firebaseUser &&
               <div style={style}>
                 {!resetSent &&
@@ -89,12 +129,22 @@ class Reset extends React.Component<IResetProps, IResetState> {
                   <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
 
-                  <DmButton text="Ok" loading={loading}
-                  onClick={this.handleReset} style={{marginTop: "35px"}} />
+                <div id="recaptcha-container" className="text-center"></div>
 
-                  {errors &&
-                    <div className="error-message round-border-3px">{errors}</div>}
-                  </>
+                { // Is captcha solved ?
+                  showResetSubmitButton &&
+                  <DmButton text="Ok" loading={loading}
+                    onClick={this.handleReset} />
+                }
+
+                { // Captcha loading
+                  captchaLoading &&
+                  <DmButton loading={true} />
+                }
+
+                {errors &&
+                  <div className="error-message round-border-3px">{errors}</div>}
+                </>
                 }
                 {resetSent &&
                   <>
