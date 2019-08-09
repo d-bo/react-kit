@@ -12,6 +12,7 @@ import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import { IWindow } from "../register";
+import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 
 const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
@@ -77,7 +78,8 @@ class Reset extends React.Component<IResetProps, IResetState> {
           showResetSubmitButton: false,
         });
       },
-      "size": "big",
+      "size": "normal",
+      "theme": "light",
     });
     (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
       self.setState({
@@ -93,7 +95,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
   public componentDidUpdate(prevProps: IResetProps): void {
     const {location} = this.props;
     if (location !== prevProps.location) {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
@@ -129,7 +131,7 @@ class Reset extends React.Component<IResetProps, IResetState> {
                   <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
 
-                <div id="recaptcha-container" className="text-center"></div>
+                <ReCaptchav2 />
 
                 { // Is captcha solved ?
                   showResetSubmitButton &&

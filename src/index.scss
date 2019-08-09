@@ -5,6 +5,10 @@ $bg-widget: #fafafa;
 $bg-error: #ff6161;
 $widget-border: #f7f7f7;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: $font-stack;
   background: $bg-color;

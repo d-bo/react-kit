@@ -11,6 +11,8 @@ import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
 import { FaGithub, FaGoogle } from "react-icons/fa";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
+import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
+import { IWindow } from "../register";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -27,10 +29,12 @@ interface ISigninProps {
 }
 
 interface ISigninState {
+  captchaLoading: boolean;
   loading: boolean;
   errors: string | null;
   email: string | null;
   password: string | null;
+  showSigninSubmitButton: boolean;
 }
 
 class SignIn extends React.Component<ISigninProps, ISigninState> {
@@ -38,10 +42,12 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   constructor(props: ISigninProps) {
     super(props);
     this.state = {
+      captchaLoading: true,
       email: null,
       errors: null,
       loading: false,
       password: null,
+      showSigninSubmitButton: false,
     };
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleGithub = this.handleGithub.bind(this);
@@ -51,6 +57,28 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   }
 
   public componentDidMount() {
+    const self = this;
+    (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+      "callback": () => {
+        self.setState({
+          captchaLoading: false,
+          showSigninSubmitButton: true,
+        });
+      },
+      "expired-callback": () => {
+        self.setState({
+          errors: "Please, check out the captcha",
+          showSigninSubmitButton: false,
+        });
+      },
+      "size": "big",
+    });
+    (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+      self.setState({
+        captchaLoading: false,
+      });
+      (window as IWindow).recaptchaWidgetId = widgetId;
+    });
     if (this.context.firebaseUser) {
       this.props.history.push("/profile");
     }
@@ -66,7 +94,14 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
   public render(): JSX.Element {
     const {firebaseUser} = this.context;
     const {style} = this.props;
-    const {errors, email, loading, password} = this.state;
+    const {
+      captchaLoading,
+      errors,
+      email,
+      loading,
+      password,
+      showSigninSubmitButton,
+    } = this.state;
     return (
       <>
       <div className="container">
@@ -85,8 +120,19 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
                 <DmInput type="password" value={password}
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <DmButton text="OK" loading={loading}
-                  onClick={this.handleSignIn} style={{marginTop: "35px"}} />
+                <ReCaptchav2></ReCaptchav2>
+
+
+                { // Is captcha solved ?
+                  showSigninSubmitButton &&
+                  <DmButton text="OK" loading={loading}
+                  onClick={this.handleSignIn} />
+                }
+
+                { // Captcha loading
+                  captchaLoading &&
+                  <DmButton loading={true} />
+                }
 
                 {errors &&
                   <div className="error-message round-border-5px">{errors}</div>}

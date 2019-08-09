@@ -81,7 +81,11 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
   public componentDidUpdate(prevProps: IProfileProps): void {
     const {location} = this.props;
     if (location !== prevProps.location) {
-      window.scrollTo(0, 0);
+      window.scroll({
+        behavior: "smooth",
+        left: 0,
+        top: 0,
+      });
     }
   }
 
@@ -181,20 +185,6 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
               </>
             }
 
-            <table style={{width: "100%"}}><tbody><tr>
-              <td style={{width: "80%"}}>
-                <input type="file" className="input-hidden"
-                  onChange={this.handleImageChange} id="img-file-upload" />
-                <DmButton text="LOAD PROFILE IMAGE" loading={loadingImg}
-                  className="margin-top" onClick={this.handleUploadClick} />
-              </td>
-              <td style={{width: "80%"}}>
-                <DmButton text={<FaTrashAlt />} loading={loadingImg}
-                  className="margin-top button-transparent"
-                  onClick={this.handleDropImageDialog} />
-              </td>
-            </tr></tbody></table>
-
             { // Cancel drop image dialog
               showDropImgDialog &&
               <>
@@ -214,6 +204,20 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
                 </tr></tbody></table>
               </>
             }
+
+            <table style={{width: "100%"}}><tbody><tr>
+              <td style={{width: "80%"}}>
+                <input type="file" className="input-hidden"
+                  onChange={this.handleImageChange} id="img-file-upload" />
+                <DmButton text="LOAD PROFILE IMAGE" loading={loadingImg}
+                  className="margin-top" onClick={this.handleUploadClick} />
+              </td>
+              <td style={{width: "80%"}}>
+                <DmButton text={<FaTrashAlt />} loading={loadingImg}
+                  className="margin-top button-transparent"
+                  onClick={this.handleDropImageDialog} />
+              </td>
+            </tr></tbody></table>
 
             </DmFolderWidget>
           </div>
@@ -403,9 +407,9 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     const self = this;
     const {firebaseUser, contextSetFirebaseUser} = this.context;
     if (firebaseUser) {
-      this.props.setProfileImgUrl("");
+      this.props.setProfileImgUrl(null);
       firebaseUser.updateProfile({
-        photoURL: "",
+        photoURL: null,
       }).then(() => {
         contextSetFirebaseUser(firebase.auth().currentUser);
         self.setState({
@@ -497,7 +501,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
     this.setState({
       imgFile: null,
       showSaveImgDialog: false,
-      uploadedImg: "",
+      uploadedImg: null,
     });
   }
 

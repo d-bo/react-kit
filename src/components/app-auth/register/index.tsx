@@ -6,6 +6,7 @@ import React from "react";
 import DmInput from "../../shared/elements/DmInput";
 import DmButton from "../../shared/elements/DmButton";
 import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
+import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
@@ -124,10 +125,11 @@ class Register extends React.Component<IRegisterProps, IRegisterState> {
                 <DmInput type="password" value={password}
                 onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <div id="recaptcha-container"></div>
+                <ReCaptchav2 />
 
                 {errors &&
-                  <div className="error-message round-border-5px">{errors}</div>}
+                  <div className="error-message round-border-5px">{errors}</div>
+                }
 
                 { // Is captcha solved ?
                   showRegisterButtonAfterCaptcha &&
