@@ -26,6 +26,10 @@ interface IProfileProps {
   location?: any;
 }
 
+interface IFileObject {
+  name?: string;
+}
+
 interface IProfileState {
   country: string | null;
   city: string | null;
@@ -33,7 +37,7 @@ interface IProfileState {
   loadingExit: boolean;
   loadingImg: boolean;
   verifyLinkSent: boolean;
-  imgFile: File | null;
+  imgFile: Blob | ArrayBuffer | Uint8Array | null | IFileObject;
   uploadedImg: string | ArrayBuffer | null;
   showSaveImgDialog: boolean;
   showDropImgDialog: boolean;
@@ -438,12 +442,14 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
       let fileName;
       let extension;
       let imgRef: firebase.storage.Reference | null = null;
-      const name = imgFile.name;
-      if (name) {
-        const ext = name.split(".");
-        const extpop = ext.pop();
-        if (extpop) {
-          extension = extpop.toLowerCase();
+      if (imgFile.hasOwnProperty("name")) {
+        const name = (imgFile as IFileObject).name;
+        if (name) {
+          const ext = name.split(".");
+          const extpop = ext.pop();
+          if (extpop) {
+            extension = extpop.toLowerCase();
+          }
         }
       }
 
@@ -459,8 +465,8 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
       // Cache url to localStorage
       // Update firebase user profile
       if (imgRef) {
-        imgRef.put(this.state.imgFile)
-          .then((snapshot) => {
+        imgRef.put(imgFile as Blob)
+          .then((snapshot: any) => {
             if (imgRef) {
               imgRef.getDownloadURL().then((url: string) => {
                 self.props.setProfileImgUrl(url);
