@@ -1,4 +1,4 @@
-FROM node:12.2.0-alpine
+FROM node:12.2.0-alpine as build-deps
 
 # set working directory
 WORKDIR /
@@ -16,7 +16,12 @@ COPY public /public
 RUN npm install
 RUN npm install -g react-scripts@3.0.1
 RUN npm install firebase --force
-RUN npm build
+RUN npm run-script build
 
 # start app
-CMD ["npm", "start"]
+#CMD ["npm", "start"]
+
+FROM nginx:1.12-alpine
+COPY --from=build-deps /build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
