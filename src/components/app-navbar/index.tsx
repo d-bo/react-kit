@@ -38,20 +38,20 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
     const {loading} = this.state;
     return (
       <div className="navbar-body soft-left-bottom-shadow" style={{marginBottom: "14px"}}>
-        <div className="container navbar">
+        <div className="container-fluid navbar">
           <div className="row">
 
+            <div className="col-sm-4"></div>
+
             <div className="col-sm-4">
-              <div>
+              <div style={{textAlign: "center"}}>
                 <Router history={history}>
-                  <Link to="/"><img src="/logo.png"
+                  <Link to="/"><img src="/favicons/apple-touch-icon.png"
                     alt="" className="img-navbar" />
                   </Link>
                 </Router>
               </div>
             </div>
-
-            <div className="col-sm-4"></div>
 
             <div className="col-sm-4 navbar-user">
               {firebaseUser &&

@@ -44,12 +44,14 @@ class Home extends React.Component<IHomeProps, IHomeState> {
   public render() {
     const {loading} = this.state;
     return (
-      <div className="container fade-in-fx">
+      <div className="container-fluid fade-in-fx">
 
         <div className="row">
           <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="Python" shadow="soft-left-bottom-shadow">
-              <p></p>
+              <DmButton text="PROFILE" loading={loading}
+                onClick={() => this.props.history.push("/person/58758ff")}
+                className="margin-bottom" />
               <img src="/python-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
@@ -58,7 +60,9 @@ class Home extends React.Component<IHomeProps, IHomeState> {
           </div>
           <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="Javascript" shadow="soft-left-bottom-shadow">
-              <p></p>
+              <DmButton text="PROFILE" loading={loading}
+                onClick={() => this.props.history.push("/person/58758ff")}
+                className="margin-bottom" />
               <img src="/js-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
@@ -67,7 +71,9 @@ class Home extends React.Component<IHomeProps, IHomeState> {
           </div>
           <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="Go" shadow="soft-left-bottom-shadow">
-              <p></p>
+              <DmButton text="PROFILE" loading={loading}
+                onClick={() => this.props.history.push("/person/58758ff")}
+                className="margin-bottom" />
               <img src="/Go-Logo_Blue.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
@@ -81,7 +87,25 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: "100%"}}><tbody><tr>
+                <td style={{width: "30%"}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={loading}
+                    onClick={() => this.props.history.push("/profile")}
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: "35%"}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={loading}
+                  onClick={() => this.props.history.push("/profile")}
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: "35%"}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={loading}
+                  onClick={() => this.props.history.push("/profile")}
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
             </DmFolderWidget>
+
           </div>
           <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="C++" shadow="soft-left-bottom-shadow">
@@ -90,6 +114,23 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
+              <table style={{width: "100%"}}><tbody><tr>
+                <td style={{width: "30%"}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={loading}
+                    onClick={() => this.props.history.push("/profile")}
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: "35%"}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={loading}
+                  onClick={() => this.props.history.push("/profile")}
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: "35%"}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={loading}
+                  onClick={() => this.props.history.push("/profile")}
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
             </DmFolderWidget>
           </div>
           <div className="col-sm-6 col-lg-4">
@@ -100,16 +141,34 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
             </DmFolderWidget>
+            <table style={{width: "100%"}}><tbody><tr>
+                <td style={{width: "30%"}} className="td-pad-10">
+                    <DmButton text={<FaEnvelope />} loading={loading}
+                    onClick={() => this.props.history.push("/profile")}
+                    className="margin-top button-transparent" />
+                </td>
+                <td style={{width: "35%"}} className="td-pad-10">
+                  <DmButton text={<FaRegStar />} loading={loading}
+                  onClick={() => this.props.history.push("/profile")}
+                  className="margin-top button-grey" />
+                </td>
+                <td style={{width: "35%"}} className="td-pad-10">
+                  <DmButton text={<FaCommentAlt />} loading={loading}
+                  onClick={() => this.props.history.push("/profile")}
+                  className="margin-top button-grey" />
+                </td>
+              </tr></tbody></table>
           </div>
         </div>
 
         <p></p>
 
         <div className="row">
-          <div className="col-sm-4">
+          <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="Isabelle Hurst" shadow="soft-left-bottom-shadow">
               <DmButton text="PROFILE" loading={loading}
-              onClick={() => this.props.history.push("/person/58758ff")} className="margin-bottom" />
+              onClick={() => this.props.history.push("/person/58758ff")}
+              className="margin-bottom" />
               <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
@@ -133,7 +192,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               </tr></tbody></table>
             </DmFolderWidget>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="Jeffrey Monnaghan" shadow="soft-left-bottom-shadow">
               <DmButton text="PROFILE" loading={loading}
               onClick={() => this.props.history.push("/person/87g8787")} className="margin-bottom" />
@@ -160,7 +219,7 @@ class Home extends React.Component<IHomeProps, IHomeState> {
               </tr></tbody></table>
             </DmFolderWidget>
           </div>
-          <div className="col-sm-4">
+          <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="Nina Ricci" shadow="soft-left-bottom-shadow">
               <DmButton text="PROFILE" loading={loading}
               onClick={() => this.props.history.push("/person/ricci.ui")} className="margin-bottom" />

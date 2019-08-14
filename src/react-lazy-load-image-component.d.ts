@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare module "react-lazy-load-image-component" {
     import { Styles } from "jss";
     import * as React from "react";
@@ -20,7 +21,7 @@ declare module "react-lazy-load-image-component" {
       debounce = "debounce",
       throttle = "throttle",
     };
-    interface LazyComponentProps {   // eslint-disable-line
+    interface LazyComponentProps {
       delayMethod: DelayMethod;
       delayTime: number;
     }

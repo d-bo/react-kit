@@ -30,8 +30,10 @@ export REACT_APP_FIREBASE_MESSAGING_SENDER_ID=""
 
 ## Docker
 
-We need to pass firebase env vars to running container.
+We need to pass firebase environment vars to running container.
+
 Create file ```env.list``` in the root of your project.
+
 Paste and fill this:
 
 ```sh

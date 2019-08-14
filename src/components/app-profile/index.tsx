@@ -111,7 +111,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
 
     return (
       <>
-      <div className="container">
+      <div className="container-fluid">
         <div className="row">
 
           <div className="col-sm-6 px-xl-5">
