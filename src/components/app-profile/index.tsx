@@ -388,7 +388,7 @@ class Profile extends React.Component<IProfileProps, IProfileState> {
             showSaveImgDialog: true,
             uploadedImg: reader.result,
           });
-        }
+        };
       }
     }
   }

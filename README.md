@@ -13,7 +13,7 @@ npm install firebase --force
 
 Enter firebase console.
 
-https://console.firebase.google.com/
+[https://console.firebase.google.com/](https://console.firebase.google.com/)
 
 Export firebase secrets to local environment variables.
 
@@ -34,7 +34,7 @@ We need to pass firebase env vars to running container.
 Create file ```env.list``` in the root of your project.
 Paste and fill this:
 
-```
+```sh
 REACT_APP_FIREBASE_DATABASE_URL=
 REACT_APP_FIREBASE_API_KEY=
 REACT_APP_FIREBASE_PROJECT_ID=

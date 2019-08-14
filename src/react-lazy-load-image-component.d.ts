@@ -1,6 +1,6 @@
-declare module 'react-lazy-load-image-component' {
-    import { Styles } from 'jss';
-    import * as React from 'react';
+declare module "react-lazy-load-image-component" {
+    import { Styles } from "jss";
+    import * as React from "react";
     export const LazyLoadImage: React.FunctionComponent<{
       afterLoad?: () => any;
       beforeLoad?: () => any;
@@ -17,13 +17,13 @@ declare module 'react-lazy-load-image-component' {
       className?: string | Styles;
     }>;
     enum DelayMethod {
-      debounce = "debounce", 
+      debounce = "debounce",
       throttle = "throttle",
     };
-    interface LazyComponentProps {
+    interface LazyComponentProps {   // eslint-disable-line
       delayMethod: DelayMethod;
       delayTime: number;
-    };
+    }
     export const trackWindowScroll: (BaseComponent: React.ComponentType<P>) => BaseComponent<P & LazyComponentProps, S>;
     export const LazyLoadComponent: React.FunctionComponent<{
       afterLoad?: () => void,
@@ -33,6 +33,7 @@ declare module 'react-lazy-load-image-component' {
       placeholder?: ReactNode,
       threshold?: number
       visibleByDefault?: boolean,
-      children: ReactNode
+      children: ReactNode,
     }>;
   }
+  

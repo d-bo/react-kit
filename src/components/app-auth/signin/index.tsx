@@ -122,7 +122,6 @@ class SignIn extends React.Component<ISigninProps, ISigninState> {
 
                 <ReCaptchav2></ReCaptchav2>
 
-
                 { // Is captcha solved ?
                   showSigninSubmitButton &&
                   <DmButton text="OK" loading={loading}

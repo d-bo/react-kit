@@ -1,4 +1,5 @@
-import * as firebase from "firebase/app";
+/* eslint-disable */
+import firebase from "firebase/app";
 import "./index.scss";
 import "firebase/auth";
 import "firebase/firestore";

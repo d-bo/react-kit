@@ -11,7 +11,7 @@ const mapStateToProps = (state: any) => state.firebaseAuth;
 
 interface INavbarProps {
   history?: any;
-  profileImgUrl?: string;
+  profileImgUrl?: string | null;
 }
 
 interface INavbarState {
@@ -44,7 +44,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
             <div className="col-sm-4">
               <div>
                 <Router history={history}>
-                  <Link to="/"><img src="/logo.png" 
+                  <Link to="/"><img src="/logo.png"
                     alt="" className="img-navbar" />
                   </Link>
                 </Router>
