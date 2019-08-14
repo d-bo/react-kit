@@ -21,7 +21,7 @@ RUN npm run-script build
 # start app
 #CMD ["npm", "start"]
 
-FROM nginx:1.12-alpine
+FROM nginx:1.12-alpine as front-end-react
 COPY --from=build-deps /build /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

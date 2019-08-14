@@ -80,7 +80,7 @@ class Navbar extends React.Component<INavbarProps, INavbarState> {
                     {(firebaseUser.photoURL && !profileImgUrl) &&
                       <>
                         <LazyLoadImage
-                          src={profileImgUrl}
+                          src={firebaseUser.photoURL}
                           placeholderSrc="/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />
