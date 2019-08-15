@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* tslint:disable */
 declare module "react-lazy-load-image-component" {
     import { Styles } from "jss";
     import * as React from "react";
