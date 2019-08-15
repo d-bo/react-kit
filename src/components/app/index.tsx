@@ -11,7 +11,7 @@ import Profile from "../app-profile";
 import Person from "../app-person";
 import Register from "../app-auth/register";
 import Home from "../app-home";
-import { NotFound404 } from "../app-404/NotFound404";
+import NotFound404 from "../app-404";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 
 interface IAppProps {
