@@ -17,7 +17,7 @@ interface IDmInputState {
   value: string;
 }
 
-class DmInput extends React.Component<IDmInputProps, IDmInputState> {
+class DmInput extends React.PureComponent<IDmInputProps, IDmInputState> {
 
   constructor(props: IDmInputProps) {
     super(props);

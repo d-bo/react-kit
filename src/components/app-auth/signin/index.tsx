@@ -37,7 +37,7 @@ interface ISigninState {
   showSigninSubmitButton: boolean;
 }
 
-class SignIn extends React.Component<ISigninProps, ISigninState> {
+class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
 
   constructor(props: ISigninProps) {
     super(props);

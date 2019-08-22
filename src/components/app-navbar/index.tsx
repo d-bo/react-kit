@@ -20,7 +20,7 @@ interface INavbarState {
   verifyLinkSent: boolean;
 }
 
-class Navbar extends React.Component<INavbarProps, INavbarState> {
+class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
 
   constructor(props: INavbarProps) {
     super(props);

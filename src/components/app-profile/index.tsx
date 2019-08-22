@@ -44,7 +44,7 @@ interface IProfileState {
   errors: string;
 }
 
-class Profile extends React.Component<IProfileProps, IProfileState> {
+class Profile extends React.PureComponent<IProfileProps, IProfileState> {
 
   constructor(props: IProfileProps) {
     super(props);

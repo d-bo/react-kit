@@ -34,7 +34,7 @@ export interface IWindow extends Window {
   recaptchaWidgetId: any;
 }
 
-class Register extends React.Component<IRegisterProps, IRegisterState> {
+class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
 
   constructor(props: IRegisterProps) {
     super(props);

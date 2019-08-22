@@ -23,7 +23,7 @@ interface IHomeState {
   verifyLinkSent: boolean;
 }
 
-class Home extends React.Component<IHomeProps, IHomeState> {
+class Home extends React.PureComponent<IHomeProps, IHomeState> {
 
   constructor(props: IHomeProps) {
     super(props);

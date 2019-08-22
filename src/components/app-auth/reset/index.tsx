@@ -42,7 +42,7 @@ interface IResetState {
   showResetSubmitButton: any;
 }
 
-class Reset extends React.Component<IResetProps, IResetState> {
+class Reset extends React.PureComponent<IResetProps, IResetState> {
 
   constructor(props: IResetProps) {
     if (firebase.auth().currentUser) {
