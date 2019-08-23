@@ -4,48 +4,7 @@ import firebase from "firebase/app";
 import React, { lazy, Suspense } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
-
-const ResetComponent = (
-  lazy(() => (
-    import("../app-auth/reset")
-  ))
-);
-
-const SignInComponent = (
-  lazy(() => (
-    import("../app-auth/signin")
-  ))
-);
-
-const ProfileComponent = (
-  lazy(() => (
-    import("../app-profile")
-  ))
-);
-
-const HomeComponent = (
-  lazy(() => (
-    import("../app-home")
-  ))
-);
-
-const RegisterComponent = (
-  lazy(() => (
-    import("../app-auth/register")
-  ))
-);
-
-const PersonComponent = (
-  lazy(() => (
-    import("../app-person")
-  ))
-);
-
-const NotFound404Component = (
-  lazy(() => (
-    import("../app-404")
-  ))
-);
+import * as LazyComponents from "./LazyComponents";
 
 interface IAppProps {
   firebaseUser: firebase.User | null;
@@ -93,33 +52,32 @@ class App extends React.Component<IAppProps, IAppState> {
         }}>
           <Navbar {...this.props} />
             <Router history={history}>
-              <Suspense fallback="Loading ...">
+              <Suspense fallback="">
                 <Switch>
                   <Route path="/" exact>
-                    <HomeComponent/>
+                    <LazyComponents.HomeComponent/>
                   </Route>
                   <Route path="/profile">
-                    <ProfileComponent/>
+                    <LazyComponents.ProfileComponent/>
                   </Route>
                   <Route path="/person/:id">
-                    <PersonComponent/>
+                    <LazyComponents.PersonComponent/>
                   </Route>
                   <Route path="/auth/signin">
-                    <SignInComponent/>
+                    <LazyComponents.SignInComponent/>
                   </Route>
                   <Route path="/auth/register">
-                    <RegisterComponent/>
+                    <LazyComponents.RegisterComponent/>
                   </Route>
                   <Route path="/auth/reset">
-                    <ResetComponent/>
+                    <LazyComponents.ResetComponent/>
                   </Route>
                   <Route>
-                    <NotFound404Component/>
+                    <LazyComponents.NotFound404Component/>
                   </Route>
                 </Switch>
               </Suspense>
             </Router>
-          <Footer />
         </FirebaseUserContext.Provider>
       </>
     );

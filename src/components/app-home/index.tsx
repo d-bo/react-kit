@@ -6,6 +6,7 @@ import { FaRegStar, FaCommentAlt } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import ButtonWidget from "../shared/widgets/ButtonWidget";
 import { withRouter } from "react-router";
+import Footer from "../app-footer";
 
 const Counter = (props: any) => <span style={{ paddingRight: "10px", fontSize: "18px" }}>{props.itemId}</span>;
 const LikeCounter = (props: any) =>
@@ -44,6 +45,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
   public render() {
     const {loading} = this.state;
     return (
+      <>
       <div className="container-fluid fade-in-fx">
 
         <div className="row">
@@ -942,6 +944,8 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
         </div>
 
       </div>
+      <Footer />
+      </>
     );
   }
 }

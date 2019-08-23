@@ -11,6 +11,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 import { FaTrashAlt } from "react-icons/fa";
 import { withRouter } from "react-router";
+import Footer from "../app-footer";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -281,6 +282,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
           </div>
       </div>
     </div>
+    <Footer />
     </>
     );
   }

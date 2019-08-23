@@ -10,6 +10,7 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
+import Footer from "../../app-footer";
 
 interface IRegisterProps {
   firebaseAuth: any;
@@ -164,6 +165,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
           <div className="col-sm-2 col-lg-4"></div>
         </div>
       </div>
+      <Footer />
     </>
     );
   }

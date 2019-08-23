@@ -6,6 +6,7 @@ import DmFolderWidget from "../shared/widgets/DmFolderWidget";
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { withRouter } from "react-router";
+import Footer from "../app-footer";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -108,6 +109,7 @@ class Person extends React.Component<IHomeProps, IHomeState> {
         </div>
 
       </div>
+      <Footer />
       </>
     );
   }

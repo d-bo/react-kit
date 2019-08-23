@@ -13,6 +13,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { IWindow } from "../register";
+import Footer from "../../app-footer";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -169,6 +170,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
         <div className="col-sm-2 col-lg-4"></div>
       </div>
     </div>
+    <Footer />
     </>
     );
   }

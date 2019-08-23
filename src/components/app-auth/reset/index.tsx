@@ -13,6 +13,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import { IWindow } from "../register";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
+import Footer from "../../app-footer";
 
 const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
@@ -176,6 +177,7 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
         <div className="col-sm-2 col-lg-4"></div>
       </div>
     </div>
+    <Footer />
     </>
     );
   }
