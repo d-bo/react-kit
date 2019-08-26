@@ -14,6 +14,7 @@ import { withRouter } from "react-router";
 import { IWindow } from "../register";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import Footer from "../../app-footer";
+import produce from "immer";
 
 const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
@@ -66,26 +67,33 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
 
   public componentDidMount(): void {
     const self = this;
-    (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
-      "callback": () => {
-        self.setState({
-          captchaLoading: false,
-          showResetSubmitButton: true,
-        });
-      },
-      "expired-callback": () => {
-        self.setState({
-          errors: "Please, check out the captcha",
-          showResetSubmitButton: false,
-        });
-      },
-      "size": "normal",
-      "theme": "light",
+    (window as IWindow).recaptchaVerifier = new
+      firebase.auth.RecaptchaVerifier("recaptcha-container", {
+        "callback": () => {
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.captchaLoading = false;
+              draft.showResetSubmitButton = true;
+            }),
+          );
+        },
+        "expired-callback": () => {
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.errors = "Please, check out the captcha";
+              draft.showResetSubmitButton = false;
+            }),
+          );
+        },
+        "size": "normal",
+        "theme": "light",
     });
     (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
-      self.setState({
-        captchaLoading: false,
-      });
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.captchaLoading = false;
+        }),
+      );
       (window as IWindow).recaptchaWidgetId = widgetId;
     });
     if (this.context.firebaseUser) {
@@ -113,10 +121,10 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
     } = this.state;
     return (
       <>
-      <div className="container">
+      <div className="container-fluid body-page-color">
         <div className="row">
-          <div className="col-sm-2 col-lg-4"></div>
-          <div className="col-sm-8 col-lg-4">
+          <div className="col-sm-3 col-lg-4"></div>
+          <div className="col-sm-6 col-lg-4">
           <div className="vertical-center">
             <DmFolderWidget title="Reset password" className="fade-in-fx"
               shadow="soft-left-bottom-shadow">
@@ -174,7 +182,7 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
           </div>
 
           </div>
-        <div className="col-sm-2 col-lg-4"></div>
+        <div className="col-sm-3 col-lg-4"></div>
       </div>
     </div>
     <Footer />
@@ -188,30 +196,38 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
     if (loading) {
       return;
     }
-    this.setState({
-      errors: null,
-      loading: true,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.errors = null;
+        draft.loading = true;
+      }),
+    );
     firebase.auth().sendPasswordResetEmail(
         email as string,
         {url: `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`},
       ).then(() => {
-      self.setState({
-        loading: false,
-        resetSent: true,
-      });
+      self.setState(
+        produce(this.state, (draft) => {
+          draft.resetSent = true;
+          draft.loading = false;
+        }),
+      );
     }).catch((error) => {
-      self.setState({
-        errors: error.message,
-        loading: false,
-      });
+      self.setState(
+        produce(this.state, (draft) => {
+          draft.errors = error.message;
+          draft.loading = false;
+        }),
+      );
     });
   }
 
   private handleEmailChange(e: any): void {
-    this.setState({
-      email: e,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.email = e;
+      }),
+    );
   }
 }
 

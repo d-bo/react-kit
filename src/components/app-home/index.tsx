@@ -7,6 +7,13 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import ButtonWidget from "../shared/widgets/ButtonWidget";
 import { withRouter } from "react-router";
 import Footer from "../app-footer";
+import axios from "axios";
+import produce from "immer";
+import { receiveItems } from "../../redux/actions";
+import store from "../../redux/stores/store";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state: any) => state.firebaseAuth;
 
 const Counter = (props: any) => <span style={{ paddingRight: "10px", fontSize: "18px" }}>{props.itemId}</span>;
 const LikeCounter = (props: any) =>
@@ -15,10 +22,12 @@ const LikeCounter = (props: any) =>
 
 interface IHomeProps {
   history: any;
+  items: object[] | null;
   location?: any;
 }
 
 interface IHomeState {
+  errors: string | null;
   loading: boolean;
   loadingExit: boolean;
   verifyLinkSent: boolean;
@@ -29,10 +38,12 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
   constructor(props: IHomeProps) {
     super(props);
     this.state = {
+      errors: null,
       loading: false,
       loadingExit: false,
       verifyLinkSent: false,
     };
+    this.fetchItems = this.fetchItems.bind(this);
   }
 
   public componentDidUpdate(prevProps: IHomeProps) {
@@ -42,11 +53,59 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
     }
   }
 
+  public fetchItems() {
+    const self = this;
+    return (dispatch: any) => {
+      axios({
+        method: "get",
+        responseType: "json",
+        url: "https://fakerestapi.azurewebsites.net/api/Users",
+      })
+      .then((response) => {
+        dispatch(receiveItems(response.data));
+      })
+      .catch((error) => {
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.errors = error;
+          }),
+        );
+        dispatch(receiveItems(null));
+      });
+    };
+  }
+
+  public componentDidMount(): void {
+    store.dispatch(this.fetchItems() as any);
+  }
+
   public render() {
-    const {loading} = this.state;
+    const {errors, loading} = this.state;
+    const {items} = this.props;
     return (
       <>
-      <div className="container-fluid fade-in-fx">
+      <div className="container-fluid fade-in-fx body-page-color">
+
+        {items &&
+          <div className="row fade-in-fx">
+          {items.map((item: any) =>
+            <div className="col-sm-6 col-lg-4" key={item.ID}>
+              <DmFolderWidget title={item.UserName} shadow="soft-left-bottom-shadow">
+                <img src="/python-logo.png" alt=""
+                  className="in-folder-img round-border-50" />
+                <p>{item.ID}</p>
+                <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
+              and sizes thanks to a twelve column system, five default responsive tiers,
+              Sass variables and mixins, and dozens of predefined classes.</p>
+              </DmFolderWidget>
+            </div>,
+          )}
+          </div>
+        }
+
+        {errors &&
+          <div className="error-message round-border-5px">No items</div>
+        }
 
         <div className="row">
           <div className="col-sm-6 col-lg-4">
@@ -950,4 +1009,4 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
   }
 }
 
-export default withRouter(Home as any);
+export default withRouter(connect(mapStateToProps)(Home) as any);

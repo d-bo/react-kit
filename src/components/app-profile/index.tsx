@@ -112,7 +112,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
 
     return (
       <>
-      <div className="container-fluid">
+      <div className="container-fluid body-page-color">
         <div className="row">
 
           <div className="col-sm-6 px-xl-5">

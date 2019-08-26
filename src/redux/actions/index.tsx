@@ -1,7 +1,10 @@
+import { AxiosResponse } from "axios";
+
 export const actionTypes = {
   AUTH_FIREBASE: "AUTH_FIREBASE",
   LOADING: "LOADING",
   LOGOUT: "LOGOUT",
+  RECEIVE_ITEMS: "RECEIVE_ITEMS",
   SET_EMAIL: "SET_EMAIL",
   SET_NAME: "SET_NAME",
   SET_PASSWORD: "SET_PASSWORD",
@@ -15,10 +18,16 @@ interface IReduxAction {
   profileImgUrl?: string;
   firebaseUser?: firebase.User | null;
   email?: string;
+  items?: AxiosResponse | null;
   password?: string;
   loading?: boolean;
   displayName?: string;
 }
+
+export const receiveItems = (items: AxiosResponse | null): IReduxAction => ({
+  items,
+  type: actionTypes.RECEIVE_ITEMS,
+});
 
 export const setUserFirestoreData = (userData: object | null): IReduxAction => ({
   type: actionTypes.SET_USER_FIRESTORE_DATA,

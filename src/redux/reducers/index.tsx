@@ -1,7 +1,9 @@
 import { combineReducers } from "redux";
 import { actionTypes } from "../actions";
+import produce, { Draft } from "immer";
 
 interface IInitState {
+  items: object[] | null;
   loading: boolean;
   email: string;
   password: string;
@@ -17,6 +19,7 @@ const initState: IInitState = {
   country: "",
   displayName: "",
   email: "",
+  items: null,
   loading: false,   // global state lock ?? mutex like
   password: "",
   profileImgUrl: "",
@@ -49,59 +52,39 @@ const storeState = (state: any) => {
 };
 
 const firebaseAuth = (state = getInitState(), action: any) => {
-  switch (action.type) {
 
-    case actionTypes.AUTH_FIREBASE:
-      return storeState({
-        ...state,
-        firebaseUser: action.firebaseUser,
-      });
+  // immerjs immutable state process
+  return storeState(produce(state, (draft: any) => {
+    switch (action.type) {
 
-    case actionTypes.SET_EMAIL:
-      return storeState({
-        ...state,
-        email: action.email,
-      });
+      case actionTypes.AUTH_FIREBASE:
+        draft.firebaseUser = action.firebaseUser;
 
-    case actionTypes.SET_PASSWORD:
-      return storeState({
-        ...state,
-        password: action.password,
-      });
+      case actionTypes.SET_EMAIL:
+        draft.email = action.email;
 
-    case actionTypes.SET_NAME:
-      return storeState({
-        ...state,
-        displayName: action.displayName,
-      });
+      case actionTypes.SET_PASSWORD:
+        draft.password = action.password;
 
-    case actionTypes.LOADING:
-      return storeState({
-        ...state,
-        loading: action.loading,
-      });
+      case actionTypes.SET_NAME:
+        draft.displayName = action.displayName;
 
-    case actionTypes.LOGOUT:
-      return storeState({
-        ...state,
-        firebaseUser: null,
-      });
+      case actionTypes.LOADING:
+        draft.loading = action.loading;
 
-    case actionTypes.SET_PROFILE_IMG_URL:
-      return storeState({
-        ...state,
-        profileImgUrl: action.profileImgUrl,
-      });
+      case actionTypes.LOGOUT:
+        draft.firebaseUser = null;
 
-    case actionTypes.SET_USER_FIRESTORE_DATA:
-      return storeState({
-        ...state,
-        userData: action.userData,
-      });
+      case actionTypes.SET_PROFILE_IMG_URL:
+        draft.profileImgUrl = action.profileImgUrl;
 
-    default:
-      return state;
-  }
+      case actionTypes.SET_USER_FIRESTORE_DATA:
+        draft.userData = action.userData;
+
+      case actionTypes.RECEIVE_ITEMS:
+        draft.items = action.items;
+    }
+  }));
 };
 
 const rootReducer = combineReducers({firebaseAuth});

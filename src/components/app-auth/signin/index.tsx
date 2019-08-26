@@ -105,10 +105,10 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     } = this.state;
     return (
       <>
-      <div className="container">
+      <div className="container-fluid body-page-color">
         <div className="row">
-          <div className="col-sm-2 col-lg-4"></div>
-          <div className="col-sm-8 col-lg-4">
+          <div className="col-sm-3 col-lg-4"></div>
+          <div className="col-sm-6 col-lg-4">
 
           <div className="vertical-center">
             <DmFolderWidget title="Sign In" className="fade-in-fx"
@@ -167,7 +167,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
           </div>
 
           </div>
-        <div className="col-sm-2 col-lg-4"></div>
+        <div className="col-sm-3 col-lg-4"></div>
       </div>
     </div>
     <Footer />

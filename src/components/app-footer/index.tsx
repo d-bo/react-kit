@@ -4,7 +4,7 @@ import React from "react";
 const Footer: React.SFC = () =>
   <>
     <div className="footer">
-      <div className="container fade-in-fx">
+      <div className="container-fluid fade-in-fx">
         <div className="row">
           <div className="col-sm-4">
             Note:  In most cases you should never force a React component to

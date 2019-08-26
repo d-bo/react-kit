@@ -106,7 +106,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
 
     return (
       <>
-      <div className="container">
+      <div className="container-fluid body-page-color">
         <div className="row">
           <div className="col-sm-2 col-lg-4"></div>
           <div className="col-sm-8 col-lg-4">

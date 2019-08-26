@@ -1,6 +1,6 @@
 /* eslint-disable */
 import firebase from "firebase/app";
-import "./index.scss";
+import "./scss/global.scss";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";

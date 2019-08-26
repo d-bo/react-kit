@@ -37,7 +37,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
     const {firebaseUser} = this.context;
     const {loading} = this.state;
     return (
-      <div className="navbar-body soft-left-bottom-shadow" style={{marginBottom: "14px"}}>
+      <div className="navbar-body soft-left-bottom-shadow">
         <div className="container-fluid navbar">
           <div className="row">
 
