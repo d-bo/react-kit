@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import "./style.css";
+import produce from "immer";
 
 const mapStateToProps = (state: any) => state;
 
@@ -41,9 +42,11 @@ class DmInput extends React.PureComponent<IDmInputProps, IDmInputState> {
   }
 
   private handleChange(e: any): void {
-    this.setState({
-      value: e.target.value,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.value = e.target.value;
+      }),
+    );
     this.props.onChange(e.target.value);
   }
 }

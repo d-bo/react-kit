@@ -207,14 +207,14 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
         {url: `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`},
       ).then(() => {
       self.setState(
-        produce(this.state, (draft) => {
+        produce(self.state, (draft) => {
           draft.resetSent = true;
           draft.loading = false;
         }),
       );
     }).catch((error) => {
       self.setState(
-        produce(this.state, (draft) => {
+        produce(self.state, (draft) => {
           draft.errors = error.message;
           draft.loading = false;
         }),

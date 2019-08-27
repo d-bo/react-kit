@@ -11,6 +11,7 @@ import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import Footer from "../../app-footer";
+import produce from "immer";
 
 interface IRegisterProps {
   firebaseAuth: any;
@@ -60,23 +61,29 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
     const self = this;
     (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
       "callback": () => {
-        self.setState({
-          captchaLoading: false,
-          showRegisterButtonAfterCaptcha: true,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.captchaLoading = false;
+            draft.showRegisterButtonAfterCaptcha = true;
+          }),
+        );
       },
       "expired-callback": () => {
-        self.setState({
-          errors: "Please, check out the captcha",
-          showRegisterButtonAfterCaptcha: false,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.errors = "Please, check out the captcha";
+            draft.showRegisterButtonAfterCaptcha = false;
+          }),
+        );
       },
       "size": "big",
     });
     (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
-      self.setState({
-        captchaLoading: false,
-      });
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.captchaLoading = false;
+        }),
+      );
       (window as IWindow).recaptchaWidgetId = widgetId;
     });
     if (this.context.firebaseUser) {
@@ -188,35 +195,43 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
     // Validate email
     const re = /\S+@\S+\.\S+/;
     if (!re.test(this.state.email as string)) {
-      this.setState({
-        errors: "Incorrect email",
-        loading: false,
-      });
+      this.setState(
+        produce(this.state, (draft) => {
+          draft.errors = "Incorrect email";
+          draft.loading = false;
+        }),
+      );
       return;
     }
 
     // Validate password
     if (password && password.length < 6) {
-      this.setState({
-        errors: "Password min 6 symbols length",
-        loading: false,
-      });
+      this.setState(
+        produce(this.state, (draft) => {
+          draft.errors = "Password min 6 symbols length";
+          draft.loading = false;
+        }),
+      );
       return;
     }
 
     // Validate name
     if (displayName && displayName.length < 6) {
-      this.setState({
-        errors: "Name min 6 symbols length",
-        loading: false,
-      });
+      this.setState(
+        produce(this.state, (draft) => {
+          draft.errors = "Name min 6 symbols length";
+          draft.loading = false;
+        }),
+      );
       return;
     }
 
-    this.setState({
-      errors: null,
-      loading: true,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.errors = null;
+        draft.loading = true;
+      }),
+    );
 
     firebase.auth().createUserWithEmailAndPassword(
         email as string,
@@ -230,44 +245,56 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
           currentUser.sendEmailVerification({
             url,
           }).then(() => {
-            self.setState({
-              loading: false,
-            });
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.loading = false;
+              }),
+            );
             // User created and email verify sent
             history.push("/");
           }).catch((error) => {
-            self.setState({
-              errors: error.message,
-              loading: false,
-            });
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.loading = false;
+                draft.errors = error.message;
+              }),
+            );
           });
         }
 
       }).catch((error) => {
         const errorMessage = error.message;
-        self.setState({
-          errors: errorMessage,
-          loading: false,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.loading = false;
+            draft.errors = error.message;
+          }),
+        );
       });
   }
 
   private handlePasswordChange(e: any): void {
-    this.setState({
-      password: e,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.password = e;
+      }),
+    );
   }
 
   private handleEmailChange(e: any): void {
-    this.setState({
-      email: e,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.email = e;
+      }),
+    );
   }
 
   private handleNameChange(e: any): void {
-    this.setState({
-      displayName: e,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.displayName = e;
+      }),
+    );
   }
 }
 

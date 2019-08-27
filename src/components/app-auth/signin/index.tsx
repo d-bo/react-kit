@@ -14,6 +14,7 @@ import { withRouter } from "react-router";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { IWindow } from "../register";
 import Footer from "../../app-footer";
+import produce from "immer";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -61,23 +62,29 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     const self = this;
     (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
       "callback": () => {
-        self.setState({
-          captchaLoading: false,
-          showSigninSubmitButton: true,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.captchaLoading = false;
+            draft.showSigninSubmitButton = true;
+          }),
+        );
       },
       "expired-callback": () => {
-        self.setState({
-          errors: "Please, check out the captcha",
-          showSigninSubmitButton: false,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.errors = "Please, check out the captcha";
+            draft.showSigninSubmitButton = false;
+          }),
+        );
       },
       "size": "big",
     });
     (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
-      self.setState({
-        captchaLoading: false,
-      });
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.captchaLoading = false;
+        }),
+      );
       (window as IWindow).recaptchaWidgetId = widgetId;
     });
     if (this.context.firebaseUser) {
@@ -186,25 +193,31 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     // Validate email
     const re = /\S+@\S+\.\S+/;
     if (!re.test(this.state.email as string)) {
-      this.setState({
-        errors: "Incorrect email",
-        loading: false,
-      });
+      this.setState(
+        produce(this.state, (draft) => {
+          draft.errors = "Incorrect email";
+          draft.loading = false;
+        }),
+      );
       return;
     }
     // Validate password
     if (password && password.length < 6) {
-      this.setState({
-        errors: "Password min 6 symbols length",
-        loading: false,
-      });
+      this.setState(
+        produce(this.state, (draft) => {
+          draft.errors = "Password min 6 symbols length";
+          draft.loading = false;
+        }),
+      );
       return;
     }
 
-    this.setState({
-      errors: null,
-      loading: true,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.errors = null;
+        draft.loading = true;
+      }),
+    );
 
     firebase.auth().signInWithEmailAndPassword(
         email as string,
@@ -219,15 +232,19 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
         const errorMessage = error.message;
 
         if (errorCode === "auth/wrong-password") {
-          self.setState({
-            errors: "Wrong password",
-            loading: false,
-          });
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.errors = "Wrong password";
+              draft.loading = false;
+            }),
+          );
         } else {
-          self.setState({
-            errors: errorMessage,
-            loading: false,
-          });
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.errors = errorMessage;
+              draft.loading = false;
+            }),
+          );
         }
       });
   }
@@ -260,15 +277,19 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   private handlePasswordChange(e: any): void {
-    this.setState({
-      password: e,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.password = e;
+      }),
+    );
   }
 
   private handleEmailChange(e: any): void {
-    this.setState({
-      email: e,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.email = e;
+      }),
+    );
   }
 
   private handleGithub(): void {
@@ -276,7 +297,11 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     if (this.state.loading) {
       return;
     }
-    this.setState({loading: true});
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.loading = true;
+      }),
+    );
     // With popup.
     const self = this;
     const provider = new firebase.auth.GithubAuthProvider();
@@ -284,10 +309,19 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     firebase.auth().signInWithPopup(provider).then((result) => {
       contextSetFirebaseUser(result.user);
       this.setUserGlobalData(result.user);
-      self.setState({loading: false});
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.loading = false;
+        }),
+      );
       self.props.history.push("/");
     }).catch((error) => {
-      self.setState({loading: false, errors: error.message});
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.loading = false;
+          draft.errors = error.message;
+        }),
+      );
     });
   }
 
@@ -296,7 +330,11 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
       return;
     }
     const {contextSetFirebaseUser} = this.context;
-    this.setState({loading: true});
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.loading = true;
+      }),
+    );
     // Using a popup.
     const self = this;
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -305,10 +343,19 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     firebase.auth().signInWithPopup(provider).then((result) => {
       contextSetFirebaseUser(result.user);
       this.setUserGlobalData(result.user);
-      self.setState({loading: false});
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.loading = false;
+        }),
+      );
       self.props.history.push("/");
     }).catch((error) => {
-      self.setState({loading: false, errors: error.message});
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.loading = false;
+          draft.errors = error.message;
+        }),
+      );
     });
   }
 }

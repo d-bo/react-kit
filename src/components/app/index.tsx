@@ -5,6 +5,7 @@ import React, { lazy, Suspense } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 import * as LazyComponents from "./LazyComponents";
+import produce from "immer";
 
 interface IAppProps {
   firebaseUser: firebase.User | null;
@@ -36,9 +37,11 @@ class App extends React.Component<IAppProps, IAppState> {
   // Dynamically set user from child components
   // Setting null as a logout
   public contextSetFirebaseUser(firebaseUser: firebase.User | null) {
-    this.setState({
-      firebaseUser,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.firebaseUser = firebaseUser;
+      }),
+    );
   }
 
   public render() {
