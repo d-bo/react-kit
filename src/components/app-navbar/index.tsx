@@ -114,8 +114,8 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                     <td style={{width: "50%"}}></td>
                     <td style={{width: "50%"}}>
                       <DmButton text="SIGN IN" loading={loading}
-                      onClick={() => this.props.history.push("/profile")}
-                      icon="" theme="border-small" />
+                        onClick={() => this.props.history.push("/profile")}
+                        theme="outlined" />
                     </td>
                   </tr></tbody>
                 </table>

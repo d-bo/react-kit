@@ -15,6 +15,7 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { IWindow } from "../register";
 import Footer from "../../app-footer";
 import produce from "immer";
+import {LoadingFacebookBlack} from "../../shared/elements/loading";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -60,6 +61,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
 
   public componentDidMount() {
     const self = this;
+    // Google captcha prepared
     (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
       "callback": () => {
         self.setState(
@@ -132,17 +134,18 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
 
                 { // Is captcha solved ?
                   showSigninSubmitButton &&
-                  <DmButton text="OK" loading={loading}
+                  <DmButton text="OK" disabled={loading}
                   onClick={this.handleSignIn} />
                 }
 
                 { // Captcha loading
                   captchaLoading &&
-                  <DmButton loading={true} />
+                  <LoadingFacebookBlack/>
                 }
 
                 {errors &&
-                  <div className="error-message round-border-5px">{errors}</div>}
+                  <div className="error-message round-border-5px">{errors}</div>
+                }
 
                 <div className="margin-top custom-a">
                   <table className="full-width"><tbody><tr>
@@ -158,11 +161,11 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
                 <div className="margin-top custom-a">
                   <table className="full-width"><tbody><tr>
                   <td>
-                    <DmButton text={<FaGithub />} loading={loading}
+                    <DmButton text={<FaGithub />} disabled={loading}
                       onClick={this.handleGithub} className="button-grey" />
                   </td>
                   <td>
-                    <DmButton text={<FaGoogle />} loading={loading}
+                    <DmButton text={<FaGoogle />} disabled={loading}
                       onClick={this.handleGithub} className="button-grey" />
                   </td>
                   </tr></tbody></table>

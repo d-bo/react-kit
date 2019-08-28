@@ -12,6 +12,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import Footer from "../../app-footer";
 import produce from "immer";
+import {LoadingFacebookBlack} from "../../shared/elements/loading";
 
 interface IRegisterProps {
   firebaseAuth: any;
@@ -147,7 +148,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
 
                 { // Captcha loading
                   captchaLoading &&
-                  <DmButton loading={true} />
+                  <LoadingFacebookBlack/>
                 }
 
                 <Router history={history}>

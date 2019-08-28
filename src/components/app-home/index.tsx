@@ -12,6 +12,7 @@ import produce from "immer";
 import { receiveItems } from "../../redux/actions";
 import store from "../../redux/stores/store";
 import { connect } from "react-redux";
+import {LoadingFacebookBlack} from "../shared/elements/loading";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -101,6 +102,10 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             </div>,
           )}
           </div>
+        }
+
+        {!items &&
+          <LoadingFacebookBlack/>
         }
 
         {errors &&

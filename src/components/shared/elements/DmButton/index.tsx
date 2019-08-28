@@ -1,7 +1,7 @@
 import React from "react";
 import "./style.css";
 
-const BorderSmall: React.CSSProperties = {
+const Outlined: React.CSSProperties = {
   background: "transparent",
   border: "1px solid #555",
   color: "#333",
@@ -9,6 +9,7 @@ const BorderSmall: React.CSSProperties = {
 };
 
 interface IDMButtonProps {
+  disabled?: boolean;
   theme?: string;
   onClick?: any;
   className?: string;
@@ -21,11 +22,12 @@ interface IDMButtonProps {
 
 const DmButton = (props: IDMButtonProps) =>
   <>
-    {props.theme === "border-small" &&
+    {props.theme === "outlined" &&
 
-      <div className={`dm-button round-border-5px ${props.className}`}
-        onClick={props.onClick} onKeyPress={props.onKeyPress}
-        style={{...props.style, ...BorderSmall}}>
+      <div className={`dm-button round-border-5px ${props.className}
+        ${props.disabled ? "button-disabled" : ""}`}
+        onClick={props.disabled ? null : props.onClick} onKeyPress={props.onKeyPress}
+        style={{...props.style, ...Outlined}}>
 
       {props.icon &&
         <span style={props.text ? {marginRight: "7px"} : {}}>{props.icon}</span>
@@ -37,8 +39,9 @@ const DmButton = (props: IDMButtonProps) =>
     }
 
     {!props.theme &&
-      <div className={`dm-button round-border-5px ${props.className}`}
-        onClick={props.onClick} onKeyPress={props.onKeyPress}
+      <div className={`dm-button round-border-5px ${props.className}
+        ${props.disabled ? "button-disabled" : ""}`}
+        onClick={props.disabled ? null : props.onClick} onKeyPress={props.onKeyPress}
         style={props.style}>
 
       {props.icon &&
