@@ -26,6 +26,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface IResetProps {
+  context: React.Context<any>;
   history: any;
   style: any;
   email: string | null;
@@ -48,9 +49,6 @@ interface IResetState {
 class Reset extends React.PureComponent<IResetProps, IResetState> {
 
   constructor(props: IResetProps) {
-    if (firebase.auth().currentUser) {
-      props.history.push("/");
-    }
     super(props);
     this.state = {
       captchaLoading: true,
@@ -67,6 +65,10 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
   }
 
   public componentDidMount(): void {
+    const {context, history} = this.props;
+    if (context) {
+      history.push("/");
+    }
     const self = this;
     (window as IWindow).recaptchaVerifier = new
       firebase.auth.RecaptchaVerifier("recaptcha-container", {

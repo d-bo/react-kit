@@ -15,6 +15,7 @@ import produce from "immer";
 import {LoadingFacebookBlack} from "../../shared/elements/loading";
 
 interface IRegisterProps {
+  context: React.Context<any>;
   firebaseAuth: any;
   history: any;
   style: any;
@@ -59,6 +60,10 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
   }
 
   public componentDidMount() {
+    const {context, history} = this.props;
+    if (context) {
+      history.push("/");
+    }
     const self = this;
     (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
       "callback": () => {

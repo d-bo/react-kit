@@ -1,5 +1,4 @@
 import Navbar from "../app-navbar";
-import Footer from "../app-footer";
 import firebase from "firebase/app";
 import React, { lazy, Suspense } from "react";
 import { Router, Route, Switch } from "react-router-dom";

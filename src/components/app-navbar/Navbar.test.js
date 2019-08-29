@@ -1,29 +1,27 @@
 /* eslint-disable */
 import React from "react";
-import {shallow} from "enzyme";
+import {shallow, render} from "enzyme";
 import Navbar from "./index";
+import { Router, Route, Switch } from "react-router-dom";
+import { createBrowserHistory } from "history";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
+import { Provider } from "react-redux";
+import store from "../../redux/stores/store";
 
-function Fixture() {
-  return (
-    <div>
-      <input id="disabled" disabled />
-      <input id="not"/>
-    </div>
-  );
-}
+const history = createBrowserHistory();
 
-describe("Navbar", () => {
-  it("Fixture is OK", () => {
-    const wrapper = shallow(<Fixture />);
-    expect(wrapper.find('#disabled')).toBeDisabled();
-    expect(wrapper.find('#not')).not.toBeDisabled();
-  });
-  it("Navbar is rendering", () => {
-    const wrapper = shallow(<FirebaseUserContext.Provider value={{
-      contextSetFirebaseUser: () => null,
-      firebaseUser: null,
-    }}><Navbar /></FirebaseUserContext.Provider>);
-    expect(wrapper.dive()).toExist();
+describe("<Navbar> component", () => {
+  it("Navbar component with Redux, Context, Router (not authenticated)", () => {
+    const wrapper = render(
+      <Provider store={store}>
+        <FirebaseUserContext.Provider value={{
+          contextSetFirebaseUser: () => null,
+          firebaseUser: null,
+        }}>
+        <Router history={history}><Navbar history={history} /></Router>
+        </FirebaseUserContext.Provider>
+      </Provider>
+      );
+    expect(wrapper.find(".container-fluid")).toHaveLength(1);
   });
 });

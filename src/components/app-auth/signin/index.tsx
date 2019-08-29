@@ -24,6 +24,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface ISigninProps {
+  context: React.Context<any>;
   history: any;
   style: any;
   setProfileImgUrl: any;
@@ -60,6 +61,10 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   public componentDidMount() {
+    const {context, history} = this.props;
+    if (context) {
+      history.push("/");
+    }
     const self = this;
     // Google captcha prepared
     (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {

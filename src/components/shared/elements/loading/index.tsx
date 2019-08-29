@@ -1,7 +1,9 @@
+import React from "react";
+
 export const LoadingFacebookBlack = () => {
   return (
     <div style={{textAlign: "center"}}>
-        <img src="/img/loading-facebook-black.gif" alt="" />
+      <img src="/img/loading-facebook-black.gif" alt="" />
     </div>
   );
 };
@@ -9,7 +11,7 @@ export const LoadingFacebookBlack = () => {
 export const LoadingRollingBlack = () => {
   return (
     <div style={{textAlign: "center"}}>
-        <img src="/img/loading-rolling-black.gif" alt="" />
+      <img src="/img/loading-rolling-black.gif" alt="" />
     </div>
   );
 };
