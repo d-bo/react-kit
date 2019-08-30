@@ -24,7 +24,6 @@ yarn-debug.log*
 yarn-error.log*
 
 __snapshots__
-.firebase/
 env.list
 
 travis.log
