@@ -12,7 +12,7 @@ import produce from "immer";
 import { receiveItems } from "../../redux/actions";
 import store from "../../redux/stores/store";
 import { connect } from "react-redux";
-import {LoadingFacebookBlack} from "../shared/elements/loading";
+import { LoadingFacebookBlack } from "../shared/elements/Loader";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -77,7 +77,9 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
   }
 
   public componentDidMount(): void {
-    store.dispatch(this.fetchItems() as any);
+    if (!this.props.items) {
+      store.dispatch(this.fetchItems() as any);
+    }
   }
 
   public render() {
@@ -85,14 +87,14 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
     const {items} = this.props;
     return (
       <>
-      <div className="container-fluid fade-in-fx body-page-color">
+      <div className="container-fluid fade-in-fx body-page-color body-page-margin-top">
 
         {items &&
           <div className="row fade-in-fx">
           {items.map((item: any) =>
             <div className="col-sm-6 col-lg-4" key={item.ID}>
               <DmFolderWidget title={item.UserName} shadow="soft-left-bottom-shadow">
-                <img src="/python-logo.png" alt=""
+                <img src="/img/python-logo.png" alt=""
                   className="in-folder-img round-border-50" />
                 <p>{item.ID}</p>
                 <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
@@ -118,7 +120,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <DmButton text="PROFILE" loading={loading}
                 onClick={() => this.props.history.push("/person/58758ff")}
                 className="margin-bottom" />
-              <img src="/python-logo.png" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/python-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -129,7 +131,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <DmButton text="PROFILE" loading={loading}
                 onClick={() => this.props.history.push("/person/58758ff")}
                 className="margin-bottom" />
-              <img src="/js-logo.png" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/js-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -140,7 +142,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <DmButton text="PROFILE" loading={loading}
                 onClick={() => this.props.history.push("/person/58758ff")}
                 className="margin-bottom" />
-              <img src="/Go-Logo_Blue.png" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/Go-Logo_Blue.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -149,7 +151,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="Rust" shadow="soft-left-bottom-shadow">
               <p></p>
-              <img src="/rust-logo.png" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/rust-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -176,7 +178,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="C++" shadow="soft-left-bottom-shadow">
               <p></p>
-              <img src="/c-plus-plus-logo.png" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/c-plus-plus-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -202,7 +204,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-6 col-lg-4">
             <DmFolderWidget title="C" shadow="soft-left-bottom-shadow">
               <p></p>
-              <img src="/c-logo.png" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/c-logo.png" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -235,7 +237,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <DmButton text="PROFILE" loading={loading}
               onClick={() => this.props.history.push("/person/58758ff")}
               className="margin-bottom" />
-              <img src="/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/bio_1.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -262,7 +264,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="Jeffrey Monnaghan" shadow="soft-left-bottom-shadow">
               <DmButton text="PROFILE" loading={loading}
               onClick={() => this.props.history.push("/person/87g8787")} className="margin-bottom" />
-              <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -289,7 +291,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="Nina Ricci" shadow="soft-left-bottom-shadow">
               <DmButton text="PROFILE" loading={loading}
               onClick={() => this.props.history.push("/person/ricci.ui")} className="margin-bottom" />
-              <img src="/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/bio_3.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -327,7 +329,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <ButtonWidget />
 
             <LazyLoadImage
-              src="prod-1.jpg"
+              src="/img/prod-1.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover-product round-border-3px" />
@@ -345,7 +347,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <ButtonWidget />
 
               <LazyLoadImage
-                src="/prod-2.jpg"
+                src="/img/prod-2.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover-product round-border-3px" />
@@ -365,7 +367,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <ButtonWidget />
 
               <LazyLoadImage
-                src="/prod-3.jpg"
+                src="/img/prod-3.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover-product round-border-3px" />
@@ -382,7 +384,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <ButtonWidget />
 
               <LazyLoadImage
-                src="/prod-4.jpg"
+                src="/img/prod-4.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover-product round-border-3px" />
@@ -396,7 +398,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="Телефон NOKIA 3310"
               style={{textAlign: "center"}}>
               <LazyLoadImage
-                src="/prod-5.jpg"
+                src="/img/prod-5.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover-product round-border-3px" />
@@ -415,7 +417,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
               <ButtonWidget />
 
               <LazyLoadImage
-                src="/prod-6.jpg"
+                src="/img/prod-6.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover-product round-border-3px" />
@@ -432,7 +434,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="Mercedes ZX180" style={{textAlign: "center"}}>
             <ButtonWidget />
             <LazyLoadImage
-              src="avto-1.jpg"
+              src="/img/avto-1.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -442,7 +444,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="Toyota RAV102" style={{textAlign: "center"}}>
               <ButtonWidget />
               <LazyLoadImage
-                src="/avto-2.jpg"
+                src="/img/avto-2.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -452,7 +454,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="LADA 540 El Diablo" style={{textAlign: "center"}}>
               <ButtonWidget />
               <LazyLoadImage
-                src="/avto-3.jpg"
+                src="/img/avto-3.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -462,7 +464,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="BMW Z3 Autotesting" style={{textAlign: "center"}}>
               <ButtonWidget />
               <LazyLoadImage
-                src="/avto-4.jpg"
+                src="/img/avto-4.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -476,7 +478,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-3">
             <DmFolderWidget title="Shailene Woodley" style={{textAlign: "center"}}>
             <LazyLoadImage
-              src="/bio_4.jpg"
+              src="/img/bio_4.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
@@ -488,7 +490,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-3">
             <DmFolderWidget title="Ashley judd" style={{textAlign: "center"}}>
               <LazyLoadImage
-                src="/ashley_judd.jpg"
+                src="/img/ashley_judd.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -511,7 +513,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-3">
             <DmFolderWidget title="Brie Larson" style={{textAlign: "center"}}>
               <LazyLoadImage
-                src="/brie_larson.jpg"
+                src="/img/brie_larson.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -537,7 +539,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-3">
             <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
               <LazyLoadImage
-                src="/natasha_henstridge.jpg"
+                src="/img/natasha_henstridge.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -551,7 +553,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-3">
             <DmFolderWidget title="Shailene Woodley" style={{textAlign: "center"}}>
             <LazyLoadImage
-              src="/nude-1.jpg"
+              src="/img/nude-1.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -564,7 +566,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget desc="Njkbvwiueg wewiugfuwgeuwg" title="Ashley judd"
             style={{textAlign: "center"}}>
               <LazyLoadImage
-                src="/nude-2.jpg"
+                src="/img/nude-2.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -585,7 +587,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-3">
             <DmFolderWidget title={<FaRegStar />} style={{textAlign: "center"}}>
               <LazyLoadImage
-                src="/nude-3.jpg"
+                src="/img/nude-3.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -611,7 +613,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-3">
             <DmFolderWidget title="Natasha Henstridge" style={{textAlign: "center"}}>
               <LazyLoadImage
-                src="/nude-4.jpg"
+                src="/img/nude-4.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px product-pic-shadow" />
@@ -625,7 +627,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-1.jpg"
+                src="/img/nude-1.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -635,7 +637,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-2.jpg"
+                src="/img/nude-2.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -645,7 +647,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-3.jpg"
+                src="/img/nude-3.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -655,7 +657,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-4.jpg"
+                src="/img/nude-4.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -665,7 +667,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-5.jpg"
+                src="/img/nude-5.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -675,7 +677,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-6.jpg"
+                src="/img/nude-6.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -689,7 +691,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
         <div className="row">
           <div className="col-sm-4 col-lg-2">
             <LazyLoadImage
-              src="/nude-7.jpg"
+              src="/img/nude-7.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
@@ -697,7 +699,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           </div>
           <div className="col-sm-4 col-lg-2">
             <LazyLoadImage
-              src="/nude-8.jpg"
+              src="/img/nude-8.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
@@ -705,7 +707,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           </div>
           <div className="col-sm-4 col-lg-2">
             <LazyLoadImage
-              src="/nude-9.jpg"
+              src="/img/nude-9.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
@@ -713,7 +715,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           </div>
           <div className="col-sm-4 col-lg-2">
             <LazyLoadImage
-              src="/nude-10.jpg"
+              src="/img/nude-10.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
@@ -721,7 +723,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           </div>
           <div className="col-sm-4 col-lg-2">
             <LazyLoadImage
-              src="/nude-11.jpg"
+              src="/img/nude-11.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
@@ -729,7 +731,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           </div>
           <div className="col-sm-4 col-lg-2">
             <LazyLoadImage
-              src="/nude-12.jpg"
+              src="/img/nude-12.jpg"
               placeholderSrc="/no-image-slide.png"
               effect="blur"
               className="fit-in-cover round-border-5px" />
@@ -743,7 +745,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-13.jpg"
+                src="/img/nude-13.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -753,7 +755,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-14.jpg"
+                src="/img/nude-14.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -763,7 +765,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-15.jpg"
+                src="/img/nude-15.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -773,7 +775,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-16.jpg"
+                src="/img/nude-16.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -783,7 +785,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-17.jpg"
+                src="/img/nude-17.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -793,7 +795,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-18.jpg"
+                src="/img/nude-18.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -808,7 +810,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-19.jpg"
+                src="/img/nude-19.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -818,7 +820,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-20.jpg"
+                src="/img/nude-20.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -828,7 +830,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-21.jpg"
+                src="/img/nude-21.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -838,7 +840,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-22.jpg"
+                src="/img/nude-22.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -848,7 +850,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-23.jpg"
+                src="/img/nude-23.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -858,7 +860,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4 col-lg-2">
             <DmFolderWidget>
               <LazyLoadImage
-                src="/nude-24.jpg"
+                src="/img/nude-24.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="fit-in-cover round-border-5px" />
@@ -874,7 +876,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title="Python Identity Operators">
                 <div style={{textAlign: "center", marginBottom: "14px"}}>
                 <LazyLoadImage
-                  src="/bio_1.jpg"
+                  src="/img/bio_1.jpg"
                   placeholderSrc="/no-image-slide.png"
                   effect="blur"
                   className="round-border-5px" />
@@ -930,7 +932,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
             <DmFolderWidget title={<FaRegStar />}>
               <DmButton text="PROFILE" loading={loading}
               onClick={() => this.props.history.push("/profile")} className="margin-bottom" />
-              <img src="/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
+              <img src="/img/bio_2.jpg" alt="" className="in-folder-img round-border-50" />
               <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
               and sizes thanks to a twelve column system, five default responsive tiers,
               Sass variables and mixins, and dozens of predefined classes.</p>
@@ -961,7 +963,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-4">
             <DmFolderWidget title="BRAWLcast 261 Data Raven - Renegade Interrupt">
               <LazyLoadImage
-                src="/cast_1.jpg"
+                src="/img/cast_1.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="in-folder-img round-border-50" />
@@ -982,7 +984,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="col-sm-8">
             <DmFolderWidget title="Rave girl 303">
               <LazyLoadImage
-                src="/bio_3.jpg"
+                src="/img/bio_3.jpg"
                 placeholderSrc="/no-image-slide.png"
                 effect="blur"
                 className="in-folder-img round-border-50" />

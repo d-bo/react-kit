@@ -15,7 +15,7 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { IWindow } from "../register";
 import Footer from "../../app-footer";
 import produce from "immer";
-import {LoadingFacebookBlack} from "../../shared/elements/loading";
+import {LoadingFacebookBlack} from "../../shared/elements/Loader";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -119,10 +119,10 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     } = this.state;
     return (
       <>
-      <div className="container-fluid body-page-color">
+      <div className="container-fluid body-page-color body-page-margin-top-when-centered">
         <div className="row">
-          <div className="col-sm-3 col-lg-4"></div>
-          <div className="col-sm-6 col-lg-4">
+          <div className="col-md-3 col-sm-2 col-lg-4"></div>
+          <div className="col-md-6 col-sm-8 col-lg-4">
 
           <div className="vertical-center">
             <DmFolderWidget title="Sign In" className="fade-in-fx"
@@ -182,7 +182,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
           </div>
 
           </div>
-        <div className="col-sm-3 col-lg-4"></div>
+        <div className="col-md-3 col-sm-2 col-lg-4"></div>
       </div>
     </div>
     <Footer />

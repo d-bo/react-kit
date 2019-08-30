@@ -1,4 +1,4 @@
-$bg-widget: #fafafa;
+@import "../../scss/vars.scss";
 
 .img-navbar {
   width: 40px;
@@ -19,9 +19,71 @@ $bg-widget: #fafafa;
 .navbar-body {
   padding: 10px;
   background: $bg-widget;
-  color: #555;
+  color: $app-color;
+  position: fixed;
+  width: 100%;
+  z-index: 99999;
 }
 
-.soft-left-bottom-shadow {
-  box-shadow: -10px 10px 15px -20px #999;
+#navbar-side-menu {
+  display: none;
+}
+
+#navbar-bottom-menu {
+  display: none;
+}
+
+#navbar-sidebar {
+  right: 0;
+  top: 0;
+  position: fixed;
+  background: $bg-color;
+  padding: 10px;
+  width: 300px;
+  z-index: 99999;
+}
+
+.sidebar-closed {
+  display: none;
+}
+
+.sidebar-opened {
+  display: block;
+}
+
+.navbar-sidebar-close-btn {
+  text-align: right;
+  font-size: 28px;
+  padding-right: 10px;
+}
+
+@media screen and (max-width: 576px) {
+  #navbar-media-query {
+    display: none;
+  }
+
+  #navbar-side-menu {
+    display: block;
+    text-align: right;
+    font-size: 26px;
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    z-index: 99999;
+  }
+
+  #navbar-bottom-menu {
+    width: 100%;
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: $bg-color;
+    td {
+      text-align: center;
+      padding: 20px;
+      cursor: pointer;
+    }
+    z-index: 99999;
+  }
 }

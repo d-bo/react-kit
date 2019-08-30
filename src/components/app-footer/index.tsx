@@ -3,7 +3,7 @@ import React from "react";
 
 const Footer: React.SFC = () =>
   <>
-    <div className="footer">
+    <div className="footer soft-left-top-shadow">
       <div className="container-fluid fade-in-fx">
         <div className="row">
           <div className="col-sm-4">

@@ -56,7 +56,7 @@ class Person extends React.Component<IHomeProps, IHomeState> {
     return (
       <>
       <div style={{textAlign: "center"}}>{params.id}</div>
-      <div className="container fade-in-fx">
+      <div className="container fade-in-fx body-page-margin-top">
 
         <div className="row">
           <div className="col-sm-4">

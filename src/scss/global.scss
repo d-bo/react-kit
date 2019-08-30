@@ -195,6 +195,22 @@ body {
   padding-top: 14px;
 }
 
+.body-page-margin-top {
+  padding-top: 82px;
+}
+
+.body-page-margin-top-when-centered {
+  padding-top: 62px;
+}
+
 a {
   color:rgb(148, 148, 0);
+}
+
+.soft-left-bottom-shadow {
+  box-shadow: -10px 10px 15px -20px #999;
+}
+
+.soft-left-top-shadow {
+  box-shadow: 0 0px 15px -10px #999;
 }

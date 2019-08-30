@@ -15,7 +15,7 @@ import { IWindow } from "../register";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import Footer from "../../app-footer";
 import produce from "immer";
-import {LoadingRollingBlack} from "../../shared/elements/loading";
+import {LoadingRollingBlack} from "../../shared/elements/Loader";
 
 const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
@@ -124,10 +124,10 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
     } = this.state;
     return (
       <>
-      <div className="container-fluid body-page-color">
+      <div className="container-fluid body-page-color body-page-margin-top-when-centered">
         <div className="row">
-          <div className="col-sm-3 col-lg-4"></div>
-          <div className="col-sm-6 col-lg-4">
+          <div className="col-md-3 col-sm-2 col-lg-4"></div>
+          <div className="col-md-6 col-sm-8 col-lg-4">
           <div className="vertical-center">
             <DmFolderWidget title="Reset password" className="fade-in-fx"
               shadow="soft-left-bottom-shadow">
@@ -185,7 +185,7 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
           </div>
 
           </div>
-        <div className="col-sm-3 col-lg-4"></div>
+        <div className="col-md-3 col-sm-2 col-lg-4"></div>
       </div>
     </div>
     <Footer />

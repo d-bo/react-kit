@@ -112,11 +112,11 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
 
     return (
       <>
-      <div className="container-fluid body-page-color">
+      <div className="container-fluid body-page-color body-page-margin-top">
         <div className="row">
 
-          <div className="col-sm-6 px-xl-5">
-            <DmFolderWidget title="Profile" className="fade-in-fx">
+          <div className="col-sm-4">
+            <DmFolderWidget title="Photo" className="fade-in-fx">
 
             <p></p>
 
@@ -227,7 +227,24 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
             </DmFolderWidget>
           </div>
 
-          <div className="col-sm-6 px-xl-5">
+          <div className="col-sm-4">
+            <DmFolderWidget title="Skills" className="fade-in-fx">
+                Rizzle - Serenity <b>[Dispatch Recordings]</b><br/>
+                Kasra - Alburz <b>[Critical Music]</b><br/>
+                Skeptical - Mechanism <b>[Exit Records]</b><br/>
+                Neve - Ping Pong <b>[Guidance]</b><br/>
+                Mefjus - Sinkhole (Skeptical Remix) <b>[Vision Recordings]</b><br/>
+                Trex & Qu3st - Eye Spy <b>[The Dreamers]</b><br/>
+                Alix Perez & Monty - Good to Me <b>[1985 Music]</b><br/>
+                Nucleus & Paradox - Azha <b>[Metalheadz]</b><br/>
+                Frame & Base - Pony Express <b>[Delta9 Recordings]</b><br/>
+                Blacklight - Enormous Machine <b>[Subplate Recordings]</b><br/>
+                Doctor Jeep - Natural Selection <b>[Plush Recordings]</b><br/>
+                Ground - Attract <b>[Flexout Audio]</b><br/>
+            </DmFolderWidget>
+          </div>
+
+          <div className="col-sm-4">
             <DmFolderWidget title="Settings" className="fade-in-fx">
               <p></p>
               <table style={{width: "100%"}}><tbody><tr>

@@ -12,7 +12,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import Footer from "../../app-footer";
 import produce from "immer";
-import {LoadingFacebookBlack} from "../../shared/elements/loading";
+import {LoadingFacebookBlack} from "../../shared/elements/Loader";
 
 interface IRegisterProps {
   context: React.Context<any>;
@@ -119,10 +119,10 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
 
     return (
       <>
-      <div className="container-fluid body-page-color">
+      <div className="container-fluid body-page-color body-page-margin-top-when-centered">
         <div className="row">
-          <div className="col-sm-2 col-lg-4"></div>
-          <div className="col-sm-8 col-lg-4">
+          <div className="col-md-3 col-sm-2 col-lg-4"></div>
+          <div className="col-md-6 col-sm-8 col-lg-4">
 
           <div className="vertical-center">
             <DmFolderWidget title="Register" className="fade-in-fx"
@@ -175,7 +175,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
           </div>
 
           </div>
-          <div className="col-sm-2 col-lg-4"></div>
+          <div className="col-md-3 col-sm-2 col-lg-4"></div>
         </div>
       </div>
       <Footer />

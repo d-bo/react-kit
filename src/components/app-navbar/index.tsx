@@ -6,6 +6,11 @@ import DmButton from "../shared/elements/DmButton";
 import { Router } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
+import {
+  FaBars, FaFastBackward, FaFastForward,
+  FaPlay, FaRegWindowClose,
+} from "react-icons/fa";
+import produce from "immer";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -17,6 +22,7 @@ interface INavbarProps {
 interface INavbarState {
   loading: boolean;
   loadingExit: boolean;
+  sidebar: boolean;
   verifyLinkSent: boolean;
 }
 
@@ -27,19 +33,66 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
     this.state = {
       loading: false,
       loadingExit: false,
+      sidebar: false,
       verifyLinkSent: false,
     };
     this.redirectProfile = this.redirectProfile.bind(this);
+    this.toggleSidebar = this.toggleSidebar.bind(this);
+  }
+
+  public toggleSidebar() {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.sidebar = draft.sidebar ? false : true;
+      }),
+    );
   }
 
   public render() {
     const {history, profileImgUrl} = this.props;
     const {firebaseUser} = this.context;
-    const {loading} = this.state;
+    const {loading, sidebar} = this.state;
     return (
-      <div className="navbar-body soft-left-bottom-shadow">
+      <div className="navbar-body soft-left-bottom-shadow fade-in-fx">
         <div className="container-fluid navbar">
           <div className="row">
+
+            <div id="navbar-side-menu" className="fade-in-fx">
+              <FaBars style={{cursor: "pointer"}} onClick={this.toggleSidebar} />
+            </div>
+
+            <div id="navbar-bottom-menu" className="soft-left-top-shadow">
+              <table style={{width: "100%"}}>
+                <tbody>
+                  <tr>
+                    <td><FaFastBackward/></td>
+                    <td><FaFastForward/></td>
+                    <td><FaPlay/></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div id="navbar-sidebar"
+              className={`soft-left-top-shadow ${sidebar ? "sidebar-opened" : "sidebar-closed"}`}>
+              <p className="navbar-sidebar-close-btn">
+                <FaRegWindowClose style={{cursor: "pointer"}} onClick={this.toggleSidebar} />
+              </p>
+              <p>
+                Rizzle - Serenity <b>[Dispatch Recordings]</b><br/>
+                Kasra - Alburz <b>[Critical Music]</b><br/>
+                Skeptical - Mechanism <b>[Exit Records]</b><br/>
+                Neve - Ping Pong <b>[Guidance]</b><br/>
+                Mefjus - Sinkhole (Skeptical Remix) <b>[Vision Recordings]</b><br/>
+                Trex & Qu3st - Eye Spy <b>[The Dreamers]</b><br/>
+                Alix Perez & Monty - Good to Me <b>[1985 Music]</b><br/>
+                Nucleus & Paradox - Azha <b>[Metalheadz]</b><br/>
+                Frame & Base - Pony Express <b>[Delta9 Recordings]</b><br/>
+                Blacklight - Enormous Machine <b>[Subplate Recordings]</b><br/>
+                Doctor Jeep - Natural Selection <b>[Plush Recordings]</b><br/>
+                Ground - Attract <b>[Flexout Audio]</b><br/>
+              </p>
+            </div>
 
             <div className="col-sm-4"></div>
 
@@ -54,6 +107,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
             </div>
 
             <div className="col-sm-4 navbar-user">
+              <div id="navbar-media-query">
               {firebaseUser &&
                 <div style={{textAlign: "right"}}>
                   <span onClick={this.redirectProfile} style={{cursor: "pointer"}}>
@@ -120,6 +174,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                   </tr></tbody>
                 </table>
               }
+              </div>
             </div>
 
           </div>

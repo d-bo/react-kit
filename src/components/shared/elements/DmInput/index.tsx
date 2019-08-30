@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import "./style.css";
+import "./style.scss";
 import produce from "immer";
 
 const mapStateToProps = (state: any) => state;

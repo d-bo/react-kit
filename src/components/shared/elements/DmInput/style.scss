@@ -1,3 +1,5 @@
+@import "../../../../scss/vars.scss";
+
 .dm-input {
   border: 0;
   width: 100%;
@@ -5,7 +7,7 @@
   font-size: 14px;
   font-weight: bold;
   display: inline-block;
-  padding: 21px;
+  padding: $element-padding;
   background: #e6e6e6;
   margin: 7px 0;
   cursor: pointer;
