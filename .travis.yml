@@ -11,6 +11,7 @@ script:
 - npm run build
 deploy:
   provider: firebase
+  skip_cleanup: true
   token:
     secure: 1/TxzFeZQIVagBiWpNn8jHsBGAigSKqa41y3UmKrf5SYOP1etpKF6IOI0KEd9RSBMO
 env:
