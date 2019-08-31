@@ -23,5 +23,6 @@ describe("<Navbar> component", () => {
       </Provider>
       );
     expect(wrapper.find(".container-fluid")).toHaveLength(1);
+    expect(wrapper.find("#navbar-side-menu")).toHaveLength(1);
   });
 });

@@ -1,0 +1,24 @@
+@import "../../../../scss/vars.scss";
+
+.navbar-sidebar-close-btn {
+  text-align: right;
+  font-size: 28px;
+  padding-right: 10px;
+}
+
+#navbar-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  background: $bg-color;
+  z-index: 99999;
+}
+
+.sidebar-closed {
+  display: none;
+}
+
+.sidebar-opened {
+  display: block;
+}

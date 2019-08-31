@@ -7,10 +7,11 @@ import { Router } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 import {
-  FaBars, FaFastBackward, FaFastForward,
-  FaPlay, FaRegWindowClose,
+  FaBars, FaFastBackward,
+  FaPlay, FaFastForward,
 } from "react-icons/fa";
 import produce from "immer";
+import Sidebar from "../shared/widgets/Sidebar";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -73,26 +74,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
               </table>
             </div>
 
-            <div id="navbar-sidebar"
-              className={`soft-left-top-shadow ${sidebar ? "sidebar-opened" : "sidebar-closed"}`}>
-              <p className="navbar-sidebar-close-btn">
-                <FaRegWindowClose style={{cursor: "pointer"}} onClick={this.toggleSidebar} />
-              </p>
-              <p>
-                Rizzle - Serenity <b>[Dispatch Recordings]</b><br/>
-                Kasra - Alburz <b>[Critical Music]</b><br/>
-                Skeptical - Mechanism <b>[Exit Records]</b><br/>
-                Neve - Ping Pong <b>[Guidance]</b><br/>
-                Mefjus - Sinkhole (Skeptical Remix) <b>[Vision Recordings]</b><br/>
-                Trex & Qu3st - Eye Spy <b>[The Dreamers]</b><br/>
-                Alix Perez & Monty - Good to Me <b>[1985 Music]</b><br/>
-                Nucleus & Paradox - Azha <b>[Metalheadz]</b><br/>
-                Frame & Base - Pony Express <b>[Delta9 Recordings]</b><br/>
-                Blacklight - Enormous Machine <b>[Subplate Recordings]</b><br/>
-                Doctor Jeep - Natural Selection <b>[Plush Recordings]</b><br/>
-                Ground - Attract <b>[Flexout Audio]</b><br/>
-              </p>
-            </div>
+            <Sidebar history={history} onClick={this.toggleSidebar} sidebar={sidebar}/>
 
             <div className="col-sm-4"></div>
 

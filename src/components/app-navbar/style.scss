@@ -33,30 +33,6 @@
   display: none;
 }
 
-#navbar-sidebar {
-  right: 0;
-  top: 0;
-  position: fixed;
-  background: $bg-color;
-  padding: 10px;
-  width: 300px;
-  z-index: 99999;
-}
-
-.sidebar-closed {
-  display: none;
-}
-
-.sidebar-opened {
-  display: block;
-}
-
-.navbar-sidebar-close-btn {
-  text-align: right;
-  font-size: 28px;
-  padding-right: 10px;
-}
-
 @media screen and (max-width: 576px) {
   #navbar-media-query {
     display: none;
