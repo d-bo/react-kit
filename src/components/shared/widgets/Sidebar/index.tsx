@@ -14,19 +14,19 @@ const Sidebar = (props: any) => {
       </p>
       <div style={{textAlign: "center", width: "280px"}}>
       <Router history={history}>
-        <Link to="/">
+        <Link to="/" onClick={onClick}>
           <h3>Home</h3>
         </Link>
         <p></p>
-        <Link to="/profile">
+        <Link to="/profile" onClick={onClick}>
           <h3>Profile</h3>
         </Link>
         <p></p>
-        <Link to="/auth/signin">
+        <Link to="/auth/signin" onClick={onClick}>
           <h3>Signin</h3>
         </Link>
         <p></p>
-        <Link to="/signin">
+        <Link to="/auth/register" onClick={onClick}>
           <h3>Register</h3>
         </Link>
         <p></p>

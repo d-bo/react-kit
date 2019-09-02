@@ -58,7 +58,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
         <div className="container-fluid navbar">
           <div className="row">
 
-            <div id="navbar-side-menu" className="fade-in-fx">
+            <div id="navbar-sidebar-button" className="fade-in-fx">
               <FaBars style={{cursor: "pointer"}} onClick={this.toggleSidebar} />
             </div>
 
