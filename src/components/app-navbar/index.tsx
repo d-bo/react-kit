@@ -41,10 +41,18 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
     this.toggleSidebar = this.toggleSidebar.bind(this);
   }
 
-  public toggleSidebar() {
+  public toggleSidebar(): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.sidebar = draft.sidebar ? false : true;
+      }),
+    );
+  }
+
+  public hideSidebar(): void {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.sidebar = false;
       }),
     );
   }
@@ -74,7 +82,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
               </table>
             </div>
 
-            <Sidebar history={history} onClick={this.toggleSidebar} sidebar={sidebar}/>
+            <Sidebar history={history} onClick={this.toggleSidebar} sidebar={sidebar} />
 
             <div className="col-sm-4"></div>
 
