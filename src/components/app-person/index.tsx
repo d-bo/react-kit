@@ -17,10 +17,6 @@ const Counter = (props: any) => <span
   style={{ paddingRight: "10px", fontSize: "18px" }}>
   {props.itemId}</span>;
 
-const LikeCounter = (props: any) =>
-  <DmButton text={<><Counter itemId={props.itemId} /><FaRegThumbsUp /></>}
-  onClick={() => null} className="margin-top-10 button-grey" />;
-
 interface IHomeProps {
   history: any;
   match: any;

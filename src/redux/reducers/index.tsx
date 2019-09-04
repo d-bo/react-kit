@@ -1,16 +1,16 @@
 import { combineReducers } from "redux";
 import { actionTypes } from "../actions";
-import produce, { Draft } from "immer";
+import produce from "immer";
 
 interface IInitState {
   items: object[] | null;
-  loading: boolean;
   email: string;
   password: string;
   displayName: string;
   city: string;
   country: string;
   profileImgUrl: string;
+  sidebar: boolean;
   userData: {};
 }
 
@@ -20,9 +20,9 @@ const initState: IInitState = {
   displayName: "",
   email: "",
   items: null,
-  loading: false,   // global state lock ?? mutex like
   password: "",
   profileImgUrl: "",
+  sidebar: false,
   userData: {},
 };
 
@@ -51,41 +51,55 @@ const storeState = (state: any) => {
   return state;
 };
 
-const firebaseAuth = (state = getInitState(), action: any) => {
+const firebaseAuth = (state = getInitState(), action: any) =>
+  produce(state, (draft: any) => {
 
-  // immerjs immutable state process
-  return storeState(produce(state, (draft: any) => {
     switch (action.type) {
 
       case actionTypes.AUTH_FIREBASE:
         draft.firebaseUser = action.firebaseUser;
+        break;
 
       case actionTypes.SET_EMAIL:
         draft.email = action.email;
+        break;
 
       case actionTypes.SET_PASSWORD:
         draft.password = action.password;
+        break;
 
       case actionTypes.SET_NAME:
         draft.displayName = action.displayName;
+        break;
 
       case actionTypes.LOADING:
         draft.loading = action.loading;
+        break;
 
       case actionTypes.LOGOUT:
         draft.firebaseUser = null;
+        break;
 
       case actionTypes.SET_PROFILE_IMG_URL:
         draft.profileImgUrl = action.profileImgUrl;
+        break;
 
       case actionTypes.SET_USER_FIRESTORE_DATA:
         draft.userData = action.userData;
+        break;
 
       case actionTypes.RECEIVE_ITEMS:
         draft.items = action.items;
-    }
-  }));
-};
+        break;
+
+      case actionTypes.TOGGLE_SIDEBAR:
+        draft.sidebar = draft.sidebar ? false : true;
+        break;
+
+      case actionTypes.HIDE_SIDEBAR:
+        draft.sidebar = false;
+        break;
+}});
 
 const rootReducer = combineReducers({firebaseAuth});
 

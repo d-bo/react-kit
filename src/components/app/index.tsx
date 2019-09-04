@@ -1,18 +1,30 @@
 import Navbar from "../app-navbar";
 import firebase from "firebase/app";
-import React, { lazy, Suspense } from "react";
+import React, { Suspense } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 import * as LazyComponents from "./LazyComponents";
 import produce from "immer";
+import { connect } from "react-redux";
+import { hideSidebar } from "../../redux/actions";
+
+const mapStateToProps = (state: any) => state.firebaseAuth;
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    handleHideSidebar: () => dispatch(hideSidebar()),
+  };
+};
 
 interface IAppProps {
-  firebaseUser: firebase.User | null;
+  firebaseUser?: firebase.User | null;
   history?: any;
+  handleHideSidebar?: any;
+  setProfileImgUrl?: any;
 }
 
 interface IAppState {
-  firebaseUser: firebase.User | null;
+  firebaseUser: firebase.User | undefined | null ;
   errors: string | null;
   loading: boolean;
   loadingExit: boolean;
@@ -31,6 +43,7 @@ class App extends React.Component<IAppProps, IAppState> {
       verifyLinkSent: false,
     };
     this.contextSetFirebaseUser = this.contextSetFirebaseUser.bind(this);
+    this.clickBodyListener = this.clickBodyListener.bind(this);
   }
 
   // Dynamically set user from child components
@@ -41,6 +54,17 @@ class App extends React.Component<IAppProps, IAppState> {
         draft.firebaseUser = firebaseUser;
       }),
     );
+  }
+
+  // TODO: sidebar hides, so i can't click and execute click event listener
+  public clickBodyListener(e: MouseEvent) {
+    //this.props.handleHideSidebar(e);
+  }
+  public componentDidMount() {
+    //document.addEventListener("mousedown", this.clickBodyListener, true);
+  }
+  public componentWillUnmount() {
+    //document.removeEventListener("mousedown", this.clickBodyListener);
   }
 
   public render() {
@@ -86,4 +110,4 @@ class App extends React.Component<IAppProps, IAppState> {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

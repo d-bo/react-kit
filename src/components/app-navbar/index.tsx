@@ -1,7 +1,7 @@
 import "./style.scss";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import React, { Component } from "react";
+import React from "react";
 import DmButton from "../shared/elements/DmButton";
 import { Router } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -10,20 +10,32 @@ import {
   FaBars, FaFastBackward,
   FaPlay, FaFastForward,
 } from "react-icons/fa";
-import produce from "immer";
 import Sidebar from "../shared/widgets/Sidebar";
+import { toggleSidebar, setProfileImgUrl, setUserFirestoreData } from "../../redux/actions";
+import firebase from "firebase/app";
+import produce from "immer";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    handleToggleSidebar: (e: MouseEvent) => dispatch(toggleSidebar()),
+    setProfileImgUrl: (imgUrl: string) => dispatch(setProfileImgUrl(imgUrl)),
+  };
+};
 
 interface INavbarProps {
   history?: any;
   profileImgUrl?: string | null;
+  setProfileImgUrl?: any;
+  sidebar?: boolean;
+  handleToggleSidebar?: any;
 }
 
 interface INavbarState {
+  errors: string | null;
   loading: boolean;
   loadingExit: boolean;
-  sidebar: boolean;
   verifyLinkSent: boolean;
 }
 
@@ -32,42 +44,56 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
   constructor(props: INavbarProps) {
     super(props);
     this.state = {
+      errors: null,
       loading: false,
       loadingExit: false,
-      sidebar: false,
       verifyLinkSent: false,
     };
     this.redirectProfile = this.redirectProfile.bind(this);
-    this.toggleSidebar = this.toggleSidebar.bind(this);
+    this.handleLogOut = this.handleLogOut.bind(this);
   }
 
-  public toggleSidebar(): void {
-    this.setState(
-      produce(this.state, (draft) => {
-        draft.sidebar = draft.sidebar ? false : true;
+  public handleLogOut(): void {
+    const self = this;
+    const {setProfileImgUrl, history} = this.props;
+    const {contextSetFirebaseUser} = this.context;
+    self.setState(
+      produce(self.state, (draft) => {
+        draft.loadingExit = true;
       }),
     );
-  }
-
-  public hideSidebar(): void {
-    this.setState(
-      produce(this.state, (draft) => {
-        draft.sidebar = false;
-      }),
-    );
+    firebase.auth().signOut().then(() => {
+      contextSetFirebaseUser(null);
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.loadingExit = false;
+        }),
+      );
+      localStorage.removeItem("localAppCurrentUserID");
+      setProfileImgUrl(null);
+      history.push("/auth/signin");
+    }).catch((error) => {
+      const errorMessage = error.message;
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.errors = errorMessage;
+          draft.loadingExit = false;
+        }),
+      );
+    });
   }
 
   public render() {
-    const {history, profileImgUrl} = this.props;
+    const {history, profileImgUrl, handleToggleSidebar, sidebar } = this.props;
     const {firebaseUser} = this.context;
-    const {loading, sidebar} = this.state;
+    const {loading} = this.state;
     return (
       <div className="navbar-body soft-left-bottom-shadow fade-in-fx">
         <div className="container-fluid navbar">
           <div className="row">
 
             <div id="navbar-sidebar-button" className="fade-in-fx">
-              <FaBars style={{cursor: "pointer"}} onClick={this.toggleSidebar} />
+              <FaBars style={{cursor: "pointer"}} onClick={handleToggleSidebar} />
             </div>
 
             <div id="navbar-bottom-menu" className="soft-left-top-shadow">
@@ -82,9 +108,23 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
               </table>
             </div>
 
-            <Sidebar history={history} onClick={this.toggleSidebar} sidebar={sidebar} />
+            <Sidebar history={history} onClick={handleToggleSidebar}
+              sidebar={sidebar} firebaseUser={firebaseUser} logOut={this.handleLogOut}/>
 
-            <div className="col-sm-4"></div>
+            <div className="col-sm-4 mobile-disabled">
+              {!firebaseUser &&
+                <table style={{width: "100%"}}>
+                  <tbody><tr>
+                    <td style={{width: "50%"}}>
+                    <DmButton text="REGISTER" loading={loading}
+                        onClick={() => this.props.history.push("/auth/register")}
+                        style={{padding: "7px 0"}} />
+                    </td>
+                    <td style={{width: "50%"}}></td>
+                  </tr></tbody>
+                </table>
+              }
+            </div>
 
             <div className="col-sm-4">
               <div style={{textAlign: "center"}}>
@@ -180,4 +220,4 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
 
 Navbar.contextType = FirebaseUserContext;
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

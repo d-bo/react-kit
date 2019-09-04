@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 
 export const actionTypes = {
   AUTH_FIREBASE: "AUTH_FIREBASE",
+  HIDE_SIDEBAR: "HIDE_SIDEBAR",
   LOADING: "LOADING",
   LOGOUT: "LOGOUT",
   RECEIVE_ITEMS: "RECEIVE_ITEMS",
@@ -10,12 +11,15 @@ export const actionTypes = {
   SET_PASSWORD: "SET_PASSWORD",
   SET_PROFILE_IMG_URL: "SET_PROFILE_IMG_URL",
   SET_USER_FIRESTORE_DATA: "SET_USER_FIRESTORE_DATA",
+  TOGGLE_SIDEBAR: "TOGGLE_SIDEBAR",
 };
 
 interface IReduxAction {
   type: string;
   userData?: object | null;
+  payload?: any;
   profileImgUrl?: string;
+  sidebar?: boolean;
   firebaseUser?: firebase.User | null;
   email?: string;
   items?: AxiosResponse | null;
@@ -67,4 +71,13 @@ export const firebaseSetName = (displayName: string): IReduxAction => ({
 export const firebaseLogOut = (): IReduxAction => ({
   firebaseUser: null,
   type: actionTypes.LOGOUT,
+});
+
+export const toggleSidebar = (): IReduxAction => ({
+  payload: null,
+  type: actionTypes.TOGGLE_SIDEBAR,
+});
+
+export const hideSidebar = (): IReduxAction => ({
+  type: actionTypes.HIDE_SIDEBAR,
 });

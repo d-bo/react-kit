@@ -1,4 +1,4 @@
-import React, { Component, ComponentClass, FunctionComponent } from "react";
+import React from "react";
 import DmButton from "../shared/elements/DmButton";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
 import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";

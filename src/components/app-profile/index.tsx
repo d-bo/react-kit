@@ -12,6 +12,7 @@ import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 import { FaTrashAlt } from "react-icons/fa";
 import { withRouter } from "react-router";
 import Footer from "../app-footer";
+import produce from "immer";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -42,7 +43,7 @@ interface IProfileState {
   uploadedImg: string | ArrayBuffer | null;
   showSaveImgDialog: boolean;
   showDropImgDialog: boolean;
-  errors: string;
+  errors: string | null;
 }
 
 class Profile extends React.PureComponent<IProfileProps, IProfileState> {
@@ -78,8 +79,9 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
   }
 
   public componentDidMount() {
+    const {history} = this.props;
     if (!this.context.firebaseUser) {
-      this.props.history.push("/auth/signin");
+      history.push("/auth/signin");
     }
   }
 
@@ -101,8 +103,6 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     const {
       showSaveImgDialog,
       loadingImg,
-      country,
-      city,
       verifyLinkSent,
       errors,
       loading,
@@ -304,61 +304,79 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     );
   }
 
-  private handleLogOut(): void {
+  public handleLogOut(): void {
     const self = this;
     const {setProfileImgUrl, history} = this.props;
     const {contextSetFirebaseUser} = this.context;
-    self.setState({
-      loadingExit: true,
-    });
+    self.setState(
+      produce(self.state, (draft) => {
+        draft.loadingExit = true;
+      }),
+    );
     firebase.auth().signOut().then(() => {
       contextSetFirebaseUser(null);
-      self.setState({loadingExit: false});
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.loadingExit = false;
+        }),
+      );
       localStorage.removeItem("localAppCurrentUserID");
       setProfileImgUrl(null);
       history.push("/auth/signin");
     }).catch((error) => {
       const errorMessage = error.message;
-      self.setState({
-        errors: errorMessage,
-        loadingExit: false,
-      });
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.errors = errorMessage;
+          draft.loadingExit = false;
+        }),
+      );
     });
   }
 
   private sendVerifyLink(): void {
     const self = this;
     const {firebaseUser} = this.context;
-    this.setState({
-      loading: true,
-    });
+    this.setState(
+      produce(self.state, (draft) => {
+        draft.loading = true;
+      }),
+    );
     if (firebaseUser) {
       firebaseUser.sendEmailVerification({
         url: `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`,
       }).then(() => {
-        self.setState({
-          verifyLinkSent: true,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.verifyLinkSent = true;
+          }),
+        );
         self.forceUpdate();
       }).catch((error: any) => {
-        self.setState({
-          errors: error.message,
-          loading: false,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.errors = error.message;
+            draft.loading = false;
+          }),
+        );
       });
     }
   }
 
   private handleCityChange(city: string | null): void {
-    this.setState({
-      city,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.city = city;
+      }),
+    );
   }
 
   private handleCountryChange(country: string | null): void {
-    this.setState({
-      country,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.country = country;
+      }),
+    );
   }
 
   // Save additional user data to firestore
@@ -372,41 +390,54 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
       country,
     };
     setUserFirestoreData(userDataTemp);
-    this.setState({
-      loading: true,
-    });
+    this.setState(
+      produce(self.state, (draft) => {
+        draft.loading = true;
+      }),
+    );
     if (currentUser != null) {
       firebase.firestore().collection("users")
         .doc(currentUser.uid)
         .set(userDataTemp, {merge: true}).then((e) => {
-          self.setState({
-            errors: "",
-            loading: false,
-          });
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.loading = false;
+              draft.errors = null;
+            }),
+          );
         }).catch((error) => {
-          self.setState({
-            errors: error.message,
-            loading: false,
-          });
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.loading = false;
+              draft.errors = error.message;
+            }),
+          );
         });
     }
   }
 
   private handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void {
     e.preventDefault();
-    this.setState({loadingImg: true});
+    const self = this;
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.loadingImg = true;
+      }),
+    );
     const reader = new FileReader();
     if (e.target != null) {
       if (e.target.files != null) {
         const file = e.target.files[0];
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          this.setState({
-            imgFile: file,
-            loadingImg: false,
-            showSaveImgDialog: true,
-            uploadedImg: reader.result,
-          });
+          this.setState(
+            produce(self.state, (draft) => {
+              draft.imgFile = file;
+              draft.loadingImg = false;
+              draft.showSaveImgDialog = true;
+              draft.uploadedImg = reader.result;
+            }),
+          );
         };
       }
     }
@@ -418,33 +449,42 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
   }
 
   private handleDropImageDialog(): void {
-    this.setState({
-      showDropImgDialog: true,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.showDropImgDialog = true;
+      }),
+    );
   }
 
   private handleDropImage(): void {
-    this.setState({
-      loadingImg: true,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.loadingImg = true;
+      }),
+    );
     const self = this;
+    const {setProfileImgUrl} = this.props;
     const {firebaseUser, contextSetFirebaseUser} = this.context;
     if (firebaseUser) {
-      this.props.setProfileImgUrl(null);
+      setProfileImgUrl(null);
       firebaseUser.updateProfile({
         photoURL: null,
       }).then(() => {
         contextSetFirebaseUser(firebase.auth().currentUser);
-        self.setState({
-          imgFile: null,
-          loadingImg: false,
-          showDropImgDialog: false,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.imgFile = null;
+            draft.loadingImg = false;
+            draft.showDropImgDialog = false;
+          }),
+        );
       }).catch((error: any) => {
-        self.setState({
-          errors: error.message,
-          loading: false,
-        });
+        self.setState(
+          produce(self.state, (draft) => {
+            draft.errors = error.message;
+            draft.loading = false;
+          }),
+        );
       });
     }
   }
@@ -453,10 +493,13 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     const self = this;
     const {firebaseUser} = this.context;
     const {imgFile} = this.state;
+    const {setProfileImgUrl} = this.props;
     const storageRef = firebase.storage().ref();
-    self.setState({
-      loadingImg: true,
-    });
+    self.setState(
+      produce(this.state, (draft) => {
+        draft.loadingImg = true;
+      }),
+    );
     if (imgFile) {
       let fileName;
       let extension;
@@ -488,52 +531,64 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
           .then((snapshot: any) => {
             if (imgRef) {
               imgRef.getDownloadURL().then((url: string) => {
-                self.props.setProfileImgUrl(url);
+                setProfileImgUrl(url);
                 if (firebaseUser) {
                   firebaseUser.updateProfile({
                     photoURL: url,
                   }).then(() => {
-                    self.setState({
-                      imgFile: null,
-                      loadingImg: false,
-                      showSaveImgDialog: false,
-                    });
+                    self.setState(
+                      produce(self.state, (draft) => {
+                        draft.imgFile = null;
+                        draft.loadingImg = false;
+                        draft.showSaveImgDialog = false;
+                      }),
+                    );
                   }).catch((error: any) => {
-                    self.setState({
-                      errors: error.message,
-                      loading: false,
-                    });
+                    self.setState(
+                      produce(self.state, (draft) => {
+                        draft.errors = error.message;
+                        draft.loading = false;
+                      }),
+                    );
                   });
                 }
               }).catch((e: any) => {
-                self.setState({
-                  errors: e.message,
-                  loading: false,
-                });
+                self.setState(
+                  produce(self.state, (draft) => {
+                    draft.errors = e.message;
+                    draft.loading = false;
+                  }),
+                );
               });
             }
           }).catch((e: any) => {
-                self.setState({
-                  errors: e.message,
-                  loading: false,
-                });
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.errors = e.message;
+                draft.loading = false;
+              }),
+            );
           });
       }
     }
   }
 
   private cancelImgUpload(): void {
-    this.setState({
-      imgFile: null,
-      showSaveImgDialog: false,
-      uploadedImg: null,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.imgFile = null;
+        draft.showSaveImgDialog = false;
+        draft.uploadedImg = null;
+      }),
+    );
   }
 
   private cancelDropImg(): void {
-    this.setState({
-      showDropImgDialog: false,
-    });
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.showDropImgDialog = false;
+      }),
+    );
   }
 }
 
