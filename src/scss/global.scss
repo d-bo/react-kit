@@ -1,3 +1,4 @@
+@import "./bootstrap-4.3.1-dist/css/bootstrap-grid.css";
 @import "vars.scss";
 
 html {
@@ -191,7 +192,7 @@ body {
 }
 
 .body-page-color {
-  background: url(/img/positive-bg.png) $bg-front-page-color;
+  background: url(/img/positive-bg.png) $bg-front-page-color center center;
   padding-top: 14px;
 }
 

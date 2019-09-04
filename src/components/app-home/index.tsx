@@ -90,19 +90,70 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
       <div className="container-fluid fade-in-fx body-page-color body-page-margin-top">
 
         {items &&
-          <div className="row fade-in-fx">
-          {items.map((item: any) =>
-            <div className="col-sm-6 col-lg-4" key={item.ID}>
-              <DmFolderWidget title={item.UserName} shadow="soft-left-bottom-shadow">
-                <img src="/img/python-logo.png" alt=""
-                  className="in-folder-img round-border-50" />
-                <p>{item.ID}</p>
-                <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
-              and sizes thanks to a twelve column system, five default responsive tiers,
-              Sass variables and mixins, and dozens of predefined classes.</p>
+          <div className="row-fluid fade-in-fx">
+            <div className="row" style={{padding: "0 15px"}}>
+            <div className="col-sm-6 col-lg-8">
+              <div className="row">
+
+                {items.map((item: any) =>
+                  <div className="col-sm-12 col-lg-6 col-md-12 col-xl-4" key={item.ID}>
+                    <DmFolderWidget title={item.UserName} shadow="soft-left-bottom-shadow">
+                      <img src="/img/python-logo.png" alt=""
+                        className="in-folder-img round-border-50" />
+                      <p>Use our powerful mobile-first flexbox grid to build layouts of all shapes
+                    and sizes thanks to a twelve column system, five default responsive tiers,
+                    Sass variables and mixins, and dozens of predefined classes.</p>
+                    <table style={{width: "100%"}}><tbody><tr>
+                      <td style={{width: "30%"}} className="td-pad-10">
+                          <DmButton text={<FaEnvelope />} loading={loading}
+                          onClick={() => this.props.history.push("/profile")}
+                          className="margin-top button-transparent" />
+                      </td>
+                      <td style={{width: "35%"}} className="td-pad-10">
+                        <DmButton text={<FaRegStar />} loading={loading}
+                        onClick={() => this.props.history.push("/profile")}
+                        className="margin-top button-grey" />
+                      </td>
+                      <td style={{width: "35%"}} className="td-pad-10">
+                        <DmButton text={<FaCommentAlt />} loading={loading}
+                        onClick={() => this.props.history.push("/profile")}
+                        className="margin-top button-grey" />
+                      </td>
+                    </tr></tbody></table>
+                    </DmFolderWidget>
+                  </div>,
+                )}
+
+              </div>
+            </div>
+            <div className="col-sm-6 col-lg-4">
+              <DmFolderWidget title="Телефон NOKIA 3310"
+                style={{textAlign: "center"}}>
+                <LazyLoadImage
+                  src="/img/prod-5.jpg"
+                  placeholderSrc="/no-image-slide.png"
+                  effect="blur"
+                  className="fit-in-cover-product round-border-3px" />
+                <h2 className="price">{<FaRegStar/>} 71 $</h2>
               </DmFolderWidget>
-            </div>,
-          )}
+              <DmFolderWidget title="Утюг Tefal CV-901"
+                desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг,
+                отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
+                style={{textAlign: "center"}}>
+
+                <ButtonWidget />
+
+                <LazyLoadImage
+                  src="/img/prod-1.jpg"
+                  placeholderSrc="/no-image-slide.png"
+                  effect="blur"
+                  className="fit-in-cover-product round-border-3px" />
+
+                <h2 className="price">{<FaRegStar/>} 233 $</h2>
+
+              </DmFolderWidget>
+            </div>
+          </div>
           </div>
         }
 

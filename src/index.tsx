@@ -13,8 +13,6 @@ import { createBrowserHistory } from "history";
 import * as serviceWorker from "./serviceWorker";
 import firebase_config from "./config/firebase.config";
 
-serviceWorker.register();
-
 // Init firebase account
 firebase.initializeApp(firebase_config);
 
@@ -37,3 +35,5 @@ firebase.auth().onAuthStateChanged((firebaseUser) => {
     </Provider>
     , document.getElementById("root"));
 });
+
+serviceWorker.register();
