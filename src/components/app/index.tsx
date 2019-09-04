@@ -58,13 +58,13 @@ class App extends React.Component<IAppProps, IAppState> {
 
   // TODO: sidebar hides, so i can't click and execute click event listener
   public clickBodyListener(e: MouseEvent) {
-    //this.props.handleHideSidebar(e);
+    // this.props.handleHideSidebar(e);
   }
   public componentDidMount() {
-    //document.addEventListener("mousedown", this.clickBodyListener, true);
+    // document.addEventListener("mousedown", this.clickBodyListener, true);
   }
   public componentWillUnmount() {
-    //document.removeEventListener("mousedown", this.clickBodyListener);
+    // document.removeEventListener("mousedown", this.clickBodyListener);
   }
 
   public render() {
