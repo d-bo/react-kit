@@ -88,11 +88,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
   public componentDidUpdate(prevProps: IProfileProps): void {
     const {location} = this.props;
     if (location !== prevProps.location) {
-      window.scroll({
-        behavior: "smooth",
-        left: 0,
-        top: 0,
-      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }
 
@@ -382,7 +378,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
   // Save additional user data to firestore
   private handleUpdateUser(): void {
     const self = this;
-    const {userData, setUserFirestoreData} = this.props;
+    const {setUserFirestoreData} = this.props;
     const {city, country} = this.state;
     const currentUser = firebase.auth().currentUser;
     const userDataTemp = {
