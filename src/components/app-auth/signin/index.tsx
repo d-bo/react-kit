@@ -24,7 +24,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface ISigninProps {
-  context: React.Context<any>;
+  context: any;
   history: any;
   style: any;
   setProfileImgUrl: any;
@@ -61,8 +61,8 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   public componentDidMount() {
-    const {context, history} = this.props;
-    if (context) {
+    const {context: {firebaseUser}, history} = this.props;
+    if (firebaseUser) {
       history.push("/");
     }
     const self = this;

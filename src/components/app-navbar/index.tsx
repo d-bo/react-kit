@@ -11,9 +11,10 @@ import {
   FaPlay, FaFastForward,
 } from "react-icons/fa";
 import Sidebar from "../shared/widgets/Sidebar";
-import { toggleSidebar, setProfileImgUrl, setUserFirestoreData } from "../../redux/actions";
+import { toggleSidebar, setProfileImgUrl, networkStatusType } from "../../redux/actions";
 import firebase from "firebase/app";
 import produce from "immer";
+import { MdNetworkWifi, MdSignalWifiOff } from "react-icons/md";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -26,6 +27,7 @@ const mapDispatchToProps = (dispatch: any) => {
 
 interface INavbarProps {
   history?: any;
+  networkStatus?: networkStatusType;
   profileImgUrl?: string | null;
   setProfileImgUrl?: any;
   sidebar?: boolean;
@@ -84,7 +86,13 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
   }
 
   public render() {
-    const {history, profileImgUrl, handleToggleSidebar, sidebar } = this.props;
+    const {
+      history,
+      profileImgUrl,
+      handleToggleSidebar,
+      sidebar,
+      networkStatus,
+    } = this.props;
     const {firebaseUser} = this.context;
     const {loading} = this.state;
     return (
@@ -93,6 +101,14 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
           <div className="row">
 
             <div id="navbar-sidebar-button" className="fade-in-fx">
+              {// Show network disconnect status
+                networkStatus &&
+                <div style={{paddingRight: "60px", display: "inline-block"}}>
+                  {networkStatus === "offline" &&
+                    <MdSignalWifiOff/>
+                  }
+                </div>
+              }
               <FaBars style={{cursor: "pointer"}} onClick={handleToggleSidebar} />
             </div>
 
@@ -138,6 +154,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
 
             <div className="col-sm-4 navbar-user">
               <div id="navbar-media-query">
+
               {firebaseUser &&
                 <div style={{textAlign: "right"}}>
                   <span onClick={this.redirectProfile} style={{cursor: "pointer"}}>
@@ -155,7 +172,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                       <>
                         <LazyLoadImage
                           src={firebaseUser.photoURL}
-                          placeholderSrc="/no-image-slide.png"
+                          placeholderSrc="/img/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />
                       </>
@@ -165,7 +182,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                       <>
                         <LazyLoadImage
                           src={firebaseUser.photoURL}
-                          placeholderSrc="/no-image-slide.png"
+                          placeholderSrc="/img/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />
                       </>
@@ -182,7 +199,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                       <>
                         <LazyLoadImage
                           src="/no-user.png"
-                          placeholderSrc="/no-image-slide.png"
+                          placeholderSrc="/img/no-image-slide.png"
                           effect="blur"
                           className="img-navbar" />
                       </>
@@ -195,7 +212,16 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
               {!firebaseUser &&
                 <table style={{width: "100%"}}>
                   <tbody><tr>
-                    <td style={{width: "50%"}}></td>
+                    <td style={{width: "50%"}}>
+                      {// Show network disconnect status
+                        networkStatus &&
+                        <div style={{fontSize: "28px"}}>
+                          {networkStatus === "offline" &&
+                            <MdSignalWifiOff/>
+                          }
+                        </div>
+                      }
+                    </td>
                     <td style={{width: "50%"}}>
                       <DmButton text="SIGN IN" loading={loading}
                         onClick={() => this.props.history.push("/profile")}

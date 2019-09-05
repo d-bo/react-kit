@@ -15,7 +15,7 @@ import produce from "immer";
 import {LoadingFacebookBlack} from "../../shared/elements/Loader";
 
 interface IRegisterProps {
-  context: React.Context<any>;
+  context: any;
   firebaseAuth: any;
   history: any;
   style: any;
@@ -60,8 +60,8 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
   }
 
   public componentDidMount() {
-    const {context, history} = this.props;
-    if (context) {
+    const {context: {firebaseUser}, history} = this.props;
+    if (firebaseUser) {
       history.push("/");
     }
     const self = this;

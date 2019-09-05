@@ -59,7 +59,7 @@ class Person extends React.Component<IHomeProps, IHomeState> {
             <DmFolderWidget title="BRAWLcast 261 Data Raven - Renegade Interrupt">
               <LazyLoadImage
                 src="/cast_1.jpg"
-                placeholderSrc="/no-image-slide.png"
+                placeholderSrc="/img/no-image-slide.png"
                 effect="blur"
                 className="in-folder-img round-border-50" />
               Rizzle - Serenity <b>[Dispatch Recordings]</b>
@@ -80,7 +80,7 @@ class Person extends React.Component<IHomeProps, IHomeState> {
             <DmFolderWidget title="Rave girl 303">
               <LazyLoadImage
                 src="/bio_3.jpg"
-                placeholderSrc="/no-image-slide.png"
+                placeholderSrc="/img/no-image-slide.png"
                 effect="blur"
                 className="in-folder-img round-border-50" />
                 <p>

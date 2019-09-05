@@ -127,7 +127,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
                       src={firebaseUser.photoURL}
-                      placeholderSrc="/no-image-slide.png"
+                      placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px" />
                   </div>
@@ -139,7 +139,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
                       src={uploadedImg as string}
-                      placeholderSrc="/no-image-slide.png"
+                      placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px" />
                   </div>
@@ -161,7 +161,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
                       src={uploadedImg as string}
-                      placeholderSrc="/no-image-slide.png"
+                      placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px" />
                   </div>

@@ -5,6 +5,7 @@ import produce from "immer";
 interface IInitState {
   items: object[] | null;
   email: string;
+  networkStatus: "offline" | "online" | null;
   password: string;
   displayName: string;
   city: string;
@@ -20,6 +21,7 @@ const initState: IInitState = {
   displayName: "",
   email: "",
   items: null,
+  networkStatus: null,
   password: "",
   profileImgUrl: "",
   sidebar: false,
@@ -98,6 +100,10 @@ const firebaseAuth = (state = getInitState(), action: any) =>
 
       case actionTypes.HIDE_SIDEBAR:
         draft.sidebar = false;
+        break;
+
+      case actionTypes.RECEIVE_NETWORK_STATUS:
+        draft.networkStatus = action.networkStatus;
         break;
 }});
 

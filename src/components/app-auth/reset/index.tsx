@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 });
 
 interface IResetProps {
-  context: React.Context<any>;
+  context: any;
   history: any;
   style: any;
   email: string | null;
@@ -65,8 +65,8 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
   }
 
   public componentDidMount(): void {
-    const {context, history} = this.props;
-    if (context) {
+    const {context: {firebaseUser}, history} = this.props;
+    if (firebaseUser) {
       history.push("/");
     }
     const self = this;
