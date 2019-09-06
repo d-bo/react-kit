@@ -23,7 +23,6 @@ interface IAppProps {
   handleHideSidebar?: any;
   networkStatus?: networkStatusType;
   receiveNetworkStatus?: (networkStatus: networkStatusType) => {};
-  setProfileImgUrl?: any;
 }
 
 interface IAppState {
@@ -32,6 +31,7 @@ interface IAppState {
   loading: boolean;
   loadingExit: boolean;
   verifyLinkSent: boolean;
+  photoURL: string | null;
 }
 
 class App extends React.Component<IAppProps, IAppState> {
@@ -43,18 +43,31 @@ class App extends React.Component<IAppProps, IAppState> {
       firebaseUser: this.props.firebaseUser,
       loading: false,
       loadingExit: false,
+      photoURL: null,
       verifyLinkSent: false,
     };
     this.contextSetFirebaseUser = this.contextSetFirebaseUser.bind(this);
     this.clickBodyListener = this.clickBodyListener.bind(this);
+    this.contextSetPhotoURL = this.contextSetPhotoURL.bind(this);
   }
 
   // Dynamically set user from child components
   // Setting null as a logout
-  public contextSetFirebaseUser(firebaseUser: firebase.User | null) {
+  public contextSetFirebaseUser(firebaseUser: firebase.User | null): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.firebaseUser = firebaseUser;
+      }),
+    );
+    if (firebaseUser) {
+      this.contextSetPhotoURL(firebaseUser.photoURL);
+    }
+  }
+
+  public contextSetPhotoURL(url: string | null) {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.photoURL = url;
       }),
     );
   }
@@ -65,7 +78,7 @@ class App extends React.Component<IAppProps, IAppState> {
   }
 
   public componentDidMount() {
-    const {receiveNetworkStatus} = this.props;
+    const {receiveNetworkStatus, firebaseUser} = this.props;
     window.addEventListener("online", () => {
       if (receiveNetworkStatus) {
         receiveNetworkStatus("online");
@@ -84,6 +97,11 @@ class App extends React.Component<IAppProps, IAppState> {
         receiveNetworkStatus(offlineStatus);
       }
     }
+
+    // Set user photo on load
+    if (firebaseUser) {
+      this.contextSetPhotoURL(firebaseUser.photoURL);
+    }
   }
 
   public componentDidUpdate() {
@@ -99,12 +117,14 @@ class App extends React.Component<IAppProps, IAppState> {
 
   public render() {
     const {history} = this.props;
-    const {firebaseUser} = this.state;
+    const {firebaseUser, photoURL} = this.state;
     return (
       <>
         <FirebaseUserContext.Provider value={{
           contextSetFirebaseUser: this.contextSetFirebaseUser,
+          contextSetPhotoURL: this.contextSetPhotoURL,
           firebaseUser,
+          photoURL,
         }}>
           <Navbar {...this.props} />
             <Router history={history}>

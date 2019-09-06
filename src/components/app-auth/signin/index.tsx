@@ -15,7 +15,8 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { IWindow } from "../register";
 import Footer from "../../app-footer";
 import produce from "immer";
-import {LoadingFacebookBlack} from "../../shared/elements/Loader";
+import { LoadingFacebookBlack } from "../../shared/elements/Loader";
+import { networkStatusType } from "../../../redux/actions";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -26,6 +27,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface ISigninProps {
   context: any;
   history: any;
+  networkStatus?: networkStatusType;
   style: any;
   setProfileImgUrl: any;
   setUserFirestoreData: any;
@@ -61,54 +63,85 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   public componentDidMount() {
-    const {context: {firebaseUser}, history} = this.props;
-    if (firebaseUser) {
-      history.push("/");
+    const {history, networkStatus} = this.props;
+    if (this.context.firebaseUser) {
+      history.push("/profile");
     }
     const self = this;
-    // Google captcha prepared
-    (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
-      "callback": () => {
+    // Offline ? reCaptcha disabled
+    if (networkStatus === "online") {
+      try {
+        (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+          "callback": () => {
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.captchaLoading = false;
+                draft.showSigninSubmitButton = true;
+              }),
+            );
+          },
+          "expired-callback": () => {
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.errors = "Please, check out the captcha";
+                draft.showSigninSubmitButton = false;
+              }),
+            );
+          },
+          "size": "big",
+        });
+        (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.captchaLoading = false;
+            }),
+          );
+          (window as IWindow).recaptchaWidgetId = widgetId;
+        });
+      } catch (e) {
+        // reCaptcha may not render on enzyme mount test
         self.setState(
-          produce(self.state, (draft) => {
-            draft.captchaLoading = false;
-            draft.showSigninSubmitButton = true;
+          produce(this.state, (draft) => {
+            draft.errors = "reCaptcha can not load";
           }),
         );
-      },
-      "expired-callback": () => {
-        self.setState(
-          produce(self.state, (draft) => {
-            draft.errors = "Please, check out the captcha";
-            draft.showSigninSubmitButton = false;
-          }),
-        );
-      },
-      "size": "big",
-    });
-    (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+      }
+    }
+    if (networkStatus === "offline") {
       self.setState(
-        produce(self.state, (draft) => {
-          draft.captchaLoading = false;
+        produce(this.state, (draft) => {
+          draft.errors = "Network offline. Can not use auth service.";
         }),
       );
-      (window as IWindow).recaptchaWidgetId = widgetId;
-    });
-    if (this.context.firebaseUser) {
-      this.props.history.push("/profile");
     }
   }
 
   public componentDidUpdate(prevProps: ISigninProps): void {
-    const {location} = this.props;
+    const {location, networkStatus} = this.props;
     if (location !== prevProps.location) {
       window.scrollTo(0, 0);
+    }
+    if (networkStatus !== prevProps.networkStatus) {
+      if (networkStatus === "online") {
+        this.setState(
+          produce(this.state, (draft) => {
+            draft.errors = null;
+          }),
+        );
+      }
+      if (networkStatus === "offline") {
+        this.setState(
+          produce(this.state, (draft) => {
+            draft.errors = "Network offline. Can not use auth service.";
+          }),
+        );
+      }
     }
   }
 
   public render(): JSX.Element {
     const {firebaseUser} = this.context;
-    const {style} = this.props;
+    const {style, networkStatus} = this.props;
     const {
       captchaLoading,
       errors,
@@ -135,7 +168,9 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
                 <DmInput type="password" value={password}
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <ReCaptchav2></ReCaptchav2>
+                {networkStatus === "online" &&
+                  <ReCaptchav2></ReCaptchav2>
+                }
 
                 { // Is captcha solved ?
                   showSigninSubmitButton &&
@@ -144,7 +179,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
                 }
 
                 { // Captcha loading
-                  captchaLoading &&
+                  captchaLoading && networkStatus === "online" &&
                   <LoadingFacebookBlack/>
                 }
 
@@ -191,7 +226,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   private handleSignIn(): void {
-    const {contextSetFirebaseUser, firebaseUser} = this.context;
+    const {contextSetFirebaseUser} = this.context;
     if (this.state.loading) {
       return;
     }
@@ -233,7 +268,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
       ).then(() => {
         contextSetFirebaseUser(firebase.auth().currentUser);
         this.setUserGlobalData(firebase.auth().currentUser as firebase.User);
-        history.push("/");
+        history.push("/profile");
       }).catch((error) => {
 
         const errorCode = error.code;
@@ -302,6 +337,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
 
   private handleGithub(): void {
     const {contextSetFirebaseUser} = this.context;
+    const {history} = this.props;
     if (this.state.loading) {
       return;
     }
@@ -322,7 +358,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
           draft.loading = false;
         }),
       );
-      self.props.history.push("/");
+      history.push("/profile");
     }).catch((error) => {
       self.setState(
         produce(self.state, (draft) => {
@@ -334,6 +370,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   private handleGoogle(): void {
+    const {history} = this.props;
     if (this.state.loading) {
       return;
     }
@@ -356,7 +393,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
           draft.loading = false;
         }),
       );
-      self.props.history.push("/");
+      history.push("/");
     }).catch((error) => {
       self.setState(
         produce(self.state, (draft) => {

@@ -16,6 +16,7 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import Footer from "../../app-footer";
 import produce from "immer";
 import {LoadingRollingBlack} from "../../shared/elements/Loader";
+import { networkStatusType } from "../../../redux/actions";
 
 const mapStateToProps = (state: any) => {
   return state.firebaseAuth;
@@ -28,6 +29,7 @@ const mapDispatchToProps = (dispatch: any) => ({
 interface IResetProps {
   context: any;
   history: any;
+  networkStatus?: networkStatusType;
   style: any;
   email: string | null;
   password: string | null;
@@ -65,42 +67,60 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
   }
 
   public componentDidMount(): void {
-    const {context: {firebaseUser}, history} = this.props;
-    if (firebaseUser) {
-      history.push("/");
+    const {history, networkStatus} = this.props;
+    if (this.context.firebaseUser) {
+      history.push("/profile");
     }
     const self = this;
-    (window as IWindow).recaptchaVerifier = new
-      firebase.auth.RecaptchaVerifier("recaptcha-container", {
-        "callback": () => {
+    if (networkStatus === "online") {
+      try {
+        (window as IWindow).recaptchaVerifier = new
+          firebase.auth.RecaptchaVerifier("recaptcha-container", {
+            "callback": () => {
+              self.setState(
+                produce(self.state, (draft) => {
+                  draft.captchaLoading = false;
+                  draft.showResetSubmitButton = true;
+                }),
+              );
+            },
+            "expired-callback": () => {
+              self.setState(
+                produce(self.state, (draft) => {
+                  draft.errors = "Please, check out the captcha";
+                  draft.showResetSubmitButton = false;
+                }),
+              );
+            },
+            "size": "normal",
+            "theme": "light",
+        });
+        (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
           self.setState(
             produce(self.state, (draft) => {
               draft.captchaLoading = false;
-              draft.showResetSubmitButton = true;
             }),
           );
-        },
-        "expired-callback": () => {
-          self.setState(
-            produce(self.state, (draft) => {
-              draft.errors = "Please, check out the captcha";
-              draft.showResetSubmitButton = false;
-            }),
-          );
-        },
-        "size": "normal",
-        "theme": "light",
-    });
-    (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+          (window as IWindow).recaptchaWidgetId = widgetId;
+        });
+        if (this.context.firebaseUser) {
+          this.props.history.push("/profile");
+        }
+      } catch (e) {
+        // reCaptcha may not render on enzyme mount test
+        self.setState(
+          produce(this.state, (draft) => {
+            draft.errors = "reCaptcha can not load";
+          }),
+        );
+      }
+    }
+    if (networkStatus === "offline") {
       self.setState(
-        produce(self.state, (draft) => {
-          draft.captchaLoading = false;
+        produce(this.state, (draft) => {
+          draft.errors = "Network offline. Can not use auth service.";
         }),
       );
-      (window as IWindow).recaptchaWidgetId = widgetId;
-    });
-    if (this.context.firebaseUser) {
-      this.props.history.push("/profile");
     }
   }
 

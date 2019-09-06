@@ -93,7 +93,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
       sidebar,
       networkStatus,
     } = this.props;
-    const {firebaseUser} = this.context;
+    const {firebaseUser, photoURL} = this.context;
     const {loading} = this.state;
     return (
       <div className="navbar-body soft-left-bottom-shadow fade-in-fx">
@@ -165,46 +165,20 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                     <b>{firebaseUser.email}</b>
                   }
 
-                  {firebaseUser.hasOwnProperty("photoURL") &&
-                    <>
+                  {photoURL &&
+                    <LazyLoadImage
+                      src={photoURL}
+                      placeholderSrc="/img/no-image-slide.png"
+                      effect="blur"
+                      className="img-navbar" />
+                  }
 
-                    {(firebaseUser.photoURL && profileImgUrl) &&
-                      <>
-                        <LazyLoadImage
-                          src={firebaseUser.photoURL}
-                          placeholderSrc="/img/no-image-slide.png"
-                          effect="blur"
-                          className="img-navbar" />
-                      </>
-                    }
-
-                    {(firebaseUser.photoURL && !profileImgUrl) &&
-                      <>
-                        <LazyLoadImage
-                          src={firebaseUser.photoURL}
-                          placeholderSrc="/img/no-image-slide.png"
-                          effect="blur"
-                          className="img-navbar" />
-                      </>
-                    }
-
-                    {(!firebaseUser.photoURL && profileImgUrl) &&
-                      <>
-                        <img className="img-navbar" src={profileImgUrl}
-                        alt="" />
-                      </>
-                    }
-
-                    {(!firebaseUser.photoURL && !profileImgUrl) &&
-                      <>
-                        <LazyLoadImage
-                          src="/no-user.png"
-                          placeholderSrc="/img/no-image-slide.png"
-                          effect="blur"
-                          className="img-navbar" />
-                      </>
-                    }
-                    </>
+                  {!photoURL &&
+                    <LazyLoadImage
+                    src="/img/no-user.png"
+                    placeholderSrc="/img/no-image-slide.png"
+                    effect="blur"
+                    className="img-navbar" />
                   }
                   </span>
                 </div>

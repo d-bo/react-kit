@@ -1,18 +1,19 @@
 /* eslint-disable */
 import React from "react";
-import {shallow, render} from "enzyme";
+import {mount} from "enzyme";
 import Register from "./index";
 import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { Provider } from "react-redux";
 import store from "../../../redux/stores/store";
+import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
 
 const history = createBrowserHistory();
 
 describe("Register is rendering", () => {
   it("Register component with Redux, Context, Router (not authenticated)", () => {
-    const wrapper = render(
+    const wrapper = mount(
       <Provider store={store}>
         <FirebaseUserContext.Provider value={{
           contextSetFirebaseUser: () => null,
@@ -22,6 +23,7 @@ describe("Register is rendering", () => {
         </FirebaseUserContext.Provider>
       </Provider>
       );
-    expect(wrapper.find(".container-fluid")).toHaveLength(1);
+    expect(wrapper.find(".row")).toHaveLength(2);
+    expect(wrapper.find(DmFolderWidget)).toHaveLength(1);
   });
 });

@@ -13,6 +13,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { withRouter } from "react-router";
 import Footer from "../app-footer";
 import produce from "immer";
+import { LoadingFacebookBlack } from "../../components/shared/elements/Loader";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -44,6 +45,7 @@ interface IProfileState {
   showSaveImgDialog: boolean;
   showDropImgDialog: boolean;
   errors: string | null;
+  errorsUploadPhoto: string | null;
 }
 
 class Profile extends React.PureComponent<IProfileProps, IProfileState> {
@@ -53,7 +55,8 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     this.state = {
       city: null,
       country: null,
-      errors: "",
+      errors: null,
+      errorsUploadPhoto: null,
       imgFile: null,
       loading: false,
       loadingExit: false,
@@ -94,7 +97,6 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
 
   public render(): JSX.Element {
     const {userData} = this.props;
-    const {uploadedImg} = this.state;
     const {firebaseUser} = this.context;
     const {
       showSaveImgDialog,
@@ -104,6 +106,8 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
       loading,
       loadingExit,
       showDropImgDialog,
+      uploadedImg,
+      errorsUploadPhoto,
     } = this.state;
 
     return (
@@ -146,7 +150,11 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                 (!firebaseUser.photoURL && !uploadedImg) &&
                 <>
                   <div style={{textAlign: "center"}}>
-                    <img src="/no-user.png" alt="" />
+                    <LazyLoadImage
+                        src="/img/no-user.png"
+                        placeholderSrc="/img/no-image-slide.png"
+                        effect="blur"
+                        className="profile-img round-border-5px" />
                   </div>
                 </>
               }
@@ -166,11 +174,18 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
               </>
             }
 
+            {loadingImg &&
+              <>
+                <p></p>
+                <LoadingFacebookBlack/>
+              </>
+            }
+
             { // Cancel image upload or save dialog
               showSaveImgDialog &&
               <>
                 <p></p>
-                <div className="action-message text-center round-border-3px">
+                <div className="text-center">
                   Are you sure you want to upload image ?
                 </div>
                 <table style={{width: "100%"}}><tbody><tr>
@@ -204,6 +219,12 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                 </td>
                 </tr></tbody></table>
               </>
+            }
+
+            {errorsUploadPhoto &&
+              <div className="error-message round-border-5px">
+                {errorsUploadPhoto}
+              </div>
             }
 
             <table style={{width: "100%"}}><tbody><tr>
@@ -334,7 +355,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     const self = this;
     const {firebaseUser} = this.context;
     this.setState(
-      produce(self.state, (draft) => {
+      produce(this.state, (draft) => {
         draft.loading = true;
       }),
     );
@@ -426,7 +447,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
         const file = e.target.files[0];
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          this.setState(
+          self.setState(
             produce(self.state, (draft) => {
               draft.imgFile = file;
               draft.loadingImg = false;
@@ -487,85 +508,94 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
 
   private handleSaveImage(): void {
     const self = this;
-    const {firebaseUser} = this.context;
+    const {firebaseUser, contextSetPhotoURL} = this.context;
     const {imgFile} = this.state;
     const {setProfileImgUrl} = this.props;
     const storageRef = firebase.storage().ref();
-    self.setState(
+    this.setState(
       produce(this.state, (draft) => {
         draft.loadingImg = true;
       }),
     );
-    if (imgFile) {
-      let fileName;
-      let extension;
-      let imgRef: firebase.storage.Reference | null = null;
-      if (imgFile.hasOwnProperty("name")) {
-        const name = (imgFile as IFileObject).name;
-        if (name) {
-          const ext = name.split(".");
-          const extpop = ext.pop();
-          if (extpop) {
-            extension = extpop.toLowerCase();
+    try {
+      if (imgFile) {
+        let fileName;
+        let extension;
+        let imgRef: firebase.storage.Reference | null = null;
+        if (imgFile.hasOwnProperty("name")) {
+          const name = (imgFile as IFileObject).name;
+          if (name) {
+            const ext = name.split(".");
+            const extpop = ext.pop();
+            if (extpop) {
+              extension = extpop.toLowerCase();
+            }
           }
         }
-      }
 
-      if (firebaseUser) {
-        fileName = `users/${firebaseUser.uid}.${extension}`;
-      }
-      if (fileName) {
-        imgRef = storageRef.child(fileName);
-      }
+        if (firebaseUser) {
+          fileName = `users/${firebaseUser.uid}.${extension}`;
+        }
+        if (fileName) {
+          imgRef = storageRef.child(fileName);
+        }
 
-      // Upload file to firebase
-      // Get uploaded file url
-      // Cache url to localStorage
-      // Update firebase user profile
-      if (imgRef) {
-        imgRef.put(imgFile as Blob)
-          .then((snapshot: any) => {
-            if (imgRef) {
-              imgRef.getDownloadURL().then((url: string) => {
-                setProfileImgUrl(url);
-                if (firebaseUser) {
-                  firebaseUser.updateProfile({
-                    photoURL: url,
-                  }).then(() => {
-                    self.setState(
-                      produce(self.state, (draft) => {
-                        draft.imgFile = null;
-                        draft.loadingImg = false;
-                        draft.showSaveImgDialog = false;
-                      }),
-                    );
-                  }).catch((error: any) => {
-                    self.setState(
-                      produce(self.state, (draft) => {
-                        draft.errors = error.message;
-                        draft.loading = false;
-                      }),
-                    );
-                  });
-                }
-              }).catch((e: any) => {
-                self.setState(
-                  produce(self.state, (draft) => {
-                    draft.errors = e.message;
-                    draft.loading = false;
-                  }),
-                );
-              });
-            }
-          }).catch((e: any) => {
-            self.setState(
-              produce(self.state, (draft) => {
-                draft.errors = e.message;
-                draft.loading = false;
-              }),
-            );
-          });
+        // Upload file to firebase
+        // Get uploaded file url
+        // Cache url to localStorage
+        // Update firebase user profile
+        if (imgRef) {
+          imgRef.put(imgFile as Blob)
+            .then((snapshot: any) => {
+              if (imgRef) {
+                imgRef.getDownloadURL().then((url: string) => {
+                  setProfileImgUrl(url);
+                  if (firebaseUser) {
+                    firebaseUser.updateProfile({
+                      photoURL: url,
+                    }).then(() => {
+                      contextSetPhotoURL(url);
+                      self.setState(
+                        produce(self.state, (draft) => {
+                          draft.imgFile = null;
+                          draft.loadingImg = false;
+                          draft.showSaveImgDialog = false;
+                        }),
+                      );
+                    }).catch((error: any) => {
+                      self.setState(
+                        produce(self.state, (draft) => {
+                          draft.errors = error.message;
+                          draft.loading = false;
+                        }),
+                      );
+                    });
+                  }
+                }).catch((e: any) => {
+                  self.setState(
+                    produce(self.state, (draft) => {
+                      draft.errors = e.message;
+                      draft.loading = false;
+                    }),
+                  );
+                });
+              }
+            }).catch((e: any) => {
+              self.setState(
+                produce(self.state, (draft) => {
+                  draft.errors = e.message;
+                  draft.loading = false;
+                }),
+              );
+            });
+        }
       }
+    } catch (e) {
+      self.setState(
+        produce(self.state, (draft) => {
+          draft.errorsUploadPhoto = e;
+        }),
+      );
     }
   }
 

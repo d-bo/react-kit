@@ -13,6 +13,10 @@ import { withRouter } from "react-router";
 import Footer from "../../app-footer";
 import produce from "immer";
 import {LoadingFacebookBlack} from "../../shared/elements/Loader";
+import { networkStatusType } from "../../../redux/actions";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state: any) => state.firebaseAuth;
 
 interface IRegisterProps {
   context: any;
@@ -20,6 +24,7 @@ interface IRegisterProps {
   history: any;
   style: any;
   location: any;
+  networkStatus?: networkStatusType;
 }
 
 interface IRegisterState {
@@ -60,53 +65,88 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
   }
 
   public componentDidMount() {
-    const {context: {firebaseUser}, history} = this.props;
-    if (firebaseUser) {
-      history.push("/");
+    const {history, networkStatus} = this.props;
+    if (this.context.firebaseUser) {
+      history.push("/profile");
     }
     const self = this;
-    (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
-      "callback": () => {
+    // Offline ? reCaptcha disabled
+    if (networkStatus === "online") {
+      try {
+        (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+          "callback": () => {
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.captchaLoading = false;
+                draft.showRegisterButtonAfterCaptcha = true;
+              }),
+            );
+          },
+          "expired-callback": () => {
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.errors = "Please, check out the captcha";
+                draft.showRegisterButtonAfterCaptcha = false;
+              }),
+            );
+          },
+          "size": "big",
+        });
+        (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+          self.setState(
+            produce(self.state, (draft) => {
+              draft.captchaLoading = false;
+            }),
+          );
+          (window as IWindow).recaptchaWidgetId = widgetId;
+        });
+        if (this.context.firebaseUser) {
+          this.props.history.push("/profile");
+        }
+      } catch (e) {
+        // reCaptcha may not render on enzyme mount test
         self.setState(
-          produce(self.state, (draft) => {
-            draft.captchaLoading = false;
-            draft.showRegisterButtonAfterCaptcha = true;
+          produce(this.state, (draft) => {
+            draft.errors = "reCaptcha can not load";
           }),
         );
-      },
-      "expired-callback": () => {
-        self.setState(
-          produce(self.state, (draft) => {
-            draft.errors = "Please, check out the captcha";
-            draft.showRegisterButtonAfterCaptcha = false;
-          }),
-        );
-      },
-      "size": "big",
-    });
-    (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
-      self.setState(
-        produce(self.state, (draft) => {
-          draft.captchaLoading = false;
+      }
+    }
+    if (networkStatus === "offline") {
+      this.setState(
+        produce(this.state, (draft) => {
+          draft.errors = "Network offline. Can not use auth service.";
         }),
       );
-      (window as IWindow).recaptchaWidgetId = widgetId;
-    });
-    if (this.context.firebaseUser) {
-      this.props.history.push("/profile");
     }
   }
 
   public componentDidUpdate(prevProps: IRegisterProps): void {
-    const {location} = this.props;
+    const {location, networkStatus} = this.props;
     if (location !== prevProps.location) {
       window.scrollTo(0, 0);
+    }
+    if (networkStatus !== prevProps.networkStatus) {
+      if (networkStatus === "online") {
+        this.setState(
+          produce(this.state, (draft) => {
+            draft.errors = null;
+          }),
+        );
+      }
+      if (networkStatus === "offline") {
+        this.setState(
+          produce(this.state, (draft) => {
+            draft.errors = "Network offline. Can not use auth service.";
+          }),
+        );
+      }
     }
   }
 
   public render(): JSX.Element {
 
-    const {style, history} = this.props;
+    const {style, history, networkStatus} = this.props;
     const {
       captchaLoading,
       displayName,
@@ -139,7 +179,9 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
                 <DmInput type="password" value={password}
                 onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
-                <ReCaptchav2 />
+                {networkStatus === "online" &&
+                  <ReCaptchav2></ReCaptchav2>
+                }
 
                 {errors &&
                   <div className="error-message round-border-5px">{errors}</div>
@@ -152,7 +194,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
                 }
 
                 { // Captcha loading
-                  captchaLoading &&
+                  captchaLoading && networkStatus === "online" &&
                   <LoadingFacebookBlack/>
                 }
 
@@ -306,4 +348,4 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
 
 Register.contextType = FirebaseUserContext;
 
-export default withRouter(Register as any);
+export default withRouter(connect(mapStateToProps)(Register) as any);
