@@ -12,7 +12,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import Footer from "../../app-footer";
 import produce from "immer";
-import {LoadingFacebookBlack} from "../../shared/elements/Loader";
+import { LoadingFacebookBlack } from "../../shared/elements/Loader";
 import { networkStatusType } from "../../../redux/actions";
 import { connect } from "react-redux";
 

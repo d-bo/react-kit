@@ -14,7 +14,7 @@ import Sidebar from "../shared/widgets/Sidebar";
 import { toggleSidebar, setProfileImgUrl, networkStatusType } from "../../redux/actions";
 import firebase from "firebase/app";
 import produce from "immer";
-import { MdNetworkWifi, MdSignalWifiOff } from "react-icons/md";
+import { MdSignalWifiOff } from "react-icons/md";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -88,7 +88,6 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
   public render() {
     const {
       history,
-      profileImgUrl,
       handleToggleSidebar,
       sidebar,
       networkStatus,
@@ -103,7 +102,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
             <div id="navbar-sidebar-button" className="fade-in-fx">
               {// Show network disconnect status
                 networkStatus &&
-                <div style={{paddingRight: "60px", display: "inline-block"}}>
+                <div style={{paddingRight: "30px", display: "inline-block", color: "#c0c0c0"}}>
                   {networkStatus === "offline" &&
                     <MdSignalWifiOff/>
                   }

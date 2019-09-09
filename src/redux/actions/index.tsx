@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { string } from "prop-types";
 
 export const actionTypes = {
   AUTH_FIREBASE: "AUTH_FIREBASE",
