@@ -20,7 +20,6 @@ import {
 } from "mongodb-stitch-browser-sdk";
 import { networkStatusType } from "../../redux/actions";
 import ProductCardMiniWidget from "../shared/widgets/ProductCardMiniWidget";
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import "./style.scss";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
