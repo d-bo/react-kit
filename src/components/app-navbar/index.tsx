@@ -168,16 +168,14 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                     <LazyLoadImage
                       src={photoURL}
                       placeholderSrc="/img/no-image-slide.png"
-                      effect="blur"
-                      className="img-navbar animated pulse" />
+                      effect="blur" />
                   }
 
                   {!photoURL &&
                     <LazyLoadImage
                     src="/img/no-user.png"
                     placeholderSrc="/img/no-image-slide.png"
-                    effect="blur"
-                    className="img-navbar animated pulse" />
+                    effect="blur" />
                   }
                   </span>
                 </div>

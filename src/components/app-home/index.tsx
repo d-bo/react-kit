@@ -135,9 +135,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
                       title={item.name}
                       shadow="soft-left-bottom-shadow"
                       img_preview={item.img_preview}
-                      description={item.description}
-                      className="animated fadeInLeft"
-                      >
+                      description={item.description}>
                     </ProductCardMiniWidget>
                   </div>,
                   )
@@ -145,7 +143,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
 
               </div>
             </div>
-            <div className="col-sm-6 col-lg-4 animated fadeInRight">
+            <div className="col-sm-6 col-lg-4">
               <DmFolderWidget title="Телефон NOKIA 3310"
                 style={{textAlign: "center"}}>
                 <LazyLoadImage
