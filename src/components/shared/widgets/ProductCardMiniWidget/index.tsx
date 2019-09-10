@@ -45,17 +45,17 @@ const ProductCardMiniWidget = (props: IWidgetProps) =>
         <table style={{width: "100%"}}><tbody><tr>
           <td style={{width: "30%"}} className="td-pad-10">
               <DmButton text={<FaEnvelope />}
-              onClick={() => {props.history.push("/profile")}}
+              onClick={() => null}
               className="margin-top button-transparent" />
           </td>
           <td style={{width: "35%"}} className="td-pad-10">
             <DmButton text={<FaRegStar />}
-            onClick={() => {props.history.push("/profile")}}
+            onClick={() => null}
             className="margin-top button-grey" />
           </td>
           <td style={{width: "35%"}} className="td-pad-10">
             <DmButton text={<FaCommentAlt />}
-            onClick={() => {props.history.push("/profile")}}
+            onClick={() => null}
             className="margin-top button-grey" />
           </td>
         </tr></tbody></table>
