@@ -55,3 +55,15 @@ docker run --env-file ./env.list -itp 80:80 react-kit
 # TODO: put prod-ready build under the nginx folder
 # Is there an nginx fat-free version ?
 ```
+
+## Mongo
+
+```
+# Mongo limited export
+mongo --quiet dbName --eval 'printjson(db.collectionName.find().limit(15).toArray())' > output.json
+```
+
+```
+# Mongo import (Mongo Atlas example)
+mongoimport --uri "mongodb+srv://userName@cluster0-lypgc.mongodb.net/databaseName" --collection collectionName --jsonArray --file outputFileName.json
+```

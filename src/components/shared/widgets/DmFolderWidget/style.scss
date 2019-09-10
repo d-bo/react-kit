@@ -1,0 +1,37 @@
+@import "../../../../scss/vars.scss";
+
+.folder-right {
+  font-size: 20px;
+  display: inline-block;
+  padding: 7px 14px;
+  background:$bg-widget;
+  color: #555;
+  border: 1px solid $widget-border;
+  border-bottom: 0;
+}
+
+.folder-center {
+  width: 100%;
+  text-align: left;
+  margin-bottom: -1px;
+  z-index: 9999;
+}
+
+.round-border-5px-except-right-top {
+  border-radius: 0 5px 5px 5px;
+}
+
+.round-border-5px-only-top {
+  border-radius: 5px 5px 0 0;
+}
+
+.round-border-5px-bottom {
+  border-radius: 0 0 5px 5px;
+}
+
+#dmfolder-widget {
+  p {
+    font-size: 14px;
+    color: #666;
+  }
+}

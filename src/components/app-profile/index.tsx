@@ -129,7 +129,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                       src={firebaseUser.photoURL}
                       placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
-                      className="profile-img round-border-5px" />
+                      className="profile-img round-border-5px fade-in-fx" />
                   </div>
                 </>
               }
@@ -141,7 +141,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                       src={uploadedImg as string}
                       placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
-                      className="profile-img round-border-5px" />
+                      className="profile-img round-border-5px fade-in-fx" />
                   </div>
                 </>
               }
@@ -154,7 +154,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                         src="/img/no-user.png"
                         placeholderSrc="/img/no-image-slide.png"
                         effect="blur"
-                        className="profile-img round-border-5px" />
+                        className="profile-img round-border-5px fade-in-fx" />
                   </div>
                 </>
               }
@@ -167,7 +167,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                       src={uploadedImg as string}
                       placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
-                      className="profile-img round-border-5px" />
+                      className="profile-img round-border-5px fade-in-fx" />
                   </div>
                 </>
               }
@@ -183,7 +183,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
 
             { // Cancel image upload or save dialog
               showSaveImgDialog &&
-              <>
+              <div>
                 <p></p>
                 <div className="text-center">
                   Are you sure you want to upload image ?
@@ -198,7 +198,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                     className="margin-top button-grey" onClick={this.cancelImgUpload} />
                 </td>
                 </tr></tbody></table>
-              </>
+              </div>
             }
 
             { // Cancel drop image dialog

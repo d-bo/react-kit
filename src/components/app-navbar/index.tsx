@@ -169,7 +169,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                       src={photoURL}
                       placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
-                      className="img-navbar" />
+                      className="img-navbar animated pulse" />
                   }
 
                   {!photoURL &&
@@ -177,7 +177,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                     src="/img/no-user.png"
                     placeholderSrc="/img/no-image-slide.png"
                     effect="blur"
-                    className="img-navbar" />
+                    className="img-navbar animated pulse" />
                   }
                   </span>
                 </div>
@@ -188,10 +188,14 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                     <td style={{width: "50%"}}>
                       {// Show network disconnect status
                         networkStatus &&
-                        <div style={{fontSize: "28px"}}>
-                          {networkStatus === "offline" &&
-                            <MdSignalWifiOff/>
-                          }
+                        <div style={{
+                          color: "#c0c0c0",
+                          display: "inline-block",
+                          paddingRight: "30px",
+                        }}>
+                        {networkStatus === "offline" &&
+                          <MdSignalWifiOff/>
+                        }
                         </div>
                       }
                     </td>

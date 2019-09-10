@@ -1,5 +1,6 @@
 @import "./bootstrap-4.3.1-dist/css/bootstrap-grid.css";
 @import "vars.scss";
+@import "animate.css";
 
 html {
   scroll-behavior: smooth;
@@ -16,18 +17,6 @@ body {
 
 .round-border-5px {
   border-radius: 5px;
-}
-
-.round-border-5px-except-right-top {
-  border-radius: 0 5px 5px 5px;
-}
-
-.round-border-5px-only-top {
-  border-radius: 5px 5px 0 0;
-}
-
-.round-border-5px-bottom {
-  border-radius: 0 0 5px 5px;
 }
 
 .App {
@@ -90,28 +79,11 @@ body {
   padding: 7px;
 }
 
-.folder-right {
-  font-size: 20px;
-  display: inline-block;
-  padding: 7px 14px;
-  background: $bg-widget;
-  color: #555;
-  border: 1px solid $widget-border;
-  border-bottom: 0;
-}
-
 .login-body {
   padding: 7px;
 	background: $bg-widget;
   color: #555;
   border: 1px solid $widget-border;
-}
-
-.folder-center {
-  width: 100%;
-  text-align: left;
-  margin-bottom: -1px;
-  z-index: 9999;
 }
 
 .margin-top {
@@ -214,4 +186,15 @@ a {
 
 .soft-left-top-shadow {
   box-shadow: 0 0px 15px -10px #999;
+}
+
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: 20px;
+    padding-left: 0;
+  }
 }

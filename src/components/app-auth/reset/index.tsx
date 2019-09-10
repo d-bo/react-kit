@@ -15,7 +15,7 @@ import { IWindow } from "../register";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import Footer from "../../app-footer";
 import produce from "immer";
-import {LoadingRollingBlack} from "../../shared/elements/Loader";
+import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { networkStatusType } from "../../../redux/actions";
 
 const mapStateToProps = (state: any) => {

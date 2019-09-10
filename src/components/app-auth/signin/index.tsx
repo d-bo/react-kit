@@ -15,7 +15,7 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { IWindow } from "../register";
 import Footer from "../../app-footer";
 import produce from "immer";
-import { LoadingFacebookBlack } from "../../shared/elements/Loader";
+import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { networkStatusType } from "../../../redux/actions";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
@@ -180,7 +180,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
 
                 { // Captcha loading
                   captchaLoading && networkStatus === "online" &&
-                  <LoadingFacebookBlack/>
+                  <LoadingRollingBlack/>
                 }
 
                 {errors &&

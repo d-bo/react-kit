@@ -12,7 +12,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import Footer from "../../app-footer";
 import produce from "immer";
-import { LoadingFacebookBlack } from "../../shared/elements/Loader";
+import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { networkStatusType } from "../../../redux/actions";
 import { connect } from "react-redux";
 
@@ -195,7 +195,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
 
                 { // Captcha loading
                   captchaLoading && networkStatus === "online" &&
-                  <LoadingFacebookBlack/>
+                  <LoadingRollingBlack/>
                 }
 
                 <Router history={history}>

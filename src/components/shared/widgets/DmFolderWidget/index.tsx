@@ -1,4 +1,5 @@
 import React from "react";
+import "./style.scss";
 
 interface IWidgetProps {
   style?: any;
@@ -11,7 +12,7 @@ interface IWidgetProps {
 }
 
 const DmFolderWidget = (props: IWidgetProps) =>
-  <div className={`nice-border shadow-right-bottom ${props.className}
+  <div id="dmfolder-widget" className={`nice-border shadow-right-bottom ${props.className}
     margin-top-10 ${props.shadow}`} style={props.style}>
     <div className="folder-center">
       {props.title &&
@@ -24,7 +25,7 @@ const DmFolderWidget = (props: IWidgetProps) =>
       }
     </div>
 
-    <div className="login-body round-border-5px-except-right-top">
+    <div className="login-body">
       {props.desc &&
         <div style={{fontSize: "10px", textAlign: "left", marginBottom: "10px"}}>{props.desc}</div>
       }

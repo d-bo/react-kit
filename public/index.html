@@ -35,6 +35,7 @@
         align-items: center;
         justify-content: center;
         background: #f5f5f5;
+        z-index: 99999;
       }
 
       #preload-01 { background: url(%PUBLIC_URL%/favicons/apple-touch-icon.png) no-repeat -9999px -9999px; }
@@ -163,7 +164,8 @@
     <div id="root">
       <div class="center-container">
         <div id="vinyl-loading-fade">
-          <img src="%PUBLIC_URL%/favicons/apple-touch-icon.png" class="rotate-logo" alt="" />
+          <img src="%PUBLIC_URL%/favicons/apple-touch-icon.png"
+            class="rotate-logo" alt="" id="logo-loading" />
         </div>
       </div>
     </div>
