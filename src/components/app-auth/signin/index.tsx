@@ -71,7 +71,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     // Offline ? reCaptcha disabled
     if (networkStatus === "online") {
       try {
-        (window as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
+        (window as unknown as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
           "callback": () => {
             self.setState(
               produce(self.state, (draft) => {
@@ -90,13 +90,13 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
           },
           "size": "big",
         });
-        (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+        (window as unknown as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
           self.setState(
             produce(self.state, (draft) => {
               draft.captchaLoading = false;
             }),
           );
-          (window as IWindow).recaptchaWidgetId = widgetId;
+          (window as unknown as IWindow).recaptchaWidgetId = widgetId;
         });
       } catch (e) {
         // reCaptcha may not render on enzyme mount test

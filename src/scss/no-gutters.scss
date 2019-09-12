@@ -1,0 +1,11 @@
+// Custom gutters padding
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+
+  > .col,
+  > [class*="col-"] {
+    padding-right: 20px;
+    padding-left: 0;
+  }
+}

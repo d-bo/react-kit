@@ -1,6 +1,8 @@
 @import "../../scss/vars.scss";
 
-.img-navbar {
+$pr : "navbar";
+
+.img-#{$pr} {
   width: 40px;
   height: 40px;
   margin: 0 7px 0 7px;
@@ -8,15 +10,15 @@
   object-fit: cover;
 }
 
-.navbar {
+.#{$pr} {
   font-size: 20px;
 }
 
-.navbar-user {
+.#{$pr}-user {
   font-size: 14px;
 }
 
-.navbar-body {
+.#{$pr}-body {
   padding: 10px;
   background: $bg-widget;
   color: $app-color;
@@ -25,24 +27,24 @@
   z-index: 99999;
 }
 
-#navbar-sidebar-button {
+##{$pr}-sidebar-button {
   display: none;
 }
 
-#navbar-bottom-menu {
+##{$pr}-bottom-menu {
   display: none;
 }
 
 @media screen and (max-width: 576px) {
-  #navbar-media-query {
+  ##{$pr}-media-query {
     display: none;
   }
 
-  .mobile-disabled {
+  .#{$pr}-mobile-disabled {
     display: none;
   }
 
-  #navbar-sidebar-button {
+  ##{$pr}-sidebar-button {
     display: block;
     text-align: right;
     font-size: 26px;
@@ -52,14 +54,14 @@
     z-index: 99999;
   }
 
-  #navbar-bottom-menu {
+  ##{$pr}-bottom-menu {
     width: 100%;
     display: block;
     position: fixed;
     bottom: 0;
     left: 0;
     background: $bg-color;
-    td {
+    &td {
       text-align: center;
       padding: 20px;
       cursor: pointer;

@@ -1,6 +1,8 @@
-@import "./bootstrap-4.3.1-dist/css/bootstrap-grid.css";
-@import "vars.scss";
+@import "~bootstrap/scss/bootstrap-reboot";
+@import "~bootstrap/scss/bootstrap-grid";
+@import "vars";
 @import "animate.css";
+@import "no-gutters";
 
 html {
   scroll-behavior: smooth;
@@ -19,34 +21,11 @@ body {
   border-radius: 5px;
 }
 
-.App {
-  text-align: center;
-  color: $app-color;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
 .vertical-center {
   min-height: 80vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.App-link {
-  color: #333;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .forgot-password {
@@ -164,7 +143,7 @@ body {
 }
 
 .body-page-color {
-  background: url(/img/positive-bg.png) $bg-front-page-color center center;
+  background: url(#{$active-block-background}) $bg-front-page-color center center;
   padding-top: 14px;
 }
 
@@ -186,15 +165,4 @@ a {
 
 .soft-left-top-shadow {
   box-shadow: 0 0px 15px -10px #999;
-}
-
-.no-gutters {
-  margin-right: 0;
-  margin-left: 0;
-
-  > .col,
-  > [class*="col-"] {
-    padding-right: 20px;
-    padding-left: 0;
-  }
 }

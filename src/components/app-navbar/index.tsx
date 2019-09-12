@@ -126,13 +126,13 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
             <Sidebar history={history} onClick={handleToggleSidebar}
               sidebar={sidebar} firebaseUser={firebaseUser} logOut={this.handleLogOut}/>
 
-            <div className="col-sm-4 mobile-disabled">
+            <div className="col-sm-4 navbar-mobile-disabled">
               {!firebaseUser &&
                 <table style={{width: "100%"}}>
                   <tbody><tr>
                     <td style={{width: "50%"}}>
                     <DmButton text="REGISTER" loading={loading}
-                        onClick={() => this.props.history.push("/auth/register")}
+                        onClick={() => history.push("/auth/register")}
                         style={{padding: "7px 0"}} />
                     </td>
                     <td style={{width: "50%"}}></td>
@@ -168,14 +168,14 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                     <LazyLoadImage
                       src={photoURL}
                       placeholderSrc="/img/no-image-slide.png"
-                      effect="blur" />
+                      effect="blur" wrapperClassName="img-navbar" />
                   }
 
                   {!photoURL &&
                     <LazyLoadImage
-                    src="/img/no-user.png"
-                    placeholderSrc="/img/no-image-slide.png"
-                    effect="blur" />
+                      src="/img/no-user.png"
+                      placeholderSrc="/img/no-image-slide.png"
+                      effect="blur" wrapperClassName="img-navbar" />
                   }
                   </span>
                 </div>
@@ -199,7 +199,7 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                     </td>
                     <td style={{width: "50%"}}>
                       <DmButton text="SIGN IN" loading={loading}
-                        onClick={() => this.props.history.push("/profile")}
+                        onClick={() => history.push("/profile")}
                         theme="outlined" />
                     </td>
                   </tr></tbody>

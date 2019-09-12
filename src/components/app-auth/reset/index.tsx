@@ -74,7 +74,7 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
     const self = this;
     if (networkStatus === "online") {
       try {
-        (window as IWindow).recaptchaVerifier = new
+        (window as unknown as IWindow).recaptchaVerifier = new
           firebase.auth.RecaptchaVerifier("recaptcha-container", {
             "callback": () => {
               self.setState(
@@ -95,13 +95,13 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
             "size": "normal",
             "theme": "light",
         });
-        (window as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
+        (window as unknown as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
           self.setState(
             produce(self.state, (draft) => {
               draft.captchaLoading = false;
             }),
           );
-          (window as IWindow).recaptchaWidgetId = widgetId;
+          (window as unknown as IWindow).recaptchaWidgetId = widgetId;
         });
         if (this.context.firebaseUser) {
           this.props.history.push("/profile");
