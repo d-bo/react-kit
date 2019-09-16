@@ -7,15 +7,12 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import ButtonWidget from "../shared/widgets/ButtonWidget";
 import { withRouter } from "react-router";
 import Footer from "../app-footer";
-import axios from "axios";
-import produce from "immer";
 import { receiveItems } from "../../redux/actions";
 import store from "../../redux/stores/store";
 import { connect } from "react-redux";
 import { LoadingFacebookBlack } from "../shared/elements/Loader";
 import {
   Stitch,
-  RemoteMongoClient,
   AnonymousCredential,
 } from "mongodb-stitch-browser-sdk";
 import { networkStatusType } from "../../redux/actions";
@@ -53,7 +50,6 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
       loadingExit: false,
       verifyLinkSent: false,
     };
-    this.fetchItems = this.fetchItems.bind(this);
     this.fetchItemsMongoAtlas = this.fetchItemsMongoAtlas.bind(this);
   }
 
@@ -68,42 +64,11 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
   }
 
   public fetchItemsMongoAtlas() {
-    const self = this;
     return (dispatch: any) => {
       const client = Stitch.initializeDefaultAppClient("kuvalda-uuveu");
-      const db = client.getServiceClient(RemoteMongoClient.factory, "mongodb-atlas").db("test");
-      client.auth.loginWithCredential(new AnonymousCredential()).then((user) =>
-        db.collection("gotcha").find({}, {limit: 10}).asArray(),
-      ).then((docs: any) => {
-        dispatch(receiveItems(docs));
-      }).catch((error: any) => {
-        self.setState(
-          produce(self.state, (draft) => {
-            draft.errors = error;
-          }),
-        );
-      });
-    };
-  }
-
-  public fetchItems() {
-    const self = this;
-    return (dispatch: any) => {
-      axios({
-        method: "get",
-        responseType: "json",
-        url: "https://fakerestapi.azurewebsites.net/api/Users",
-      })
-      .then((response) => {
-        dispatch(receiveItems(response.data));
-      })
-      .catch((error) => {
-        self.setState(
-          produce(self.state, (draft) => {
-            draft.errors = error;
-          }),
-        );
-        dispatch(receiveItems(null));
+      client.auth.loginWithCredential(new AnonymousCredential());
+      client.callFunction("function0", []).then((res) => {
+        dispatch(receiveItems(res));
       });
     };
   }
@@ -116,7 +81,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
   }
 
   public render() {
-    const {errors, loading} = this.state;
+    const {errors} = this.state;
     const {items} = this.props;
     return (
       <>
@@ -135,7 +100,8 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
                       title={item.name}
                       shadow="soft-left-bottom-shadow"
                       img_preview={item.img_preview}
-                      description={item.description}>
+                      description={item.description}
+                      className="animated pulse">
                     </ProductCardMiniWidget>
                   </div>,
                   )
@@ -150,7 +116,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
                   src="/img/prod-5.jpg"
                   placeholderSrc="/img/no-image-slide.png"
                   effect="blur"
-                  className="fit-in-cover-product round-border-3px" />
+                  className="fit-in-cover-product round-border-3px animated fadeInRight" />
                 <h2 className="price">{<FaRegStar/>} 71 $</h2>
               </DmFolderWidget>
               <DmFolderWidget title="Утюг Tefal CV-901"
@@ -175,7 +141,13 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
         }
 
         {!items &&
-          <LoadingFacebookBlack/>
+          <div style={{textAlign: "center"}}>
+            <div style={{display: "inline-block"}}>
+              <DmFolderWidget className="vertical-center center-loader-width">
+                <LoadingFacebookBlack/>
+              </DmFolderWidget>
+            </div>
+          </div>
         }
 
         {errors &&

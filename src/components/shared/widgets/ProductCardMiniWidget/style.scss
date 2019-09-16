@@ -23,3 +23,20 @@
     color: #666;
   }
 }
+
+.product-modal-image {
+  padding: 60px 30px;
+}
+
+.product-img-float-container {
+  float: left;
+  margin-right: 10px;
+}
+
+#product-modal-overlay {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.product-description {
+  word-wrap: break-word;
+}

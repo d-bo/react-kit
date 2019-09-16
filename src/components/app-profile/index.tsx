@@ -190,11 +190,11 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                 </div>
                 <table style={{width: "100%"}}><tbody><tr>
                 <td>
-                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={loadingImg}
+                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} disabled={loadingImg}
                     className="margin-top button-grey" onClick={this.handleSaveImage} />
                 </td>
                 <td>
-                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={loadingImg}
+                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} disabled={loadingImg}
                     className="margin-top button-grey" onClick={this.cancelImgUpload} />
                 </td>
                 </tr></tbody></table>
@@ -210,11 +210,11 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                 </div>
                 <table style={{width: "100%"}}><tbody><tr>
                 <td>
-                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} loading={loadingImg}
+                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} disabled={loadingImg}
                     className="margin-top button-grey" onClick={this.handleDropImage} />
                 </td>
                 <td>
-                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} loading={loadingImg}
+                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} disabled={loadingImg}
                     className="margin-top button-grey" onClick={this.cancelDropImg} />
                 </td>
                 </tr></tbody></table>
@@ -231,11 +231,11 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
               <td style={{width: "80%"}}>
                 <input type="file" className="input-hidden"
                   onChange={this.handleImageChange} id="img-file-upload" />
-                <DmButton text="LOAD PROFILE IMAGE" loading={loadingImg}
+                <DmButton text="LOAD PROFILE IMAGE" disabled={loadingImg}
                   className="margin-top" onClick={this.handleUploadClick} />
               </td>
               <td style={{width: "80%"}}>
-                <DmButton text={<FaTrashAlt />} loading={loadingImg}
+                <DmButton text={<FaTrashAlt />}
                   className="margin-top button-transparent"
                   onClick={this.handleDropImageDialog} />
               </td>
@@ -368,7 +368,6 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
             draft.verifyLinkSent = true;
           }),
         );
-        self.forceUpdate();
       }).catch((error: any) => {
         self.setState(
           produce(self.state, (draft) => {
@@ -515,6 +514,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     this.setState(
       produce(this.state, (draft) => {
         draft.loadingImg = true;
+        draft.showSaveImgDialog = false;
       }),
     );
     try {
@@ -567,6 +567,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                         produce(self.state, (draft) => {
                           draft.errors = error.message;
                           draft.loading = false;
+                          draft.showSaveImgDialog = false;
                         }),
                       );
                     });
@@ -576,6 +577,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                     produce(self.state, (draft) => {
                       draft.errors = e.message;
                       draft.loading = false;
+                      draft.showSaveImgDialog = false;
                     }),
                   );
                 });
@@ -585,6 +587,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
                 produce(self.state, (draft) => {
                   draft.errors = e.message;
                   draft.loading = false;
+                  draft.showSaveImgDialog = false;
                 }),
               );
             });
@@ -594,6 +597,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
       self.setState(
         produce(self.state, (draft) => {
           draft.errorsUploadPhoto = e;
+          draft.showSaveImgDialog = false;
         }),
       );
     }

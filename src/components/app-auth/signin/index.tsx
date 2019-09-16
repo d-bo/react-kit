@@ -121,6 +121,8 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     if (location !== prevProps.location) {
       window.scrollTo(0, 0);
     }
+
+    // Internet connection status
     if (networkStatus !== prevProps.networkStatus) {
       if (networkStatus === "online") {
         this.setState(

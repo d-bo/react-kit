@@ -9,7 +9,7 @@ import ReactDOM from "react-dom";
 import store from "./redux/stores/store";
 import App from "./components/app";
 import { Provider } from "react-redux";
-import { createBrowserHistory } from "history";
+import { createHashHistory } from "history";
 import * as serviceWorker from "./serviceWorker";
 import firebase_config from "./config/firebase.config";
 
@@ -21,7 +21,7 @@ firebase.auth().languageCode = (navigator.languages &&
   navigator.languages.length) ? navigator.languages[0] : navigator.language;
 
 // Router history
-const history = createBrowserHistory();
+const history = createHashHistory();
 
 // Render app when user acquired
 firebase.auth().onAuthStateChanged((firebaseUser) => {
