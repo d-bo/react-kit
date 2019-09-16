@@ -53,7 +53,9 @@ $pr : "navbar";
     right: 20px;
     z-index: 99999;
   }
+}
 
+@media screen and (min-height: 500px) and (max-width: 576px) {
   ##{$pr}-bottom-menu {
     width: 100%;
     display: block;
@@ -61,7 +63,7 @@ $pr : "navbar";
     bottom: 0;
     left: 0;
     background: $bg-color;
-    &td {
+    & td {
       text-align: center;
       padding: 20px;
       cursor: pointer;

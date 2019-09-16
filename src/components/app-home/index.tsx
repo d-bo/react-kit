@@ -116,7 +116,7 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
                   src="/img/prod-5.jpg"
                   placeholderSrc="/img/no-image-slide.png"
                   effect="blur"
-                  className="fit-in-cover-product round-border-3px animated fadeInRight" />
+                  className="fit-in-cover-product round-border-3px animated pulse" />
                 <h2 className="price">{<FaRegStar/>} 71 $</h2>
               </DmFolderWidget>
               <DmFolderWidget title="Утюг Tefal CV-901"
