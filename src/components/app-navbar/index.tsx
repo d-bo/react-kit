@@ -95,122 +95,126 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
     const {firebaseUser, photoURL} = this.context;
     const {loading} = this.state;
     return (
-      <div className="navbar-body soft-left-bottom-shadow fade-in-fx">
-        <div className="container-fluid navbar">
-          <div className="row">
+      <header>
+        <nav>
+          <div className="navbar-body soft-left-bottom-shadow fade-in-fx">
+            <div className="container-fluid navbar">
+              <div className="row">
 
-            <div id="navbar-sidebar-button" className="fade-in-fx">
-              {// Show network disconnect status
-                networkStatus &&
-                <div style={{paddingRight: "30px", display: "inline-block", color: "#c0c0c0"}}>
-                  {networkStatus === "offline" &&
-                    <MdSignalWifiOff/>
-                  }
-                </div>
-              }
-              <FaBars style={{cursor: "pointer"}} onClick={handleToggleSidebar} />
-            </div>
-
-            <div id="navbar-bottom-menu" className="soft-left-top-shadow">
-              <table style={{width: "100%"}}>
-                <tbody>
-                  <tr>
-                    <td><FaFastBackward/></td>
-                    <td><FaFastForward/></td>
-                    <td><FaPlay/></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <Sidebar history={history} onClick={handleToggleSidebar}
-              sidebar={sidebar} firebaseUser={firebaseUser} logOut={this.handleLogOut}/>
-
-            <div className="col-sm-4 navbar-mobile-disabled">
-              {!firebaseUser &&
-                <table style={{width: "100%"}}>
-                  <tbody><tr>
-                    <td style={{width: "50%"}}>
-                    <DmButton text="REGISTER" loading={loading}
-                        onClick={() => history.push("/auth/register")}
-                        style={{padding: "7px 0"}} />
-                    </td>
-                    <td style={{width: "50%"}}></td>
-                  </tr></tbody>
-                </table>
-              }
-            </div>
-
-            <div className="col-sm-4">
-              <div style={{textAlign: "center"}}>
-                <Router history={history}>
-                  <Link to="/"><img src="/favicons/apple-touch-icon.png"
-                    alt="" className="img-navbar" />
-                  </Link>
-                </Router>
-              </div>
-            </div>
-
-            <div className="col-sm-4 navbar-user">
-              <div id="navbar-media-query">
-
-              {firebaseUser &&
-                <div style={{textAlign: "right"}}>
-                  <span onClick={this.redirectProfile} style={{cursor: "pointer"}}>
-                  {firebaseUser.displayName &&
-                    <b>{firebaseUser.displayName}</b>
-                  }
-                  {(firebaseUser.email && !firebaseUser.displayName) &&
-                    <b>{firebaseUser.email}</b>
-                  }
-
-                  {photoURL &&
-                    <LazyLoadImage
-                      src={photoURL}
-                      placeholderSrc="/img/no-image-slide.png"
-                      effect="blur" className="img-navbar" />
-                  }
-
-                  {!photoURL &&
-                    <LazyLoadImage
-                      src="/img/no-user.png"
-                      placeholderSrc="/img/no-image-slide.png"
-                      effect="blur" className="img-navbar" />
-                  }
-                  </span>
-                </div>
-              }
-              {!firebaseUser &&
-                <table style={{width: "100%"}}>
-                  <tbody><tr>
-                    <td style={{width: "50%"}}>
-                      {// Show network disconnect status
-                        networkStatus &&
-                        <div style={{
-                          color: "#c0c0c0",
-                          display: "inline-block",
-                          paddingRight: "30px",
-                        }}>
-                        {networkStatus === "offline" &&
-                          <MdSignalWifiOff/>
-                        }
-                        </div>
+                <div id="navbar-sidebar-button" className="fade-in-fx">
+                  {// Show network disconnect status
+                    networkStatus &&
+                    <div style={{paddingRight: "30px", display: "inline-block", color: "#c0c0c0"}}>
+                      {networkStatus === "offline" &&
+                        <MdSignalWifiOff/>
                       }
-                    </td>
-                    <td style={{width: "50%"}}>
-                      <DmButton text="SIGN IN" loading={loading}
-                        onClick={() => history.push("/profile")}
-                        theme="outlined" />
-                    </td>
-                  </tr></tbody>
-                </table>
-              }
+                    </div>
+                  }
+                  <FaBars style={{cursor: "pointer"}} onClick={handleToggleSidebar} />
+                </div>
+
+                <div id="navbar-bottom-menu" className="soft-left-top-shadow">
+                  <table style={{width: "100%"}}>
+                    <tbody>
+                      <tr>
+                        <td><FaFastBackward/></td>
+                        <td><FaFastForward/></td>
+                        <td><FaPlay/></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <Sidebar history={history} onClick={handleToggleSidebar}
+                  sidebar={sidebar} firebaseUser={firebaseUser} logOut={this.handleLogOut}/>
+
+                <div className="col-sm-4 navbar-mobile-disabled">
+                  {!firebaseUser &&
+                    <table style={{width: "100%"}}>
+                      <tbody><tr>
+                        <td style={{width: "50%"}}>
+                        <DmButton text="REGISTER"
+                            onClick={() => history.push("/auth/register")}
+                            style={{padding: "7px 0"}} />
+                        </td>
+                        <td style={{width: "50%"}}></td>
+                      </tr></tbody>
+                    </table>
+                  }
+                </div>
+
+                <div className="col-sm-4">
+                  <div style={{textAlign: "center"}}>
+                    <Router history={history}>
+                      <Link to="/"><img src="/favicons/apple-touch-icon.png"
+                        alt="" className="img-navbar" />
+                      </Link>
+                    </Router>
+                  </div>
+                </div>
+
+                <div className="col-sm-4 navbar-user">
+                  <div id="navbar-media-query">
+
+                  {firebaseUser &&
+                    <div style={{textAlign: "right"}}>
+                      <span onClick={this.redirectProfile} style={{cursor: "pointer"}}>
+                      {firebaseUser.displayName &&
+                        <b>{firebaseUser.displayName}</b>
+                      }
+                      {(firebaseUser.email && !firebaseUser.displayName) &&
+                        <b>{firebaseUser.email}</b>
+                      }
+
+                      {photoURL &&
+                        <LazyLoadImage
+                          src={photoURL}
+                          placeholderSrc="/img/no-image-slide.png"
+                          effect="blur" className="img-navbar" />
+                      }
+
+                      {!photoURL &&
+                        <LazyLoadImage
+                          src="/img/no-user.png"
+                          placeholderSrc="/img/no-image-slide.png"
+                          effect="blur" className="img-navbar" />
+                      }
+                      </span>
+                    </div>
+                  }
+                  {!firebaseUser &&
+                    <table style={{width: "100%"}}>
+                      <tbody><tr>
+                        <td style={{width: "50%"}}>
+                          {// Show network disconnect status
+                            networkStatus &&
+                            <div style={{
+                              color: "#c0c0c0",
+                              display: "inline-block",
+                              paddingRight: "30px",
+                            }}>
+                            {networkStatus === "offline" &&
+                              <MdSignalWifiOff/>
+                            }
+                            </div>
+                          }
+                        </td>
+                        <td style={{width: "50%"}}>
+                          <DmButton text="SIGN IN" loading={loading}
+                            onClick={() => history.push("/profile")}
+                            theme="outlined" />
+                        </td>
+                      </tr></tbody>
+                    </table>
+                  }
+                  </div>
+                </div>
+
               </div>
             </div>
-
           </div>
-        </div>
-      </div>
+        </nav>
+      </header>
     );
   }
 

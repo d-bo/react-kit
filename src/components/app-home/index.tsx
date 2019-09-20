@@ -91,50 +91,55 @@ class Home extends React.PureComponent<IHomeProps, IHomeState> {
           <div className="row-fluid fade-in-fx">
             <div className="row">
             <div className="col-sm-6 col-lg-8">
+              <h2>Products</h2>
               <div className="row no-gutters">
 
                 {items &&
                   items.map((item: any) =>
-                  <div className="col-sm-12 col-lg-6 col-md-12 col-xl-4" key={item.id}>
-                    <ProductCardMiniWidget
-                      title={item.name}
-                      shadow="soft-left-bottom-shadow"
-                      img_preview={item.img_preview}
-                      description={item.description}
-                      className="animated pulse">
-                    </ProductCardMiniWidget>
-                  </div>,
+                    <div className="col-sm-12 col-lg-6 col-md-12 col-xl-4" key={item.id}>
+                      <ProductCardMiniWidget
+                        title={item.name}
+                        shadow="soft-left-bottom-shadow"
+                        img_preview={item.img_preview}
+                        description={item.description}
+                        className="animated pulse">
+                      </ProductCardMiniWidget>
+                    </div>,
                   )
                 }
 
               </div>
             </div>
             <div className="col-sm-6 col-lg-4">
-              <DmFolderWidget title="Телефон NOKIA 3310"
-                style={{textAlign: "center"}}>
-                <LazyLoadImage
-                  src="/img/prod-5.jpg"
-                  placeholderSrc="/img/no-image-slide.png"
-                  effect="blur"
-                  className="fit-in-cover-product round-border-3px animated pulse" />
-                <h2 className="price">{<FaRegStar/>} 71 $</h2>
-              </DmFolderWidget>
-              <DmFolderWidget title="Утюг Tefal CV-901"
-                desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг,
-                отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
-                style={{textAlign: "center"}}>
+              <h2>News</h2>
+              <div className="row no-gutters">
+                
+                <DmFolderWidget title="Телефон NOKIA 3310"
+                  style={{textAlign: "center"}}>
+                  <LazyLoadImage
+                    src="/img/prod-5.jpg"
+                    placeholderSrc="/img/no-image-slide.png"
+                    effect="blur"
+                    className="fit-in-cover-product round-border-3px animated pulse" />
+                  <h2 className="price">{<FaRegStar/>} 71 $</h2>
+                </DmFolderWidget>
+                <DmFolderWidget title="Утюг Tefal CV-901"
+                  desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг,
+                  отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
+                  style={{textAlign: "center"}}>
 
-                <ButtonWidget />
+                  <ButtonWidget />
 
-                <LazyLoadImage
-                  src="/img/prod-1.jpg"
-                  placeholderSrc="/img/no-image-slide.png"
-                  effect="blur"
-                  className="fit-in-cover-product round-border-3px" />
+                  <LazyLoadImage
+                    src="/img/prod-1.jpg"
+                    placeholderSrc="/img/no-image-slide.png"
+                    effect="blur"
+                    className="fit-in-cover-product round-border-3px" />
 
-                <h2 className="price">{<FaRegStar/>} 233 $</h2>
+                  <h2 className="price">{<FaRegStar/>} 233 $</h2>
 
-              </DmFolderWidget>
+                </DmFolderWidget>
+              </div>
             </div>
           </div>
           </div>

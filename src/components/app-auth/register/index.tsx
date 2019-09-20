@@ -43,7 +43,13 @@ export interface IWindow extends Window {
   recaptchaWidgetId: any;
 }
 
-class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
+// Object index string | number types
+interface IRegister {
+  [k: string]: any;
+  [z: number]: any;
+}
+
+class Register extends React.PureComponent<IRegisterProps, IRegisterState> implements IRegister {
 
   constructor(props: IRegisterProps) {
     super(props);
@@ -57,11 +63,16 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> {
       showRegisterButtonAfterCaptcha: false,
       verifyLinkSent: false,
     };
-    this.handleRegister = this.handleRegister.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleKeyboardEnter = this.handleKeyboardEnter.bind(this);
+    [
+      "handleRegister",
+      "handleEmailChange",
+      "handlePasswordChange",
+      "handleNameChange",
+      "handleKeyboardEnter",
+    ].forEach((propToBind: string) => {
+      // @ts-ignore: Cannot find a proper solution
+      this[propToBind as keyof IRegister] = this[propToBind as keyof Register].bind(this);
+    });
   }
 
   public componentDidMount() {

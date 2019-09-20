@@ -2,28 +2,27 @@ import "./style.scss";
 import React from "react";
 
 const Footer: React.SFC = () =>
-  <>
+  <footer>
     <div className="footer">
       <div className="container-fluid fade-in-fx">
         <div className="row">
           <div className="col-sm-4">
-            Note:  In most cases you should never force a React component to
-            re-render; re-rendering should always be done based on state or
-            props changes.  Nonetheless, I don't judge and there may be a case
-            where you legitimately need to force a React component to re-render
-            so let's have it!
+            <p>Links</p>
+            <p>Guide to handbook</p>
+            <p>Drafts</p>
           </div>
           <div className="col-sm-4">
-            This blog doesn't aim to be prescriptive, so I wont scold
-            developers for using this brute force method.  Again, there's
-            likely a better, more "React-y" way to render a component properly,
-            but if you are desperate to get a component render on command,
-            there are many ways to do so with React.
+            <p>Center</p>
+            <p>Middle link</p>
+            <p>Drafts</p>
           </div>
-          <div className="col-sm-4">Column 3</div>
+          <div className="col-sm-4">
+            <p>Whats behind the forest</p>
+            <p>Transcriptions</p>
+          </div>
         </div>
       </div>
     </div>
-  </>;
+  </footer>;
 
 export default Footer;

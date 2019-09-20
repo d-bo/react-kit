@@ -8,6 +8,16 @@ html {
   //scroll-behavior: smooth;
 }
 
+@for $i from 1 through 6 {
+  h#{$i} {
+    color: $app-color;
+    padding-left: 7px;
+  }
+  h#{$i}::before {
+    content: "» ";
+  }
+}
+
 body {
   font-family: $font-stack;
   background: $bg-color;
