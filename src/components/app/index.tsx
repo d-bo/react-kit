@@ -7,9 +7,9 @@ import * as LazyComponents from "./LazyComponents";
 import produce from "immer";
 import { connect } from "react-redux";
 import { hideSidebar, receiveNetworkStatus, networkStatusType } from "../../redux/actions";
+import { IPropsGlobal } from "../shared/Interfaces";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
-
 const mapDispatchToProps = (dispatch: any) => ({
   handleHideSidebar: () => dispatch(hideSidebar()),
   receiveNetworkStatus: (networkStatus: networkStatusType) => {
@@ -17,12 +17,10 @@ const mapDispatchToProps = (dispatch: any) => ({
   },
 });
 
-interface IAppProps {
-  firebaseUser?: firebase.User | null;
-  history?: any;
-  handleHideSidebar?: any;
-  networkStatus?: networkStatusType;
-  receiveNetworkStatus?: (networkStatus: networkStatusType) => {};
+interface IAppProps extends IPropsGlobal {
+  readonly firebaseUser?: firebase.User | null;
+  readonly handleHideSidebar?: any;
+  readonly receiveNetworkStatus?: (networkStatus: networkStatusType) => {};
 }
 
 interface IAppState {
@@ -34,7 +32,14 @@ interface IAppState {
   photoURL: string | null;
 }
 
-class App extends React.Component<IAppProps, IAppState> {
+interface IAppProto {
+  contextSetFirebaseUser(firebaseUser: firebase.User | null): void;
+  contextSetPhotoURL(url: string | null): void;
+}
+
+class App
+extends React.Component<IAppProps, IAppState>
+implements IAppProto {
 
   constructor(props: IAppProps) {
     super(props);
@@ -47,7 +52,6 @@ class App extends React.Component<IAppProps, IAppState> {
       verifyLinkSent: false,
     };
     this.contextSetFirebaseUser = this.contextSetFirebaseUser.bind(this);
-    this.clickBodyListener = this.clickBodyListener.bind(this);
     this.contextSetPhotoURL = this.contextSetPhotoURL.bind(this);
   }
 
@@ -72,13 +76,9 @@ class App extends React.Component<IAppProps, IAppState> {
     );
   }
 
-  // TODO: sidebar hides, so i can't click and execute click event listener
-  public clickBodyListener(e: MouseEvent) {
-    // this.props.handleHideSidebar(e);
-  }
-
   public componentDidMount() {
     const {receiveNetworkStatus, firebaseUser} = this.props;
+
     window.addEventListener("online", () => {
       if (receiveNetworkStatus) {
         receiveNetworkStatus("online");
@@ -109,10 +109,6 @@ class App extends React.Component<IAppProps, IAppState> {
     if (this.props.networkStatus !== offlineStatus) {
       receiveNetworkStatus(offlineStatus);
     }
-  }
-
-  public componentWillUnmount() {
-    // document.removeEventListener("mousedown", this.clickBodyListener);
   }
 
   public render() {

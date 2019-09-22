@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React from "react";
-import {shallow} from "enzyme";
-import {LoadingFacebookBlack, LoadingRollingBlack} from "./index";
+import { shallow } from "enzyme";
+import { LoadingFacebookBlack, LoadingRollingBlack } from "./index";
 
-describe("Register is rendering", () => {
+describe("Loaders are rendering", () => {
   it("LoadingFacebookBlack is rendering", () => {
     const wrapper = shallow(<LoadingFacebookBlack />);
     expect(wrapper).toExist();

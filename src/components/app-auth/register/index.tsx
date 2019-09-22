@@ -13,18 +13,15 @@ import { withRouter } from "react-router";
 import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
-import { networkStatusType } from "../../../redux/actions";
 import { connect } from "react-redux";
+import { IPropsGlobal } from "../../shared/Interfaces";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
-interface IRegisterProps {
-  context: any;
-  firebaseAuth: any;
-  history: any;
-  style: any;
-  location: any;
-  networkStatus?: networkStatusType;
+interface IRegisterProps extends IPropsGlobal {
+  readonly context: any;
+  readonly firebaseAuth: any;
+  readonly style: any;
 }
 
 interface IRegisterState {
@@ -43,13 +40,19 @@ export interface IWindow extends Window {
   recaptchaWidgetId: any;
 }
 
-// Object index string | number types
-interface IRegister {
+interface IRegisterProto {
   [k: string]: any;
   [z: number]: any;
+  handleKeyboardEnter?(e: any): void;
+  handleRegister(): void;
+  handlePasswordChange(e: string): void;
+  handleEmailChange(e: string): void;
+  handleNameChange(e: string): void;
 }
 
-class Register extends React.PureComponent<IRegisterProps, IRegisterState> implements IRegister {
+class Register
+extends React.PureComponent<IRegisterProps, IRegisterState>
+implements IRegisterProto {
 
   constructor(props: IRegisterProps) {
     super(props);
@@ -76,9 +79,9 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> imple
   }
 
   public componentDidMount() {
-    const {history, networkStatus} = this.props;
+    const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
-      history.push("/profile");
+      push("/profile");
     }
     const self = this;
     // Offline ? reCaptcha disabled
@@ -112,7 +115,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> imple
           (window as unknown as IWindow).recaptchaWidgetId = widgetId;
         });
         if (this.context.firebaseUser) {
-          this.props.history.push("/profile");
+          push("/profile");
         }
       } catch (e) {
         // reCaptcha may not render on enzyme mount test
@@ -236,13 +239,13 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> imple
     );
   }
 
-  private handleKeyboardEnter(e: any): void {
+  public handleKeyboardEnter(e: any): void {
     if (e.key === "Enter") {
       this.handleRegister();
     }
   }
 
-  private handleRegister(): void {
+  public handleRegister(): void {
     if (this.state.loading) {
       return;
     }
@@ -332,7 +335,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> imple
       });
   }
 
-  private handlePasswordChange(e: any): void {
+  public handlePasswordChange(e: string): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.password = e;
@@ -340,7 +343,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> imple
     );
   }
 
-  private handleEmailChange(e: any): void {
+  public handleEmailChange(e: string): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.email = e;
@@ -348,7 +351,7 @@ class Register extends React.PureComponent<IRegisterProps, IRegisterState> imple
     );
   }
 
-  private handleNameChange(e: any): void {
+  public handleNameChange(e: string): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.displayName = e;

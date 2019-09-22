@@ -15,9 +15,9 @@ import { toggleSidebar, setProfileImgUrl, networkStatusType } from "../../redux/
 import firebase from "firebase/app";
 import produce from "immer";
 import { MdSignalWifiOff } from "react-icons/md";
+import { IPropsGlobal } from "../shared/Interfaces";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
-
 const mapDispatchToProps = (dispatch: any) => {
   return {
     handleToggleSidebar: (e: MouseEvent) => dispatch(toggleSidebar()),
@@ -25,9 +25,7 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-interface INavbarProps {
-  history?: any;
-  networkStatus?: networkStatusType;
+interface INavbarProps extends IPropsGlobal {
   profileImgUrl?: string | null;
   setProfileImgUrl?: any;
   sidebar?: boolean;
@@ -41,7 +39,14 @@ interface INavbarState {
   verifyLinkSent: boolean;
 }
 
-class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
+interface INavbarProto {
+  handleLogOut(): void;
+  redirectProfile(): void;
+}
+
+class Navbar
+extends React.PureComponent<INavbarProps, INavbarState>
+implements INavbarProto {
 
   constructor(props: INavbarProps) {
     super(props);
@@ -125,8 +130,11 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
                   </table>
                 </div>
 
-                <Sidebar history={history} onClick={handleToggleSidebar}
-                  sidebar={sidebar} firebaseUser={firebaseUser} logOut={this.handleLogOut}/>
+                <Sidebar history={history}
+                  onClick={handleToggleSidebar}
+                  sidebarStatus={sidebar}
+                  firebaseUser={firebaseUser}
+                  logOut={this.handleLogOut} />
 
                 <div className="col-sm-4 navbar-mobile-disabled">
                   {!firebaseUser &&
@@ -218,8 +226,9 @@ class Navbar extends React.PureComponent<INavbarProps, INavbarState> {
     );
   }
 
-  private redirectProfile(): void {
-    this.props.history.push("/profile");
+  public redirectProfile(): void {
+    const {history: {push}} = this.props;
+    push("/profile");
   }
 }
 

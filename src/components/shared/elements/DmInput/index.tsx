@@ -2,10 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import "./style.scss";
 import produce from "immer";
+import { IPropsGlobal } from "../../Interfaces";
 
 const mapStateToProps = (state: any) => state;
 
-interface IDmInputProps {
+interface IDmInputProps extends IPropsGlobal {
   type: any;
   value: any;
   placeholder?: any;
@@ -18,7 +19,13 @@ interface IDmInputState {
   value: string;
 }
 
-class DmInput extends React.PureComponent<IDmInputProps, IDmInputState> {
+interface IDmInputProto {
+  handleChange(e: any): void;
+}
+
+class DmInput
+extends React.PureComponent<IDmInputProps, IDmInputState>
+implements IDmInputProto {
 
   constructor(props: IDmInputProps) {
     super(props);
@@ -41,7 +48,7 @@ class DmInput extends React.PureComponent<IDmInputProps, IDmInputState> {
     );
   }
 
-  private handleChange(e: any): void {
+  public handleChange(e: any): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.value = e.target.value;

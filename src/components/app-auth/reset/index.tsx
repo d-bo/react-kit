@@ -16,25 +16,20 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
-import { networkStatusType } from "../../../redux/actions";
+import { IPropsGlobal } from "../../shared/Interfaces";
 
-const mapStateToProps = (state: any) => {
-  return state.firebaseAuth;
-};
-
+const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
   firebaseAuth: (firebaseUser: any) => dispatch(firebaseAuth(firebaseUser)),
 });
 
-interface IResetProps {
-  context: any;
-  history: any;
-  networkStatus?: networkStatusType;
-  style: any;
-  email: string | null;
-  password: string | null;
-  user: firebase.User | null;
-  location: any;
+interface IResetProps extends IPropsGlobal {
+  readonly context: any;
+  readonly style: any;
+  readonly email: string | null;
+  readonly password: string | null;
+  readonly user: firebase.User | null;
+  readonly location: any;
 }
 
 interface IResetState {
@@ -48,7 +43,14 @@ interface IResetState {
   showResetSubmitButton: any;
 }
 
-class Reset extends React.PureComponent<IResetProps, IResetState> {
+interface IResetProto {
+  handleEmailChange(e: string): void;
+  handleReset(): void;
+}
+
+class Reset
+extends React.PureComponent<IResetProps, IResetState>
+implements IResetProto {
 
   constructor(props: IResetProps) {
     super(props);
@@ -67,9 +69,9 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
   }
 
   public componentDidMount(): void {
-    const {history, networkStatus} = this.props;
+    const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
-      history.push("/profile");
+      push("/profile");
     }
     const self = this;
     if (networkStatus === "online") {
@@ -104,7 +106,7 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
           (window as unknown as IWindow).recaptchaWidgetId = widgetId;
         });
         if (this.context.firebaseUser) {
-          this.props.history.push("/profile");
+          push("/profile");
         }
       } catch (e) {
         // reCaptcha may not render on enzyme mount test
@@ -213,7 +215,7 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
     );
   }
 
-  private handleReset(): void {
+  public handleReset(): void {
     const self = this;
     const {email, loading} = this.state;
     if (loading) {
@@ -245,7 +247,7 @@ class Reset extends React.PureComponent<IResetProps, IResetState> {
     });
   }
 
-  private handleEmailChange(e: any): void {
+  public handleEmailChange(e: any): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.email = e;

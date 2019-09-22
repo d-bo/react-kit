@@ -1,5 +1,6 @@
 import React from "react";
 import "./style.scss";
+import { IPropsGlobal } from "../../Interfaces";
 
 const Outlined: React.CSSProperties = {
   background: "transparent",
@@ -8,7 +9,7 @@ const Outlined: React.CSSProperties = {
   padding: "7px 0",
 };
 
-interface IDMButtonProps {
+interface IDMButtonProps extends IPropsGlobal {
   disabled?: boolean;
   theme?: string;
   onClick?: any;

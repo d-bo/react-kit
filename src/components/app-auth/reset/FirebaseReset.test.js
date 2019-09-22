@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React from "react";
-import {mount} from "enzyme";
+import { mount } from "enzyme";
 import Reset from "./index";
-import { Router, Route, Switch } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { Provider } from "react-redux";

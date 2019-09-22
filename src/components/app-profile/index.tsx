@@ -1,6 +1,6 @@
 import "./style.scss";
 import { connect } from "react-redux";
-import React, { Component, SyntheticEvent } from "react";
+import React from "react";
 import firebase from "firebase/app";
 import DmButton from "../shared/elements/DmButton";
 import DmInput from "../shared/elements/DmInput";
@@ -14,6 +14,7 @@ import { withRouter } from "react-router";
 import Footer from "../app-footer";
 import produce from "immer";
 import { LoadingFacebookBlack } from "../../components/shared/elements/Loader";
+import { IPropsGlobal } from "../shared/Interfaces";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -21,12 +22,10 @@ const mapDispatchToProps = (dispatch: any) => ({
   setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
-interface IProfileProps {
-  history: any;
-  setProfileImgUrl: any;
-  setUserFirestoreData: any;
-  userData: any;
-  location?: any;
+interface IProfileProps extends IPropsGlobal {
+  readonly setProfileImgUrl: any;
+  readonly setUserFirestoreData: any;
+  readonly userData: any;
 }
 
 interface IFileObject {
@@ -48,7 +47,26 @@ interface IProfileState {
   errorsUploadPhoto: string | null;
 }
 
-class Profile extends React.PureComponent<IProfileProps, IProfileState> {
+interface IProfileProto {
+  [k: string]: any;
+  [z: number]: any;
+  handleLogOut(): void;
+  sendVerifyLink(): void;
+  handleCityChange(city: string | null): void;
+  handleCountryChange(country: string | null): void;
+  handleUpdateUser(): void;
+  handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  handleUploadClick(): void;
+  handleDropImageDialog(): void;
+  handleDropImage(): void;
+  handleSaveImage(): void;
+  cancelImgUpload(): void;
+  cancelDropImg(): void;
+}
+
+class Profile
+extends React.PureComponent<IProfileProps, IProfileState>
+implements IProfileProto {
 
   constructor(props: IProfileProps) {
     super(props);
@@ -67,24 +85,29 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
       verifyLinkSent: false,
     };
 
-    this.handleLogOut = this.handleLogOut.bind(this);
-    this.sendVerifyLink = this.sendVerifyLink.bind(this);
-    this.handleCityChange = this.handleCityChange.bind(this);
-    this.handleUpdateUser = this.handleUpdateUser.bind(this);
-    this.handleCountryChange = this.handleCountryChange.bind(this);
-    this.handleImageChange = this.handleImageChange.bind(this);
-    this.handleUploadClick = this.handleUploadClick.bind(this);
-    this.handleSaveImage = this.handleSaveImage.bind(this);
-    this.cancelImgUpload = this.cancelImgUpload.bind(this);
-    this.handleDropImage = this.handleDropImage.bind(this);
-    this.handleDropImageDialog = this.handleDropImageDialog.bind(this);
-    this.cancelDropImg = this.cancelDropImg.bind(this);
+    [
+      "handleLogOut",
+      "sendVerifyLink",
+      "handleCityChange",
+      "handleUpdateUser",
+      "handleCountryChange",
+      "handleImageChange",
+      "handleUploadClick",
+      "handleSaveImage",
+      "cancelImgUpload",
+      "handleDropImage",
+      "handleDropImageDialog",
+      "cancelDropImg",
+    ].forEach((propToBind: string) => {
+      // @ts-ignore: Cannot find a proper solution
+      this[propToBind as keyof IProfileProto] = this[propToBind as keyof Profile].bind(this);
+    });
   }
 
   public componentDidMount() {
-    const {history} = this.props;
+    const {history: {push}} = this.props;
     if (!this.context.firebaseUser) {
-      history.push("/auth/signin");
+      push("/auth/signin");
     }
   }
 
@@ -351,7 +374,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     });
   }
 
-  private sendVerifyLink(): void {
+  public sendVerifyLink(): void {
     const self = this;
     const {firebaseUser} = this.context;
     this.setState(
@@ -379,7 +402,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     }
   }
 
-  private handleCityChange(city: string | null): void {
+  public handleCityChange(city: string | null): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.city = city;
@@ -387,7 +410,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     );
   }
 
-  private handleCountryChange(country: string | null): void {
+  public handleCountryChange(country: string | null): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.country = country;
@@ -396,7 +419,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
   }
 
   // Save additional user data to firestore
-  private handleUpdateUser(): void {
+  public handleUpdateUser(): void {
     const self = this;
     const {setUserFirestoreData} = this.props;
     const {city, country} = this.state;
@@ -432,7 +455,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     }
   }
 
-  private handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void {
+  public handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void {
     e.preventDefault();
     const self = this;
     this.setState(
@@ -459,12 +482,12 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     }
   }
 
-  private handleUploadClick(): void {
+  public handleUploadClick(): void {
     const el: HTMLElement = document.getElementById("img-file-upload") as HTMLElement;
     el.click();
   }
 
-  private handleDropImageDialog(): void {
+  public handleDropImageDialog(): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.showDropImgDialog = true;
@@ -472,7 +495,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     );
   }
 
-  private handleDropImage(): void {
+  public handleDropImage(): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.loadingImg = true;
@@ -505,7 +528,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     }
   }
 
-  private handleSaveImage(): void {
+  public handleSaveImage(): void {
     const self = this;
     const {firebaseUser, contextSetPhotoURL} = this.context;
     const {imgFile} = this.state;
@@ -603,7 +626,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     }
   }
 
-  private cancelImgUpload(): void {
+  public cancelImgUpload(): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.imgFile = null;
@@ -613,7 +636,7 @@ class Profile extends React.PureComponent<IProfileProps, IProfileState> {
     );
   }
 
-  private cancelDropImg(): void {
+  public cancelDropImg(): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.showDropImgDialog = false;

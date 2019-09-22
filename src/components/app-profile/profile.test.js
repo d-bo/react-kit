@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from "react";
-import { render, mount } from "enzyme";
+import { mount } from "enzyme";
 import Profile from "./index";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";

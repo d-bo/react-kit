@@ -1,26 +1,19 @@
 import { connect } from "react-redux";
-import React, { Component } from "react";
+import React from "react";
 import { firebaseLogOut } from "../../redux/actions";
-import DmButton from "../shared/elements/DmButton";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
-import { FaRegThumbsUp, FaHeart, FaEnvelope } from "react-icons/fa";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { withRouter } from "react-router";
 import Footer from "../app-footer";
+import { IPropsGlobal } from "../shared/Interfaces";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
   firebaseLogOut: () => dispatch(firebaseLogOut()),
 });
 
-const Counter = (props: any) => <span
-  style={{ paddingRight: "10px", fontSize: "18px" }}>
-  {props.itemId}</span>;
-
-interface IHomeProps {
-  history: any;
+interface IHomeProps extends IPropsGlobal {
   match: any;
-  location?: any;
 }
 
 interface IHomeState {

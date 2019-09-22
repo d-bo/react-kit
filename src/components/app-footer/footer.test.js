@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from "react";
-import {shallow, render} from "enzyme";
+import { render } from "enzyme";
 import Footer from "./index";
 
 describe("<Footer> component is rendering", () => {

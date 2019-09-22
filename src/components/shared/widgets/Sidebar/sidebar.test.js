@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from "react";
-import {shallow, render} from "enzyme";
+import { render } from "enzyme";
 import Sidebar from "./index";
 import { createBrowserHistory } from "history";
 

@@ -17,6 +17,7 @@ import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { networkStatusType } from "../../../redux/actions";
+import { IPropsGlobal } from "../../shared/Interfaces";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -24,14 +25,11 @@ const mapDispatchToProps = (dispatch: any) => ({
   setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
-interface ISigninProps {
-  context: any;
-  history: any;
-  networkStatus?: networkStatusType;
-  style: any;
-  setProfileImgUrl: any;
-  setUserFirestoreData: any;
-  location: any;
+interface ISigninProps extends IPropsGlobal {
+  readonly context: any;
+  readonly style: any;
+  readonly setProfileImgUrl: any;
+  readonly setUserFirestoreData: any;
 }
 
 interface ISigninState {
@@ -43,7 +41,19 @@ interface ISigninState {
   showSigninSubmitButton: boolean;
 }
 
-class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
+interface ISigninProto {
+  handleSignIn(): void;
+  setUserGlobalData(firebaseUser: firebase.User | null): void;
+  getUserFirestoreData(firebaseUser: firebase.User | null): void;
+  handlePasswordChange(e: string): void;
+  handleEmailChange(e: string): void;
+  handleGithub(): void;
+  handleGoogle(): void;
+}
+
+class SignIn
+extends React.PureComponent<ISigninProps, ISigninState>
+implements ISigninProto {
 
   constructor(props: ISigninProps) {
     super(props);
@@ -63,32 +73,34 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   public componentDidMount() {
-    const {history, networkStatus} = this.props;
+    const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
-      history.push("/profile");
+      push("/profile");
     }
     const self = this;
     // Offline ? reCaptcha disabled
     if (networkStatus === "online") {
       try {
-        (window as unknown as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
-          "callback": () => {
-            self.setState(
-              produce(self.state, (draft) => {
-                draft.captchaLoading = false;
-                draft.showSigninSubmitButton = true;
-              }),
-            );
-          },
-          "expired-callback": () => {
-            self.setState(
-              produce(self.state, (draft) => {
-                draft.errors = "Please, check out the captcha";
-                draft.showSigninSubmitButton = false;
-              }),
-            );
-          },
-          "size": "big",
+        (window as unknown as IWindow).recaptchaVerifier = new
+          firebase.auth.RecaptchaVerifier("recaptcha-container", {
+            "callback": () => {
+              self.setState(
+                produce(self.state, (draft) => {
+                  draft.captchaLoading = false;
+                  draft.showSigninSubmitButton = true;
+                }),
+              );
+            },
+            "expired-callback": () => {
+              self.setState(
+                produce(self.state, (draft) => {
+                  draft.errors = "Please, check out the captcha";
+                  draft.showSigninSubmitButton = false;
+                }),
+              );
+            },
+            "size": "normal",
+            "theme": "light",
         });
         (window as unknown as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
           self.setState(
@@ -98,6 +110,9 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
           );
           (window as unknown as IWindow).recaptchaWidgetId = widgetId;
         });
+        if (this.context.firebaseUser) {
+          push("/profile");
+        }
       } catch (e) {
         // reCaptcha may not render on enzyme mount test
         self.setState(
@@ -227,7 +242,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     );
   }
 
-  private handleSignIn(): void {
+  public handleSignIn(): void {
     const {contextSetFirebaseUser} = this.context;
     if (this.state.loading) {
       return;
@@ -295,7 +310,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
   }
 
   // Update storage user data after success sign in
-  private setUserGlobalData(firebaseUser: firebase.User | null): void {
+  public setUserGlobalData(firebaseUser: firebase.User | null): void {
     const {setProfileImgUrl} = this.props;
     if (firebaseUser) {
       // User avatar
@@ -311,7 +326,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
 
   // Update user additional profile data
   // From firestore user storage by uid
-  private getUserFirestoreData(firebaseUser: firebase.User | null): void {
+  public getUserFirestoreData(firebaseUser: firebase.User | null): void {
     const {setUserFirestoreData} = this.props;
     if (firebaseUser) {
       firebase.firestore().collection("users").doc(firebaseUser.uid)
@@ -321,7 +336,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     }
   }
 
-  private handlePasswordChange(e: any): void {
+  public handlePasswordChange(e: string): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.password = e;
@@ -329,7 +344,7 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     );
   }
 
-  private handleEmailChange(e: any): void {
+  public handleEmailChange(e: string): void {
     this.setState(
       produce(this.state, (draft) => {
         draft.email = e;
@@ -337,10 +352,11 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     );
   }
 
-  private handleGithub(): void {
+  public handleGithub(): void {
     const {contextSetFirebaseUser} = this.context;
     const {history} = this.props;
-    if (this.state.loading) {
+    const {loading} = this.state;
+    if (loading) {
       return;
     }
     this.setState(
@@ -371,9 +387,10 @@ class SignIn extends React.PureComponent<ISigninProps, ISigninState> {
     });
   }
 
-  private handleGoogle(): void {
+  public handleGoogle(): void {
     const {history} = this.props;
-    if (this.state.loading) {
+    const {loading} = this.state;
+    if (loading) {
       return;
     }
     const {contextSetFirebaseUser} = this.context;
