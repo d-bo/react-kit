@@ -30,11 +30,13 @@ interface IAppState {
   loadingExit: boolean;
   verifyLinkSent: boolean;
   photoURL: string | null;
+  staticNavbar: boolean;
 }
 
 interface IAppProto {
   contextSetFirebaseUser(firebaseUser: firebase.User | null): void;
   contextSetPhotoURL(url: string | null): void;
+  contextShowStaticNavbar(show: boolean): void;
 }
 
 class App
@@ -49,10 +51,12 @@ implements IAppProto {
       loading: false,
       loadingExit: false,
       photoURL: null,
+      staticNavbar: true,
       verifyLinkSent: false,
     };
     this.contextSetFirebaseUser = this.contextSetFirebaseUser.bind(this);
     this.contextSetPhotoURL = this.contextSetPhotoURL.bind(this);
+    this.contextShowStaticNavbar = this.contextShowStaticNavbar.bind(this);
   }
 
   // Dynamically set user from child components
@@ -68,10 +72,20 @@ implements IAppProto {
     }
   }
 
+  // Set main photo url
   public contextSetPhotoURL(url: string | null) {
     this.setState(
       produce(this.state, (draft) => {
         draft.photoURL = url;
+      }),
+    );
+  }
+
+  // Toggle <Navbar/> component
+  public contextShowStaticNavbar(show: boolean) {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.staticNavbar = show;
       }),
     );
   }
@@ -113,16 +127,20 @@ implements IAppProto {
 
   public render() {
     const {history} = this.props;
-    const {firebaseUser, photoURL} = this.state;
+    const {firebaseUser, photoURL, staticNavbar} = this.state;
     return (
       <>
         <FirebaseUserContext.Provider value={{
           contextSetFirebaseUser: this.contextSetFirebaseUser,
           contextSetPhotoURL: this.contextSetPhotoURL,
+          contextShowStaticNavbar: this.contextShowStaticNavbar,
           firebaseUser,
           photoURL,
+          staticNavbar,
         }}>
-          <Navbar {...this.props} />
+          {staticNavbar &&
+            <Navbar {...this.props} />
+          }
             <Router history={history}>
               <Suspense fallback="">
                 <Switch>

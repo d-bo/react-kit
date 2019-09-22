@@ -15,6 +15,7 @@ import Footer from "../app-footer";
 import produce from "immer";
 import { LoadingFacebookBlack } from "../../components/shared/elements/Loader";
 import { IPropsGlobal } from "../shared/Interfaces";
+import Modal from "react-responsive-modal";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -40,9 +41,11 @@ interface IProfileState {
   loadingImg: boolean;
   verifyLinkSent: boolean;
   imgFile: Blob | ArrayBuffer | Uint8Array | null | IFileObject;
+  modalIsOpen: boolean;
   uploadedImg: string | ArrayBuffer | null;
   showSaveImgDialog: boolean;
   showDropImgDialog: boolean;
+  showUploadImgDialog: boolean;
   errors: string | null;
   errorsUploadPhoto: string | null;
 }
@@ -79,8 +82,10 @@ implements IProfileProto {
       loading: false,
       loadingExit: false,
       loadingImg: false,
+      modalIsOpen: false,
       showDropImgDialog: false,
       showSaveImgDialog: false,
+      showUploadImgDialog: true,
       uploadedImg: null,
       verifyLinkSent: false,
     };
@@ -118,6 +123,24 @@ implements IProfileProto {
     }
   }
 
+  public onOpenModal = () => {
+    this.context.contextShowStaticNavbar(false);
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.modalIsOpen = true;
+      }),
+    );
+  }
+
+  public onCloseModal = () => {
+    this.context.contextShowStaticNavbar(true);
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.modalIsOpen = false;
+      }),
+    );
+  }
+
   public render(): JSX.Element {
     const {userData} = this.props;
     const {firebaseUser} = this.context;
@@ -128,7 +151,9 @@ implements IProfileProto {
       errors,
       loading,
       loadingExit,
+      modalIsOpen,
       showDropImgDialog,
+      showUploadImgDialog,
       uploadedImg,
       errorsUploadPhoto,
     } = this.state;
@@ -147,25 +172,35 @@ implements IProfileProto {
               <>
               {(firebaseUser.photoURL && !uploadedImg) &&
                 <>
-                  <div style={{textAlign: "center"}}>
+                  <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
                     <LazyLoadImage
                       src={firebaseUser.photoURL}
                       placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px fade-in-fx" />
                   </div>
+                  <Modal open={modalIsOpen}
+                    onClose={this.onCloseModal} blockScroll={false}
+                    overlayId="product-modal-overlay" modalId="profile-modal" center>
+                    <img src={firebaseUser.photoURL} className="profile-modal-image" />
+                  </Modal>
                 </>
               }
 
               {(firebaseUser.photoURL && uploadedImg) &&
                 <>
-                  <div style={{textAlign: "center"}}>
+                  <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
                     <LazyLoadImage
                       src={uploadedImg as string}
                       placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px fade-in-fx" />
                   </div>
+                  <Modal open={modalIsOpen}
+                    onClose={this.onCloseModal} blockScroll={false}
+                    overlayId="product-modal-overlay" modalId="profile-modal" center>
+                    <img src={uploadedImg as string} className="profile-modal-image" />
+                  </Modal>
                 </>
               }
 
@@ -185,13 +220,18 @@ implements IProfileProto {
               {
                 (!firebaseUser.photoURL && uploadedImg) &&
                 <>
-                  <div style={{textAlign: "center"}}>
+                  <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
                     <LazyLoadImage
                       src={uploadedImg as string}
                       placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px fade-in-fx" />
                   </div>
+                  <Modal open={modalIsOpen}
+                    onClose={this.onCloseModal} blockScroll={false}
+                    overlayId="product-modal-overlay" modalId="profile-modal" center>
+                    <img src={uploadedImg as string} className="profile-modal-image" />
+                  </Modal>
                 </>
               }
               </>
@@ -250,19 +290,21 @@ implements IProfileProto {
               </div>
             }
 
-            <table style={{width: "100%"}}><tbody><tr>
-              <td style={{width: "80%"}}>
-                <input type="file" className="input-hidden"
-                  onChange={this.handleImageChange} id="img-file-upload" />
-                <DmButton text="LOAD PROFILE IMAGE" disabled={loadingImg}
-                  className="margin-top" onClick={this.handleUploadClick} />
-              </td>
-              <td style={{width: "80%"}}>
-                <DmButton text={<FaTrashAlt />}
-                  className="margin-top button-transparent"
-                  onClick={this.handleDropImageDialog} />
-              </td>
-            </tr></tbody></table>
+            {showUploadImgDialog &&
+              <table style={{width: "100%"}} className="animated pulse"><tbody><tr>
+                <td style={{width: "80%"}}>
+                  <input type="file" className="input-hidden"
+                    onChange={this.handleImageChange} id="img-file-upload" />
+                  <DmButton text="LOAD PROFILE IMAGE" disabled={loadingImg}
+                    className="margin-top" onClick={this.handleUploadClick} />
+                </td>
+                <td style={{width: "80%"}}>
+                  <DmButton text={<FaTrashAlt />}
+                    className="margin-top button-transparent"
+                    onClick={this.handleDropImageDialog} />
+                </td>
+              </tr></tbody></table>
+            }
 
             </DmFolderWidget>
           </div>
@@ -456,33 +498,47 @@ implements IProfileProto {
   }
 
   public handleImageChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    e.preventDefault();
     const self = this;
     this.setState(
       produce(this.state, (draft) => {
         draft.loadingImg = true;
+        draft.showUploadImgDialog = false;
       }),
     );
     const reader = new FileReader();
     if (e.target != null) {
       if (e.target.files != null) {
         const file = e.target.files[0];
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          self.setState(
-            produce(self.state, (draft) => {
-              draft.imgFile = file;
+        if (file) {
+          reader.readAsDataURL(file);
+          reader.onloadend = () => {
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.imgFile = file;
+                draft.loadingImg = false;
+                draft.showSaveImgDialog = true;
+                draft.uploadedImg = reader.result;
+              }),
+            );
+          };
+        } else {
+          this.setState(
+            produce(this.state, (draft) => {
               draft.loadingImg = false;
-              draft.showSaveImgDialog = true;
-              draft.uploadedImg = reader.result;
+              draft.showUploadImgDialog = true;
             }),
           );
-        };
+        }
       }
     }
   }
 
   public handleUploadClick(): void {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.loadingImg = true;
+      }),
+    );
     const el: HTMLElement = document.getElementById("img-file-upload") as HTMLElement;
     el.click();
   }
@@ -491,6 +547,7 @@ implements IProfileProto {
     this.setState(
       produce(this.state, (draft) => {
         draft.showDropImgDialog = true;
+        draft.showUploadImgDialog = false;
       }),
     );
   }
@@ -515,6 +572,7 @@ implements IProfileProto {
             draft.imgFile = null;
             draft.loadingImg = false;
             draft.showDropImgDialog = false;
+            draft.showUploadImgDialog = true;
           }),
         );
       }).catch((error: any) => {
@@ -522,6 +580,7 @@ implements IProfileProto {
           produce(self.state, (draft) => {
             draft.errors = error.message;
             draft.loading = false;
+            draft.showUploadImgDialog = true;
           }),
         );
       });
@@ -583,6 +642,7 @@ implements IProfileProto {
                           draft.imgFile = null;
                           draft.loadingImg = false;
                           draft.showSaveImgDialog = false;
+                          draft.showUploadImgDialog = true;
                         }),
                       );
                     }).catch((error: any) => {
@@ -591,6 +651,7 @@ implements IProfileProto {
                           draft.errors = error.message;
                           draft.loading = false;
                           draft.showSaveImgDialog = false;
+                          draft.showUploadImgDialog = true;
                         }),
                       );
                     });
@@ -601,6 +662,7 @@ implements IProfileProto {
                       draft.errors = e.message;
                       draft.loading = false;
                       draft.showSaveImgDialog = false;
+                      draft.showUploadImgDialog = true;
                     }),
                   );
                 });
@@ -611,6 +673,7 @@ implements IProfileProto {
                   draft.errors = e.message;
                   draft.loading = false;
                   draft.showSaveImgDialog = false;
+                  draft.showUploadImgDialog = true;
                 }),
               );
             });
@@ -621,6 +684,7 @@ implements IProfileProto {
         produce(self.state, (draft) => {
           draft.errorsUploadPhoto = e;
           draft.showSaveImgDialog = false;
+          draft.showUploadImgDialog = true;
         }),
       );
     }
@@ -632,6 +696,7 @@ implements IProfileProto {
         draft.imgFile = null;
         draft.showSaveImgDialog = false;
         draft.uploadedImg = null;
+        draft.showUploadImgDialog = true;
       }),
     );
   }
@@ -640,6 +705,7 @@ implements IProfileProto {
     this.setState(
       produce(this.state, (draft) => {
         draft.showDropImgDialog = false;
+        draft.showUploadImgDialog = true;
       }),
     );
   }

@@ -13,7 +13,7 @@ html {
     color: $app-color;
     padding-left: 7px;
   }
-  h#{$i}::before {
+  main h#{$i}::before {
     content: "» ";
   }
 }

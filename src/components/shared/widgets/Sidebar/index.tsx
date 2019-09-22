@@ -15,8 +15,12 @@ interface ISidebar extends IPropsGlobal {
 const Sidebar = (props: ISidebar) => {
   const {sidebarStatus, history, onClick, firebaseUser, logOut} = props;
   return (
+    <>
+    <div id="navbar-curtains"
+      className={`${sidebarStatus ? "sidebar-opened" : "sidebar-closed"}`}
+      onClick={onClick} />
     <div id="navbar-sidebar" onClick={onClick}
-      className={`soft-left-top-shadow ${sidebarStatus ? "sidebar-opened" : "sidebar-closed"}`}>
+      className={`animated slideInDown soft-left-top-shadow ${sidebarStatus ? "sidebar-opened" : "sidebar-closed"}`}>
       <p className="navbar-sidebar-close-btn">
         <FaRegWindowClose style={{cursor: "pointer"}} />
       </p>
@@ -57,6 +61,7 @@ const Sidebar = (props: ISidebar) => {
         </nav>
       </div>
     </div>
+    </>
   );
 };
 
