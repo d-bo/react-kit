@@ -181,7 +181,7 @@ implements IProfileProto {
                   </div>
                   <Modal open={modalIsOpen}
                     onClose={this.onCloseModal} blockScroll={false}
-                    overlayId="product-modal-overlay" modalId="profile-modal" center>
+                    overlayId="profile-modal-overlay" modalId="profile-modal" center>
                     <img src={firebaseUser.photoURL} className="profile-modal-image" />
                   </Modal>
                 </>
@@ -198,7 +198,7 @@ implements IProfileProto {
                   </div>
                   <Modal open={modalIsOpen}
                     onClose={this.onCloseModal} blockScroll={false}
-                    overlayId="product-modal-overlay" modalId="profile-modal" center>
+                    overlayId="profile-modal-overlay" modalId="profile-modal" center>
                     <img src={uploadedImg as string} className="profile-modal-image" />
                   </Modal>
                 </>
@@ -229,7 +229,7 @@ implements IProfileProto {
                   </div>
                   <Modal open={modalIsOpen}
                     onClose={this.onCloseModal} blockScroll={false}
-                    overlayId="product-modal-overlay" modalId="profile-modal" center>
+                    overlayId="profile-modal-overlay" modalId="profile-modal" center>
                     <img src={uploadedImg as string} className="profile-modal-image" />
                   </Modal>
                 </>
