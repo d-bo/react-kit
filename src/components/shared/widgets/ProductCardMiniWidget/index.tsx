@@ -112,23 +112,19 @@ implements IWidgetProto {
                   <p className="product-description">{description.slice(0, 120)} ...</p>
                 </article>
               }
-              <table style={{width: "100%"}}><tbody><tr>
-                <td style={{width: "30%"}} className="td-pad-10">
-                    <DmButton text={<FaEnvelope />}
-                    onClick={() => null}
-                    className="margin-top button-transparent" />
-                </td>
-                <td style={{width: "35%"}} className="td-pad-10">
-                  <DmButton text={<FaRegStar />}
+
+              <div className="flex-buttons-row">
+                <DmButton text={<FaEnvelope />}
                   onClick={() => null}
-                  className="margin-top button-grey" />
-                </td>
-                <td style={{width: "35%"}} className="td-pad-10">
-                  <DmButton text={<FaCommentAlt />}
+                  className="margin-top button-grey flex-button-item" />
+                <DmButton text={<FaRegStar />}
                   onClick={() => null}
-                  className="margin-top button-grey" />
-                </td>
-              </tr></tbody></table>
+                  className="margin-top button-grey flex-button-item" />
+                <DmButton text={<FaCommentAlt />}
+                  onClick={() => null}
+                  className="margin-top button-grey flex-button-item" />
+              </div>
+
             </div>
           </div>
         </div>

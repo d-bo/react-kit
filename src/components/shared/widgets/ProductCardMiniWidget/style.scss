@@ -40,3 +40,17 @@
 .product-description {
   word-wrap: break-word;
 }
+
+.flex-buttons-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-basis: 100px;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-button-item {
+  margin-left: 1px;
+  margin-right: 1px;
+}

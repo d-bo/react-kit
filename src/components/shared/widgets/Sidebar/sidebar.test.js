@@ -12,7 +12,7 @@ describe("<Sidebar> component", () => {
         <Sidebar history={history} />
       );
     expect(wrapper.find("#navbar-sidebar")).toBeDefined();
-    expect(wrapper.find("h3")).toHaveLength(4);
-    expect(wrapper.find("h3").text()).toEqual("HomeProfileSigninRegister");
+    expect(wrapper.find("h3")).toHaveLength(3);
+    expect(wrapper.find("h3").text()).toEqual("HomeSigninRegister");
   });
 });

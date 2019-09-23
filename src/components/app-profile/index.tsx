@@ -589,17 +589,18 @@ implements IProfileProto {
 
   public handleSaveImage(): void {
     const self = this;
-    const {firebaseUser, contextSetPhotoURL} = this.context;
-    const {imgFile} = this.state;
-    const {setProfileImgUrl} = this.props;
-    const storageRef = firebase.storage().ref();
-    this.setState(
-      produce(this.state, (draft) => {
-        draft.loadingImg = true;
-        draft.showSaveImgDialog = false;
-      }),
-    );
     try {
+      const {firebaseUser, contextSetPhotoURL} = this.context;
+      const {imgFile} = this.state;
+      const {setProfileImgUrl} = this.props;
+      const storageRef = firebase.storage().ref();
+      this.setState(
+        produce(this.state, (draft) => {
+          draft.loadingImg = true;
+          draft.showSaveImgDialog = false;
+        }),
+      );
+
       if (imgFile) {
         let fileName;
         let extension;
@@ -680,8 +681,8 @@ implements IProfileProto {
         }
       }
     } catch (e) {
-      self.setState(
-        produce(self.state, (draft) => {
+      this.setState(
+        produce(this.state, (draft) => {
           draft.errorsUploadPhoto = e;
           draft.showSaveImgDialog = false;
           draft.showUploadImgDialog = true;

@@ -21,19 +21,21 @@ const Sidebar = (props: ISidebar) => {
       onClick={onClick} />
     <div id="navbar-sidebar" onClick={onClick}
       className={`animated slideInDown soft-left-top-shadow ${sidebarStatus ? "sidebar-opened" : "sidebar-closed"}`}>
-      <p className="navbar-sidebar-close-btn">
-        <FaRegWindowClose style={{cursor: "pointer"}} />
-      </p>
-      <div style={{textAlign: "center", width: "280px"}}>
+      <div className="navbar-sidebar-body">
         <nav>
           <Router history={history}>
             <Link to="/">
               <h3>Home</h3>
             </Link>
-            <p></p>
-            <Link to="/profile">
-              <h3>Profile</h3>
-            </Link>
+            <hr/>
+            {firebaseUser &&
+              <>
+                <p></p>
+                <Link to="/profile">
+                  <h3>Profile</h3>
+                </Link>
+              </>
+            }
             {!firebaseUser &&
               <>
                 <p></p>
