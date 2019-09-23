@@ -11,8 +11,8 @@ if [ $TRAVIS_TEST_RESULT -ne 0 ]; then
     build_status="failed"
     build_color="red"
 else
-    build_status="succeeded"
-    build_color="green"
+    build_status="OK"
+    build_color="red"
 fi
 
 send_msg () {
@@ -24,11 +24,11 @@ send_msg () {
 # Note that for Markdown, you need to escape any backtick (inline-code)
 # characters, since they're reserved in bash
 send_msg "
-<div>Travis build <span style=\"color: ${build_color}\">*${build_status}!*</span></div>
-<div>Repository:  <b>${TRAVIS_REPO_SLUG}</b></div>
-<div>Branch:      <b>${TRAVIS_BRANCH}</b></div>
-<div>Commit Msg:</div>
-<div><i>${TRAVIS_COMMIT_MESSAGE}</i></div>
-<div><a href=\"${TRAVIS_JOB_WEB_URL})\">[Job Log here]</a></div>
-<div>--------------------------------------</div>
+Travis build: <b>${build_status}</b>
+Repository:   <b>${TRAVIS_REPO_SLUG}</b>
+Branch:       <b>${TRAVIS_BRANCH}</b>
+Commit Msg:
+<i>${TRAVIS_COMMIT_MESSAGE}</i>
+<a href=\"${TRAVIS_JOB_WEB_URL})\">[Job Log here]</a>
+--------------------------------------
 "
