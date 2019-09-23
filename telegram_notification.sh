@@ -4,7 +4,7 @@
 BOT_URL="https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage"
 
 # Set formatting for the message. Can be either "Markdown" or "HTML"
-PARSE_MODE="Markdown"
+PARSE_MODE="HTML"
 
 # Use built-in Travis variables to check if all previous steps passed:
 if [ $TRAVIS_TEST_RESULT -ne 0 ]; then
@@ -24,11 +24,11 @@ send_msg () {
 # Note that for Markdown, you need to escape any backtick (inline-code)
 # characters, since they're reserved in bash
 send_msg "
-Travis build <span style=\"color: ${build_color}\">*${build_status}!*</span>
-\`Repository:  ${TRAVIS_REPO_SLUG}\`
-\`Branch:      ${TRAVIS_BRANCH}\`
-*Commit Msg:*
-${TRAVIS_COMMIT_MESSAGE}
-[Job Log here](${TRAVIS_JOB_WEB_URL})
---------------------------------------
+<div>Travis build <span style=\"color: ${build_color}\">*${build_status}!*</span></div>
+<div>Repository:  <b>${TRAVIS_REPO_SLUG}</b></div>
+<div>Branch:      <b>${TRAVIS_BRANCH}</b></div>
+<div>Commit Msg:</div>
+<div><i>${TRAVIS_COMMIT_MESSAGE}</i></div>
+<div><a href=\"${TRAVIS_JOB_WEB_URL})\">[Job Log here]</a></div>
+<div>--------------------------------------</div>
 "
