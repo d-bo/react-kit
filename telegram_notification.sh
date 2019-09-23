@@ -9,8 +9,10 @@ PARSE_MODE="Markdown"
 # Use built-in Travis variables to check if all previous steps passed:
 if [ $TRAVIS_TEST_RESULT -ne 0 ]; then
     build_status="failed"
+    build_color="red"
 else
     build_status="succeeded"
+    build_color="green"
 fi
 
 send_msg () {
@@ -22,8 +24,7 @@ send_msg () {
 # Note that for Markdown, you need to escape any backtick (inline-code)
 # characters, since they're reserved in bash
 send_msg "
--------------------------------------
-Travis build *${build_status}!*
+Travis build <span style=\"color: ${build_color}\">*${build_status}!*</span>
 \`Repository:  ${TRAVIS_REPO_SLUG}\`
 \`Branch:      ${TRAVIS_BRANCH}\`
 *Commit Msg:*
