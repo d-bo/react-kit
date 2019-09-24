@@ -12,11 +12,10 @@ import { FaGithub, FaGoogle } from "react-icons/fa";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
-import { IWindow } from "../register";
+import { IWindow } from "../../shared/Interfaces";
 import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
-import { networkStatusType } from "../../../redux/actions";
 import { IPropsGlobal } from "../../shared/Interfaces";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;

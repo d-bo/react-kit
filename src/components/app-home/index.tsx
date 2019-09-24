@@ -62,9 +62,10 @@ implements IHomeProto {
   public fetchItemsMongoAtlas(): (dispatch: any) => void {
     return (dispatch: any) => {
       const client = Stitch.initializeDefaultAppClient("kuvalda-uuveu");
-      client.auth.loginWithCredential(new AnonymousCredential());
-      client.callFunction("function0", []).then((res) => {
-        dispatch(receiveItems(res));
+      client.auth.loginWithCredential(new AnonymousCredential()).then((user) => {
+        client.callFunction("function0", []).then((res) => {
+          dispatch(receiveItems(res));
+        });
       });
     };
   }

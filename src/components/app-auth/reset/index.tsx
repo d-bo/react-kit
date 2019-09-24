@@ -11,7 +11,7 @@ import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
 import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
-import { IWindow } from "../register";
+import { IWindow } from "../../shared/Interfaces";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import Footer from "../../app-footer";
 import produce from "immer";

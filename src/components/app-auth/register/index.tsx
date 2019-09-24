@@ -15,6 +15,7 @@ import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { connect } from "react-redux";
 import { IPropsGlobal } from "../../shared/Interfaces";
+import { withFirebaseAuth } from "../../shared/hocs/FirebaseAuth";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -22,6 +23,7 @@ interface IRegisterProps extends IPropsGlobal {
   readonly context: any;
   readonly firebaseAuth: any;
   readonly style: any;
+  firebaseRecaptchaRender(...args: any): any;
 }
 
 interface IRegisterState {
@@ -35,27 +37,29 @@ interface IRegisterState {
   loading: boolean;
 }
 
-export interface IWindow extends Window {
-  recaptchaVerifier: any;
-  recaptchaWidgetId: any;
-}
-
 interface IRegisterProto {
   [k: string]: any;
   [z: number]: any;
+  recaptchaElement?: any;
   handleKeyboardEnter?(e: any): void;
   handleRegister(): void;
   handlePasswordChange(e: string): void;
   handleEmailChange(e: string): void;
   handleNameChange(e: string): void;
+  firebaseRecaptchaRender?(e: any): void;
 }
 
 class Register
 extends React.PureComponent<IRegisterProps, IRegisterState>
 implements IRegisterProto {
 
+  // recaptcha elementId
+  // TODO: make captcha container ref
+  public recaptchaElement: IRegisterProto["recaptchaElement"] = null;
+
   constructor(props: IRegisterProps) {
     super(props);
+
     this.state = {
       captchaLoading: true,
       displayName: null,
@@ -72,10 +76,15 @@ implements IRegisterProto {
       "handlePasswordChange",
       "handleNameChange",
       "handleKeyboardEnter",
+      "setRecaptchaRef",
     ].forEach((propToBind: string) => {
       // @ts-ignore: Cannot find a proper solution
       this[propToBind as keyof IRegister] = this[propToBind as keyof Register].bind(this);
     });
+  }
+
+  public setRecaptchaRef = (id: string) => {
+    this.recaptchaElement = id;
   }
 
   public componentDidMount() {
@@ -86,9 +95,17 @@ implements IRegisterProto {
     const self = this;
     // Offline ? reCaptcha disabled
     if (networkStatus === "online") {
-      try {
-        (window as unknown as IWindow).recaptchaVerifier = new firebase.auth.RecaptchaVerifier("recaptcha-container", {
-          "callback": () => {
+      this.props.firebaseRecaptchaRender(
+        this.recaptchaElement,
+        {
+          captchaError: (e: any) => {
+            self.setState(
+              produce(this.state, (draft) => {
+                draft.errors = "reCaptcha can not load";
+              }),
+            );
+          },
+          captchaIsVerified: () => {
             self.setState(
               produce(self.state, (draft) => {
                 draft.captchaLoading = false;
@@ -96,7 +113,14 @@ implements IRegisterProto {
               }),
             );
           },
-          "expired-callback": () => {
+          captchaRendered: () => {
+            self.setState(
+              produce(self.state, (draft) => {
+                draft.captchaLoading = false;
+              }),
+            );
+          },
+          expiredCallback: () => {
             self.setState(
               produce(self.state, (draft) => {
                 draft.errors = "Please, check out the captcha";
@@ -104,27 +128,8 @@ implements IRegisterProto {
               }),
             );
           },
-          "size": "big",
-        });
-        (window as unknown as IWindow).recaptchaVerifier.render().then((widgetId: any) => {
-          self.setState(
-            produce(self.state, (draft) => {
-              draft.captchaLoading = false;
-            }),
-          );
-          (window as unknown as IWindow).recaptchaWidgetId = widgetId;
-        });
-        if (this.context.firebaseUser) {
-          push("/profile");
-        }
-      } catch (e) {
-        // reCaptcha may not render on enzyme mount test
-        self.setState(
-          produce(this.state, (draft) => {
-            draft.errors = "reCaptcha can not load";
-          }),
-        );
-      }
+        },
+      );
     }
     if (networkStatus === "offline") {
       this.setState(
@@ -194,11 +199,11 @@ implements IRegisterProto {
                 onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
                 {networkStatus === "online" &&
-                  <ReCaptchav2></ReCaptchav2>
+                  <ReCaptchav2 setRef={this.setRecaptchaRef} />
                 }
 
                 {errors &&
-                  <div className="error-message round-border-5px">{errors}</div>
+                  <div className="error-message round-border-5px animated pulse">{errors}</div>
                 }
 
                 { // Is captcha solved ?
@@ -323,7 +328,6 @@ implements IRegisterProto {
             );
           });
         }
-
       }).catch((error) => {
         const errorMessage = error.message;
         self.setState(
@@ -362,4 +366,4 @@ implements IRegisterProto {
 
 Register.contextType = FirebaseUserContext;
 
-export default withRouter(connect(mapStateToProps)(Register) as any);
+export default withFirebaseAuth(withRouter(connect(mapStateToProps)(Register) as any));

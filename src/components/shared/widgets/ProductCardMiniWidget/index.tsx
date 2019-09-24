@@ -43,6 +43,7 @@ implements IWidgetProto {
   }
 
   public onOpenModal = () => {
+    this.context.contextShowStaticNavbar(false);
     this.setState(
       produce(this.state, (draft) => {
         draft.modalIsOpen = true;
@@ -51,6 +52,7 @@ implements IWidgetProto {
   }
 
   public onCloseModal = () => {
+    this.context.contextShowStaticNavbar(true);
     this.setState(
       produce(this.state, (draft) => {
         draft.modalIsOpen = false;
