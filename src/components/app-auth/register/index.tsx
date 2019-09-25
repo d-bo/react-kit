@@ -202,7 +202,7 @@ implements IRegisterProto {
                 }
 
                 {errors &&
-                  <div className="error-message round-border-5px animated pulse">{errors}</div>
+                  <div className="error-message round-border-5px">{errors}</div>
                 }
 
                 { // Is captcha solved ?

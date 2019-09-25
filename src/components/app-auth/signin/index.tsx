@@ -214,18 +214,20 @@ implements ISigninProto {
                   </tr></tbody></table>
                 </div>
 
-                <div className="margin-top custom-a">
-                  <table className="full-width"><tbody><tr>
-                  <td>
-                    <DmButton text={<FaGithub />} disabled={loading}
-                      onClick={this.handleGithub} className="button-grey" />
-                  </td>
-                  <td>
-                    <DmButton text={<FaGoogle />} disabled={loading}
-                      onClick={this.handleGithub} className="button-grey" />
-                  </td>
-                  </tr></tbody></table>
-                </div>
+                {networkStatus === "online" &&
+                  <div className="margin-top custom-a">
+                    <table className="full-width"><tbody><tr>
+                    <td>
+                      <DmButton text={<FaGithub />} disabled={loading}
+                        onClick={this.handleGithub} className="button-grey" />
+                    </td>
+                    <td>
+                      <DmButton text={<FaGoogle />} disabled={loading}
+                        onClick={this.handleGithub} className="button-grey" />
+                    </td>
+                    </tr></tbody></table>
+                  </div>
+                }
 
               </div>
               }

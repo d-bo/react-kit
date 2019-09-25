@@ -71,3 +71,10 @@ $pr : "navbar";
     z-index: 99996;
   }
 }
+
+.#{$pr}-networkStatus-icon {
+  padding-right: 30px;
+  display: inline-block;
+  color: #c0c0c0;
+  font-size: 28px !important;
+}

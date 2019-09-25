@@ -134,7 +134,7 @@ implements IResetProto {
   }
 
   public render(): JSX.Element {
-    const {style, history} = this.props;
+    const {style, history, networkStatus} = this.props;
     const {firebaseUser} = this.context;
     const {
       captchaLoading,
@@ -165,7 +165,9 @@ implements IResetProto {
                   <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
 
-                <ReCaptchav2 />
+                {networkStatus === "online" &&
+                  <ReCaptchav2 />
+                }
 
                 { // Is captcha solved ?
                   showResetSubmitButton &&
@@ -174,7 +176,7 @@ implements IResetProto {
                 }
 
                 { // Captcha loading
-                  captchaLoading &&
+                  captchaLoading && networkStatus === "online" &&
                   <LoadingRollingBlack/>
                 }
 

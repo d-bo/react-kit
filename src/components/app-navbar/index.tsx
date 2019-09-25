@@ -114,7 +114,7 @@ implements INavbarProto {
                 <div id="navbar-sidebar-button" className="fade-in-fx">
                   {// Show network disconnect status
                     networkStatus &&
-                    <div style={{paddingRight: "30px", display: "inline-block", color: "#c0c0c0"}}>
+                    <div className="navbar-networkStatus-icon">
                       {networkStatus === "offline" &&
                         <MdSignalWifiOff/>
                       }
@@ -201,11 +201,7 @@ implements INavbarProto {
                         <td style={{width: "50%"}}>
                           {// Show network disconnect status
                             networkStatus &&
-                            <div style={{
-                              color: "#c0c0c0",
-                              display: "inline-block",
-                              paddingRight: "30px",
-                            }}>
+                            <div className="navbar-networkStatus-icon">
                             {networkStatus === "offline" &&
                               <MdSignalWifiOff/>
                             }
