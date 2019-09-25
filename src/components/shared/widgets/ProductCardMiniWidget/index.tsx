@@ -6,6 +6,7 @@ import DmButton from "../../elements/DmButton";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Modal from "react-responsive-modal";
 import produce from "immer";
+import { FirebaseUserContext } from "../../../../contexts/FirebaseUserContext";
 
 interface IWidgetProps {
   readonly style?: any;
@@ -134,5 +135,7 @@ implements IWidgetProto {
     );
   }
 }
+
+ProductCardMiniWidget.contextType = FirebaseUserContext;
 
 export default ProductCardMiniWidget;

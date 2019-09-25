@@ -12,10 +12,10 @@ import {
 } from "react-icons/fa";
 import Sidebar from "../shared/widgets/Sidebar";
 import { toggleSidebar, setProfileImgUrl, networkStatusType } from "../../redux/actions";
-import firebase from "firebase/app";
 import produce from "immer";
 import { MdSignalWifiOff } from "react-icons/md";
 import { IPropsGlobal } from "../shared/Interfaces";
+import { withFirebaseAuth, IErrorArgs, ICaptchaHooks } from "../shared/hocs/FirebaseAuth";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => {
@@ -30,6 +30,7 @@ interface INavbarProps extends IPropsGlobal {
   setProfileImgUrl?: any;
   sidebar?: boolean;
   handleToggleSidebar?: any;
+  firebaseLogOut(afterLogOut: ICaptchaHooks["afterLogOut"], onError: ICaptchaHooks["onError"]): void;
 }
 
 interface INavbarState {
@@ -61,33 +62,37 @@ implements INavbarProto {
   }
 
   public handleLogOut(): void {
-    const self = this;
-    const {setProfileImgUrl, history} = this.props;
+    const {setProfileImgUrl, history, firebaseLogOut} = this.props;
     const {contextSetFirebaseUser} = this.context;
-    self.setState(
-      produce(self.state, (draft) => {
+    this.setState(
+      produce(this.state, (draft) => {
         draft.loadingExit = true;
       }),
     );
-    firebase.auth().signOut().then(() => {
+    const afterLogOut = () => {
       contextSetFirebaseUser(null);
-      self.setState(
-        produce(self.state, (draft) => {
+      this.setState(
+        produce(this.state, (draft) => {
           draft.loadingExit = false;
         }),
       );
       localStorage.removeItem("localAppCurrentUserID");
       setProfileImgUrl(null);
       history.push("/auth/signin");
-    }).catch((error) => {
-      const errorMessage = error.message;
-      self.setState(
-        produce(self.state, (draft) => {
-          draft.errors = errorMessage;
-          draft.loadingExit = false;
-        }),
-      );
-    });
+    };
+    const onError = (error: IErrorArgs) => {
+      if (error.hasOwnProperty("message")) {
+        const errorMessage = error.message;
+        this.setState(
+          produce(this.state, (draft) => {
+            draft.errors = errorMessage;
+            draft.loadingExit = false;
+          }),
+        );
+      }
+    };
+
+    firebaseLogOut(afterLogOut, onError);
   }
 
   public render() {
@@ -234,4 +239,4 @@ implements INavbarProto {
 
 Navbar.contextType = FirebaseUserContext;
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
+export default withFirebaseAuth(connect(mapStateToProps, mapDispatchToProps)(Navbar));

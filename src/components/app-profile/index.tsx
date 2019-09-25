@@ -16,6 +16,7 @@ import produce from "immer";
 import { LoadingFacebookBlack } from "../../components/shared/elements/Loader";
 import { IPropsGlobal } from "../shared/Interfaces";
 import Modal from "react-responsive-modal";
+import { withFirebaseAuth, IErrorArgs, ICaptchaHooks } from "../shared/hocs/FirebaseAuth";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -27,6 +28,7 @@ interface IProfileProps extends IPropsGlobal {
   readonly setProfileImgUrl: any;
   readonly setUserFirestoreData: any;
   readonly userData: any;
+  firebaseLogOut(afterLogOut: ICaptchaHooks["afterLogOut"], onError: ICaptchaHooks["onError"]): void;
 }
 
 interface IFileObject {
@@ -53,7 +55,6 @@ interface IProfileState {
 interface IProfileProto {
   [k: string]: any;
   [z: number]: any;
-  handleLogOut(): void;
   sendVerifyLink(): void;
   handleCityChange(city: string | null): void;
   handleCountryChange(country: string | null): void;
@@ -109,7 +110,7 @@ implements IProfileProto {
     });
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     const {history: {push}} = this.props;
     if (!this.context.firebaseUser) {
       push("/auth/signin");
@@ -387,33 +388,34 @@ implements IProfileProto {
   }
 
   public handleLogOut(): void {
-    const self = this;
-    const {setProfileImgUrl, history} = this.props;
+    const {setProfileImgUrl, history, firebaseLogOut} = this.props;
     const {contextSetFirebaseUser} = this.context;
-    self.setState(
-      produce(self.state, (draft) => {
+    this.setState(
+      produce(this.state, (draft) => {
         draft.loadingExit = true;
       }),
     );
-    firebase.auth().signOut().then(() => {
+    const afterLogOut = () => {
       contextSetFirebaseUser(null);
-      self.setState(
-        produce(self.state, (draft) => {
+      this.setState(
+        produce(this.state, (draft) => {
           draft.loadingExit = false;
         }),
       );
       localStorage.removeItem("localAppCurrentUserID");
       setProfileImgUrl(null);
       history.push("/auth/signin");
-    }).catch((error) => {
+    };
+    const onError = (error: IErrorArgs) => {
       const errorMessage = error.message;
-      self.setState(
-        produce(self.state, (draft) => {
+      this.setState(
+        produce(this.state, (draft) => {
           draft.errors = errorMessage;
           draft.loadingExit = false;
         }),
       );
-    });
+    };
+    firebaseLogOut(afterLogOut, onError);
   }
 
   public sendVerifyLink(): void {
@@ -714,4 +716,8 @@ implements IProfileProto {
 
 Profile.contextType = FirebaseUserContext;
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile) as any);
+export default withFirebaseAuth(
+  withRouter(
+      connect(mapStateToProps, mapDispatchToProps)(Profile) as any,
+    ),
+);

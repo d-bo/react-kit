@@ -164,7 +164,6 @@ implements IRegisterProto {
   }
 
   public render(): JSX.Element {
-
     const {style, history, networkStatus} = this.props;
     const {
       captchaLoading,
