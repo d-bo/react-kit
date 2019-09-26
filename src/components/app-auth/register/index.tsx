@@ -16,6 +16,7 @@ import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { connect } from "react-redux";
 import { IPropsGlobal } from "../../shared/Interfaces";
 import { withFirebaseAuth } from "../../shared/hocs/FirebaseAuth";
+import * as helpers from "../../shared/helpers/validate";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -24,6 +25,7 @@ interface IRegisterProps extends IPropsGlobal {
   readonly firebaseAuth: any;
   readonly style: any;
   firebaseRecaptchaRender(...args: any): any;
+  createUserWithEmailAndPassword(email: string, password: string, hooks: object): void;
 }
 
 interface IRegisterState {
@@ -46,7 +48,6 @@ interface IRegisterProto {
   handlePasswordChange(e: string): void;
   handleEmailChange(e: string): void;
   handleNameChange(e: string): void;
-  firebaseRecaptchaRender?(e: any): void;
 }
 
 class Register
@@ -62,11 +63,11 @@ implements IRegisterProto {
 
     this.state = {
       captchaLoading: true,
-      displayName: null,
-      email: null,
+      displayName: "",
+      email: "",
       errors: null,
       loading: false,
-      password: null,
+      password: "",
       showRegisterButtonAfterCaptcha: false,
       verifyLinkSent: false,
     };
@@ -249,46 +250,43 @@ implements IRegisterProto {
     }
   }
 
+  public setError(e: string): void {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.errors = e;
+        draft.loading = false;
+      }),
+    );
+  }
+
   public handleRegister(): void {
     if (this.state.loading) {
       return;
     }
+
     const self = this;
-    const {history} = this.props;
+    let error: string | false;
+    const {history, createUserWithEmailAndPassword} = this.props;
     const {password, displayName, email} = this.state;
     const {contextSetFirebaseUser} = this.context;
 
     // Validate email
-    const re = /\S+@\S+\.\S+/;
-    if (!re.test(this.state.email as string)) {
-      this.setState(
-        produce(this.state, (draft) => {
-          draft.errors = "Incorrect email";
-          draft.loading = false;
-        }),
-      );
+    if (!helpers.validateEmail(email)) {
+      this.setError("Incorrect email");
       return;
     }
 
     // Validate password
-    if (password && password.length < 6) {
-      this.setState(
-        produce(this.state, (draft) => {
-          draft.errors = "Password min 6 symbols length";
-          draft.loading = false;
-        }),
-      );
+    error = helpers.validatePassword(password as string);
+    if (error) {
+      this.setError(error);
       return;
     }
 
     // Validate name
-    if (displayName && displayName.length < 6) {
-      this.setState(
-        produce(this.state, (draft) => {
-          draft.errors = "Name min 6 symbols length";
-          draft.loading = false;
-        }),
-      );
+    error = helpers.validateName(displayName as string);
+    if (error) {
+      this.setError(error);
       return;
     }
 
@@ -299,10 +297,8 @@ implements IRegisterProto {
       }),
     );
 
-    firebase.auth().createUserWithEmailAndPassword(
-        email as string,
-        password as string,
-      ).then(() => {
+    createUserWithEmailAndPassword(email as string, password as string, {
+      afterCreate: () => {
         const currentUser = firebase.auth().currentUser;
         // Send email verify
         if (currentUser) {
@@ -327,15 +323,16 @@ implements IRegisterProto {
             );
           });
         }
-      }).catch((error) => {
-        const errorMessage = error.message;
+      },
+      onError: (error: any) => {
         self.setState(
           produce(self.state, (draft) => {
             draft.loading = false;
             draft.errors = error.message;
           }),
         );
-      });
+      },
+    });
   }
 
   public handlePasswordChange(e: string): void {

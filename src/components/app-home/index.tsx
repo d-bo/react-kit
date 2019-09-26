@@ -8,7 +8,7 @@ import Footer from "../app-footer";
 import { receiveItems } from "../../redux/actions";
 import store from "../../redux/stores/store";
 import { connect } from "react-redux";
-import { LoadingFacebookBlack } from "../shared/elements/Loader";
+import { LoadingRollingBlack } from "../shared/elements/Loader";
 import {
   Stitch,
   AnonymousCredential,
@@ -153,9 +153,9 @@ implements IHomeProto {
           {!items &&
             <div style={{textAlign: "center"}}>
               <div style={{display: "inline-block"}}>
-                <DmFolderWidget className="vertical-center center-loader-width">
-                  <LoadingFacebookBlack/>
-                </DmFolderWidget>
+                <div className="vertical-center">
+                  <LoadingRollingBlack className="home-loader animated fadeInDown" />
+                </div>
               </div>
             </div>
           }

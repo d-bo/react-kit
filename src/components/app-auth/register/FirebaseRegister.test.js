@@ -8,6 +8,7 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { Provider } from "react-redux";
 import store from "../../../redux/stores/store";
 import DmFolderWidget from "../../shared/widgets/DmFolderWidget";
+import DmInput from "../../shared/elements/DmInput";
 
 const history = createBrowserHistory();
 
@@ -25,5 +26,6 @@ describe("Register is rendering", () => {
       );
     expect(wrapper.find(".row")).toHaveLength(2);
     expect(wrapper.find(DmFolderWidget)).toHaveLength(1);
+    expect(wrapper.find(DmInput)).toHaveLength(3);
   });
 });

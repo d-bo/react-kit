@@ -14,6 +14,9 @@ export interface IErrorArgs {
   message: string | null;
 }
 
+/**
+ * Captcha callbacks
+ */
 export interface ICaptchaHooks {
   captchaIsVerified?(): void;
   expiredCallback?(): void;
@@ -21,6 +24,14 @@ export interface ICaptchaHooks {
   captchaError?(e: string): void;
   afterLogOut?(): void;
   onError?(error: IErrorArgs): void;
+}
+
+/**
+ * Create firebase user hooks
+ */
+interface ICreateUserHooks {
+  onError?(error: string): void;
+  afterCreate?(): void;
 }
 
 /**
@@ -59,11 +70,6 @@ export function withFirebaseAuth(WrappedComponent: any) {
           }
           (window as unknown as IWindow).recaptchaWidgetId = widgetId;
         });
-        /*
-        if (this.context.firebaseUser) {
-          push("/profile");
-        }
-        */
       } catch (e) {
         // reCaptcha may not render on enzyme mount test or smth else
         if (hooks.captchaError) {
@@ -92,10 +98,35 @@ export function withFirebaseAuth(WrappedComponent: any) {
       });
     }
 
+    /**
+     * Create user (automatically signed in)
+     * @param email User email
+     * @param password Password
+     * @param hooks Callbacks
+     */
+    public createUserWithEmailAndPassword(
+      email: string,
+      password: string,
+      hooks: ICreateUserHooks = {}) {
+        firebase.auth().createUserWithEmailAndPassword(
+          email as string,
+          password as string,
+        ).then(() => {
+          if (hooks.afterCreate) {
+            hooks.afterCreate();
+          }
+        }).catch((error) => {
+          if (hooks.onError) {
+            hooks.onError(error);
+          }
+        });
+    }
+
     public render() {
       return <WrappedComponent
         firebaseRecaptchaRender={this.firebaseRecaptchaRender}
         firebaseLogOut={this.firebaseLogOut}
+        createUserWithEmailAndPassword={this.createUserWithEmailAndPassword}
         {...this.props} />;
     }
   };

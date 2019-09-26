@@ -176,7 +176,6 @@ implements IProfileProto {
                   <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
                     <LazyLoadImage
                       src={firebaseUser.photoURL}
-                      placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px fade-in-fx" />
                   </div>
@@ -193,7 +192,6 @@ implements IProfileProto {
                   <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
                     <LazyLoadImage
                       src={uploadedImg as string}
-                      placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px fade-in-fx" />
                   </div>
@@ -211,7 +209,6 @@ implements IProfileProto {
                   <div style={{textAlign: "center"}}>
                     <LazyLoadImage
                         src="/img/no-user.png"
-                        placeholderSrc="/img/no-image-slide.png"
                         effect="blur"
                         className="profile-img round-border-5px fade-in-fx" />
                   </div>
@@ -224,7 +221,6 @@ implements IProfileProto {
                   <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
                     <LazyLoadImage
                       src={uploadedImg as string}
-                      placeholderSrc="/img/no-image-slide.png"
                       effect="blur"
                       className="profile-img round-border-5px fade-in-fx" />
                   </div>

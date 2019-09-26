@@ -40,12 +40,12 @@ interface INavbarState {
   verifyLinkSent: boolean;
 }
 
-interface INavbarProto {
+export interface INavbarProto {
   handleLogOut(): void;
   redirectProfile(): void;
 }
 
-class Navbar
+export class Navbar
 extends React.PureComponent<INavbarProps, INavbarState>
 implements INavbarProto {
 

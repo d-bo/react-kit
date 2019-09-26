@@ -8,6 +8,7 @@ import produce from "immer";
 import { connect } from "react-redux";
 import { hideSidebar, receiveNetworkStatus, networkStatusType } from "../../redux/actions";
 import { IPropsGlobal } from "../shared/Interfaces";
+import { LoadingRollingBlack, LoadingFacebookBlack } from "../shared/elements/Loader";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -27,7 +28,6 @@ interface IAppState {
   firebaseUser: firebase.User | undefined | null ;
   errors: string | null;
   loading: boolean;
-  loadingExit: boolean;
   verifyLinkSent: boolean;
   photoURL: string | null;
   staticNavbar: boolean;
@@ -49,7 +49,6 @@ implements IAppProto {
       errors: null,
       firebaseUser: this.props.firebaseUser,
       loading: false,
-      loadingExit: false,
       photoURL: null,
       staticNavbar: true,
       verifyLinkSent: false,
@@ -57,6 +56,7 @@ implements IAppProto {
     this.contextSetFirebaseUser = this.contextSetFirebaseUser.bind(this);
     this.contextSetPhotoURL = this.contextSetPhotoURL.bind(this);
     this.contextShowStaticNavbar = this.contextShowStaticNavbar.bind(this);
+    this.onRouterUpdate = this.onRouterUpdate.bind(this);
   }
 
   // Dynamically set user from child components
@@ -125,6 +125,17 @@ implements IAppProto {
     }
   }
 
+  public onRouterUpdate() {
+    return (
+      <div style={{textAlign: "center"}}>
+        <div style={{display: "inline-block"}}>
+          <div className="vertical-center">
+            <LoadingRollingBlack className="home-loader animated fadeInDown" />
+          </div>
+        </div>
+      </div>);
+  }
+
   public render() {
     const {history} = this.props;
     const {firebaseUser, photoURL, staticNavbar} = this.state;
@@ -142,7 +153,7 @@ implements IAppProto {
             <Navbar {...this.props} />
           }
             <Router history={history}>
-              <Suspense fallback="">
+              <Suspense fallback={<LoadingFacebookBlack/>}>
                 <Switch>
                   <Route path="/" exact>
                     <LazyComponents.HomeComponent/>
