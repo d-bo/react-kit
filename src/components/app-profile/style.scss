@@ -1,7 +1,7 @@
 .profile-img {
 	max-width: 100%;
 	max-height: 300px;
-	min-height: 300px;
+	cursor: pointer;
 }
 
 .input-hidden {
@@ -10,7 +10,7 @@
 
 .profile-modal-image {
 	padding: 0;
-	max-width: 92vw;
+	max-width: 100%;
 	max-height: 92vh;
 }
 
@@ -20,4 +20,14 @@
 
 #profile-modal {
 	padding: 0;
+}
+
+.profile-flex-child {
+	width: 100px;
+	margin: auto;
+}
+
+.profile-flex {
+	display: flex;
+	justify-content: center;
 }

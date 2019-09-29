@@ -15,17 +15,15 @@ import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { connect } from "react-redux";
 import { IPropsGlobal } from "../../shared/Interfaces";
-import { withFirebaseAuth } from "../../shared/hocs/FirebaseAuth";
+import { withFirebaseAuth, IFirebaseAuth } from "../../shared/hocs/FirebaseAuth";
 import * as helpers from "../../shared/helpers/validate";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
-interface IRegisterProps extends IPropsGlobal {
+interface IRegisterProps extends IPropsGlobal, IFirebaseAuth {
   readonly context: any;
   readonly firebaseAuth: any;
   readonly style: any;
-  firebaseRecaptchaRender(...args: any): any;
-  createUserWithEmailAndPassword(email: string, password: string, hooks: object): void;
 }
 
 interface IRegisterState {
@@ -266,13 +264,17 @@ implements IRegisterProto {
 
     const self = this;
     let error: string | false;
-    const {history, createUserWithEmailAndPassword} = this.props;
+    const {
+      history,
+      createUserWithEmailAndPassword,
+    } = this.props;
     const {password, displayName, email} = this.state;
     const {contextSetFirebaseUser} = this.context;
 
-    // Validate email
-    if (!helpers.validateEmail(email)) {
-      this.setError("Incorrect email");
+    // Validate name
+    error = helpers.validateName(displayName as string);
+    if (error) {
+      this.setError(error);
       return;
     }
 
@@ -283,13 +285,13 @@ implements IRegisterProto {
       return;
     }
 
-    // Validate name
-    error = helpers.validateName(displayName as string);
-    if (error) {
-      this.setError(error);
+    // Validate email
+    if (!helpers.validateEmail(email)) {
+      this.setError("Incorrect email");
       return;
     }
 
+    // Loading ...
     this.setState(
       produce(this.state, (draft) => {
         draft.errors = null;
@@ -297,8 +299,9 @@ implements IRegisterProto {
       }),
     );
 
-    createUserWithEmailAndPassword(email as string, password as string, {
+    createUserWithEmailAndPassword(email as string, password as string, {}, {
       afterCreate: () => {
+        /*
         const currentUser = firebase.auth().currentUser;
         // Send email verify
         if (currentUser) {
@@ -323,6 +326,7 @@ implements IRegisterProto {
             );
           });
         }
+        */
       },
       onError: (error: any) => {
         self.setState(

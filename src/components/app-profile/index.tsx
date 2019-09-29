@@ -6,17 +6,22 @@ import DmButton from "../shared/elements/DmButton";
 import DmInput from "../shared/elements/DmInput";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
 import { setProfileImgUrl, setUserFirestoreData } from "../../redux/actions";
-import { MdClear, MdDone } from "react-icons/md";
+import { MdClear, MdDone, MdEmail, MdDelete, MdSettings } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt, FaSignOutAlt, FaPortrait, FaRegIdCard } from "react-icons/fa";
 import { withRouter } from "react-router";
 import Footer from "../app-footer";
 import produce from "immer";
 import { LoadingFacebookBlack } from "../../components/shared/elements/Loader";
 import { IPropsGlobal } from "../shared/Interfaces";
 import Modal from "react-responsive-modal";
-import { withFirebaseAuth, IErrorArgs, ICaptchaHooks } from "../shared/hocs/FirebaseAuth";
+import {
+  withFirebaseAuth,
+  IErrorArgs,
+  IFirebaseAuth,
+} from "../shared/hocs/FirebaseAuth";
+import { ConfirmDialogWidget } from "../shared/widgets/ConfirmDIalogWidget";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -24,11 +29,10 @@ const mapDispatchToProps = (dispatch: any) => ({
   setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
-interface IProfileProps extends IPropsGlobal {
+interface IProfileProps extends IPropsGlobal, IFirebaseAuth {
   readonly setProfileImgUrl: any;
   readonly setUserFirestoreData: any;
   readonly userData: any;
-  firebaseLogOut(afterLogOut: ICaptchaHooks["afterLogOut"], onError: ICaptchaHooks["onError"]): void;
 }
 
 interface IFileObject {
@@ -47,9 +51,11 @@ interface IProfileState {
   uploadedImg: string | ArrayBuffer | null;
   showSaveImgDialog: boolean;
   showDropImgDialog: boolean;
+  showExitSessionDialog: boolean;
   showUploadImgDialog: boolean;
   errors: string | null;
   errorsUploadPhoto: string | null;
+  showDeleteAccountDialog: boolean;
 }
 
 interface IProfileProto {
@@ -64,6 +70,7 @@ interface IProfileProto {
   handleDropImageDialog(): void;
   handleDropImage(): void;
   handleSaveImage(): void;
+  handleDeleteAccount(): void;
   cancelImgUpload(): void;
   cancelDropImg(): void;
 }
@@ -84,7 +91,9 @@ implements IProfileProto {
       loadingExit: false,
       loadingImg: false,
       modalIsOpen: false,
+      showDeleteAccountDialog: false,
       showDropImgDialog: false,
+      showExitSessionDialog: false,
       showSaveImgDialog: false,
       showUploadImgDialog: true,
       uploadedImg: null,
@@ -104,6 +113,7 @@ implements IProfileProto {
       "handleDropImage",
       "handleDropImageDialog",
       "cancelDropImg",
+      "handleDeleteAccount",
     ].forEach((propToBind: string) => {
       // @ts-ignore: Cannot find a proper solution
       this[propToBind as keyof IProfileProto] = this[propToBind as keyof Profile].bind(this);
@@ -143,12 +153,11 @@ implements IProfileProto {
   }
 
   public render(): JSX.Element {
-    const {userData} = this.props;
-    const {firebaseUser} = this.context;
+    const {userData, history: {push}} = this.props;
+    const {firebaseUser, contextSetFirebaseUser} = this.context;
     const {
       showSaveImgDialog,
       loadingImg,
-      verifyLinkSent,
       errors,
       loading,
       loadingExit,
@@ -157,229 +166,316 @@ implements IProfileProto {
       showUploadImgDialog,
       uploadedImg,
       errorsUploadPhoto,
+      showDeleteAccountDialog,
+      showExitSessionDialog,
     } = this.state;
 
     return (
       <>
-      <div className="container-fluid body-page-color body-page-margin-top">
-        <div className="row">
-
-          <div className="col-sm-4">
-            <DmFolderWidget title="Photo" className="fade-in-fx">
-
-            <p></p>
-
-            {(firebaseUser && firebaseUser.hasOwnProperty("photoURL")) &&
-              <>
-              {(firebaseUser.photoURL && !uploadedImg) &&
-                <>
-                  <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
-                    <LazyLoadImage
-                      src={firebaseUser.photoURL}
-                      effect="blur"
-                      className="profile-img round-border-5px fade-in-fx" />
+      { // Check email verification link layout
+        firebaseUser && !firebaseUser.emailVerified &&
+        <div className="container-fluid body-page-color">
+          <div className="row">
+            <div className="col-md-3 col-sm-2 col-lg-4"></div>
+            <div className="col-md-6 col-sm-8 col-lg-4">
+            <div className="vertical-center">
+              <DmFolderWidget
+                title={firebaseUser.email}
+                titleIcon={<MdEmail/>}
+                className="fade-in-fx"
+                shadow="soft-left-bottom-shadow">
+                  <div className="action-message round-border-3px">
+                    Please, check email verification link before getting started
                   </div>
-                  <Modal open={modalIsOpen}
-                    onClose={this.onCloseModal} blockScroll={false}
-                    overlayId="profile-modal-overlay" modalId="profile-modal" center>
-                    <img src={firebaseUser.photoURL} className="profile-modal-image" />
-                  </Modal>
-                </>
-              }
-
-              {(firebaseUser.photoURL && uploadedImg) &&
-                <>
-                  <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
-                    <LazyLoadImage
-                      src={uploadedImg as string}
-                      effect="blur"
-                      className="profile-img round-border-5px fade-in-fx" />
-                  </div>
-                  <Modal open={modalIsOpen}
-                    onClose={this.onCloseModal} blockScroll={false}
-                    overlayId="profile-modal-overlay" modalId="profile-modal" center>
-                    <img src={uploadedImg as string} className="profile-modal-image" />
-                  </Modal>
-                </>
-              }
-
-              { // No image uploaded
-                (!firebaseUser.photoURL && !uploadedImg) &&
-                <>
-                  <div style={{textAlign: "center"}}>
-                    <LazyLoadImage
-                        src="/img/no-user.png"
-                        effect="blur"
-                        className="profile-img round-border-5px fade-in-fx" />
-                  </div>
-                </>
-              }
-
-              {
-                (!firebaseUser.photoURL && uploadedImg) &&
-                <>
-                  <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
-                    <LazyLoadImage
-                      src={uploadedImg as string}
-                      effect="blur"
-                      className="profile-img round-border-5px fade-in-fx" />
-                  </div>
-                  <Modal open={modalIsOpen}
-                    onClose={this.onCloseModal} blockScroll={false}
-                    overlayId="profile-modal-overlay" modalId="profile-modal" center>
-                    <img src={uploadedImg as string} className="profile-modal-image" />
-                  </Modal>
-                </>
-              }
-              </>
-            }
-
-            {loadingImg &&
-              <>
-                <p></p>
-                <LoadingFacebookBlack/>
-              </>
-            }
-
-            { // Cancel image upload or save dialog
-              showSaveImgDialog &&
-              <div>
-                <p></p>
-                <div className="text-center">
-                  Are you sure you want to upload image ?
-                </div>
-                <table style={{width: "100%"}}><tbody><tr>
-                <td>
-                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} disabled={loadingImg}
-                    className="margin-top button-grey" onClick={this.handleSaveImage} />
-                </td>
-                <td>
-                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} disabled={loadingImg}
-                    className="margin-top button-grey" onClick={this.cancelImgUpload} />
-                </td>
-                </tr></tbody></table>
-              </div>
-            }
-
-            { // Cancel drop image dialog
-              showDropImgDialog &&
-              <>
-                <p></p>
-                <div className="action-message text-center round-border-3px">
-                  Are you sure you want to delete image ?
-                </div>
-                <table style={{width: "100%"}}><tbody><tr>
-                <td>
-                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />} disabled={loadingImg}
-                    className="margin-top button-grey" onClick={this.handleDropImage} />
-                </td>
-                <td>
-                  <DmButton icon={<MdClear style={{fontSize: "32px"}} />} disabled={loadingImg}
-                    className="margin-top button-grey" onClick={this.cancelDropImg} />
-                </td>
-                </tr></tbody></table>
-              </>
-            }
-
-            {errorsUploadPhoto &&
-              <div className="error-message round-border-5px">
-                {errorsUploadPhoto}
-              </div>
-            }
-
-            {showUploadImgDialog &&
-              <table style={{width: "100%"}} className="animated pulse"><tbody><tr>
-                <td style={{width: "80%"}}>
-                  <input type="file" className="input-hidden"
-                    onChange={this.handleImageChange} id="img-file-upload" />
-                  <DmButton text="LOAD PROFILE IMAGE" disabled={loadingImg}
-                    className="margin-top" onClick={this.handleUploadClick} />
-                </td>
-                <td style={{width: "80%"}}>
-                  <DmButton text={<FaTrashAlt />}
-                    className="margin-top button-transparent"
-                    onClick={this.handleDropImageDialog} />
-                </td>
-              </tr></tbody></table>
-            }
-
-            </DmFolderWidget>
+                  <p></p>
+                  <DmButton text="EXIT" disabled={loadingExit} onClick={this.handleLogOut}
+                    style={{marginTop: "7px"}} />
+              </DmFolderWidget>
+            </div>
+            </div>
+            <div className="col-md-3 col-sm-2 col-lg-4"></div>
           </div>
+        </div>
+      }
+      {((firebaseUser && firebaseUser.emailVerified) || !firebaseUser) &&
+        <>
+          <div className="container-fluid body-page-color body-page-margin-top">
+            <div className="row">
 
-          <div className="col-sm-4">
-            <DmFolderWidget title="Skills" className="fade-in-fx">
-                Rizzle - Serenity <b>[Dispatch Recordings]</b><br/>
-                Kasra - Alburz <b>[Critical Music]</b><br/>
-                Skeptical - Mechanism <b>[Exit Records]</b><br/>
-                Neve - Ping Pong <b>[Guidance]</b><br/>
-                Mefjus - Sinkhole (Skeptical Remix) <b>[Vision Recordings]</b><br/>
-                Trex & Qu3st - Eye Spy <b>[The Dreamers]</b><br/>
-                Alix Perez & Monty - Good to Me <b>[1985 Music]</b><br/>
-                Nucleus & Paradox - Azha <b>[Metalheadz]</b><br/>
-                Frame & Base - Pony Express <b>[Delta9 Recordings]</b><br/>
-                Blacklight - Enormous Machine <b>[Subplate Recordings]</b><br/>
-                Doctor Jeep - Natural Selection <b>[Plush Recordings]</b><br/>
-                Ground - Attract <b>[Flexout Audio]</b><br/>
-            </DmFolderWidget>
-          </div>
+              <div className="col-sm-4">
+                <DmFolderWidget title="Photo" titleIcon={<FaPortrait/>} className="fade-in-fx">
 
-          <div className="col-sm-4">
-            <DmFolderWidget title="Settings" className="fade-in-fx">
-              <p></p>
-              <table style={{width: "100%"}}><tbody><tr>
-              <td>
-                <div style={{textAlign: "center"}}>
-                  <b>Country</b>
-                </div>
-                <DmInput type="text"
-                value={userData ? userData.country : ""}
-                placeholder="Enter your city ..." onChange={this.handleCountryChange} />
-              </td>
-              <td>
-                <div style={{textAlign: "center"}}>
-                  <b>City</b>
-                </div>
-                <DmInput type="text"
-                value={userData ? userData.city : ""}
-                placeholder="Enter your city ..." onChange={this.handleCityChange} />
-              </td>
-              </tr></tbody></table>
+                <p></p>
 
-              {firebaseUser &&
-                <>
-                  {(!firebaseUser.emailVerified && !verifyLinkSent) &&
+                {(firebaseUser && firebaseUser.hasOwnProperty("photoURL")) &&
+                  <>
+                  {(firebaseUser.photoURL && !uploadedImg) &&
                     <>
-                      <p></p>
-                      <div className="error-message round-border-5px">
-                        Please, verify link from your email address
+                      <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
+                        <LazyLoadImage
+                          src={firebaseUser.photoURL}
+                          effect="blur"
+                          className="profile-img round-border-5px fade-in-fx" />
                       </div>
-                      <DmButton text="Send again" loading={loading}
-                      onClick={this.sendVerifyLink} />
+                      <Modal open={modalIsOpen}
+                        onClose={this.onCloseModal} blockScroll={false}
+                        overlayId="profile-modal-overlay" modalId="profile-modal" center>
+                        <img src={firebaseUser.photoURL} className="profile-modal-image" />
+                      </Modal>
                     </>
                   }
-                  <p/>
 
-                  {errors &&
-                    <div className="error-message round-border-5px">
-                      {errors}
-                    </div>
+                  {(firebaseUser.photoURL && uploadedImg) &&
+                    <>
+                      <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
+                        <LazyLoadImage
+                          src={uploadedImg as string}
+                          effect="blur"
+                          className="profile-img round-border-5px fade-in-fx" />
+                      </div>
+                      <Modal open={modalIsOpen}
+                        onClose={this.onCloseModal} blockScroll={false}
+                        overlayId="profile-modal-overlay" modalId="profile-modal" center>
+                        <img src={uploadedImg as string} className="profile-modal-image" />
+                      </Modal>
+                    </>
                   }
 
-                  <DmButton icon={<MdDone style={{fontSize: "32px"}} />}
-                  loading={loading} onClick={this.handleUpdateUser}
-                  style={{marginTop: "35px"}} className="button-grey" />
+                  { // No image uploaded
+                    (!firebaseUser.photoURL && !uploadedImg) &&
+                    <>
+                      <div style={{textAlign: "center"}}>
+                        <LazyLoadImage
+                            src="/img/no-user.png"
+                            effect="blur"
+                            className="profile-img round-border-5px fade-in-fx" />
+                      </div>
+                    </>
+                  }
 
-                  <DmButton text="EXIT" loading={loadingExit} onClick={this.handleLogOut}
-                  style={{marginTop: "7px"}} />
-                </>
-              }
+                  {
+                    (!firebaseUser.photoURL && uploadedImg) &&
+                    <>
+                      <div style={{textAlign: "center"}} onClick={this.onOpenModal}>
+                        <LazyLoadImage
+                          src={uploadedImg as string}
+                          effect="blur"
+                          className="profile-img round-border-5px fade-in-fx" />
+                      </div>
+                      <Modal open={modalIsOpen}
+                        onClose={this.onCloseModal} blockScroll={false}
+                        overlayId="profile-modal-overlay" modalId="profile-modal" center>
+                        <img src={uploadedImg as string} className="profile-modal-image" />
+                      </Modal>
+                    </>
+                  }
+                  </>
+                }
 
-            </DmFolderWidget>
+                {loadingImg &&
+                  <>
+                    <p></p>
+                    <LoadingFacebookBlack/>
+                  </>
+                }
+
+                { // Cancel image upload or save dialog
+                  showSaveImgDialog &&
+                  <>
+                    <p></p>
+                    <ConfirmDialogWidget text={<>Are you sure you want to <b>upload image</b> ?</>}
+                      onProceed={this.handleSaveImage} onCancel={this.cancelImgUpload} />
+                  </>
+                }
+
+                { // Cancel drop image dialog
+                  showDropImgDialog &&
+                  <>
+                    <p></p>
+                    <ConfirmDialogWidget text={<>Are you sure you want to <b>delete image</b> ?</>}
+                      onProceed={this.handleDropImage} onCancel={this.cancelDropImg} />
+                  </>
+                }
+
+                {errorsUploadPhoto &&
+                  <div className="error-message round-border-5px">
+                    {errorsUploadPhoto}
+                  </div>
+                }
+
+                {showUploadImgDialog &&
+                  <table style={{width: "100%"}} className="animated pulse"><tbody><tr>
+                    <td style={{width: "80%"}}>
+                      <input type="file" className="input-hidden"
+                        onChange={this.handleImageChange} id="img-file-upload" />
+                      <DmButton text="LOAD PROFILE IMAGE" disabled={loadingImg}
+                        className="margin-top" onClick={this.handleUploadClick} />
+                    </td>
+                    <td style={{width: "80%"}}>
+                      <DmButton text={<FaTrashAlt />}
+                        className="margin-top button-transparent"
+                        onClick={this.handleDropImageDialog} />
+                    </td>
+                  </tr></tbody></table>
+                }
+
+                </DmFolderWidget>
+              </div>
+
+              <div className="col-sm-4">
+                <DmFolderWidget title="Skills" titleIcon={<FaRegIdCard/>} className="fade-in-fx">
+                    Rizzle - Serenity <b>[Dispatch Recordings]</b><br/>
+                    Kasra - Alburz <b>[Critical Music]</b><br/>
+                    Skeptical - Mechanism <b>[Exit Records]</b><br/>
+                    Neve - Ping Pong <b>[Guidance]</b><br/>
+                    Mefjus - Sinkhole (Skeptical Remix) <b>[Vision Recordings]</b><br/>
+                    Trex & Qu3st - Eye Spy <b>[The Dreamers]</b><br/>
+                    Alix Perez & Monty - Good to Me <b>[1985 Music]</b><br/>
+                    Nucleus & Paradox - Azha <b>[Metalheadz]</b><br/>
+                    Frame & Base - Pony Express <b>[Delta9 Recordings]</b><br/>
+                    Blacklight - Enormous Machine <b>[Subplate Recordings]</b><br/>
+                    Doctor Jeep - Natural Selection <b>[Plush Recordings]</b><br/>
+                    Ground - Attract <b>[Flexout Audio]</b><br/>
+                </DmFolderWidget>
+              </div>
+
+              <div className="col-sm-4">
+                <DmFolderWidget title="Settings" titleIcon={<MdSettings/>} className="fade-in-fx">
+                  <p></p>
+                  <table style={{width: "100%"}}><tbody><tr>
+                  <td>
+                    <div style={{textAlign: "center"}}>
+                      <b>Country</b>
+                    </div>
+                    <DmInput type="text"
+                    value={userData ? userData.country : ""}
+                    placeholder="Enter your city ..." onChange={this.handleCountryChange} />
+                  </td>
+                  <td>
+                    <div style={{textAlign: "center"}}>
+                      <b>City</b>
+                    </div>
+                    <DmInput type="text"
+                    value={userData ? userData.city : ""}
+                    placeholder="Enter your city ..." onChange={this.handleCityChange} />
+                  </td>
+                  </tr></tbody></table>
+
+                  {firebaseUser &&
+                    <>
+                      <p></p>
+
+                      {errors &&
+                        <div className="error-message round-border-5px">
+                          {errors}
+                        </div>
+                      }
+
+                      <DmButton
+                        icon={<MdDone/>}
+                        disabled={loading}
+                        onClick={this.handleUpdateUser}
+                        className="dm-button-color-grey dm-button-margin-top" />
+
+                      {showExitSessionDialog &&
+                        <>
+                          <p></p>
+                          <ConfirmDialogWidget text={<>Are you sure you want to <b>exit</b> ?</>}
+                            onProceed={() => {
+                              this.props.signOut(() => {
+                                contextSetFirebaseUser(null);
+                                push("/auth/signin");
+                              }, (error: string) => {
+                                this.setState(
+                                  produce(this.state, (draft) => {
+                                    draft.errors = error;
+                                    draft.showExitSessionDialog = false;
+                                  }),
+                                );
+                              });
+                            }} onCancel={() => {
+                              this.setState(
+                                produce(this.state, (draft) => {
+                                  draft.showExitSessionDialog = false;
+                                }),
+                              );
+                            }} />
+                        </>
+                      }
+                      {!showExitSessionDialog &&
+                        <DmButton
+                          text="EXIT"
+                          disabled={loadingExit}
+                          onClick={() => {
+                            this.setState(
+                              produce(this.state, (draft) => {
+                                draft.showExitSessionDialog = true;
+                              }),
+                            );
+                          }}
+                          icon={<FaSignOutAlt/>} className="dm-button-margin-top" />
+                      }
+                      {showDeleteAccountDialog &&
+                        <>
+                          <p></p>
+                          <ConfirmDialogWidget text={<>Are you sure you want to <b>delete account</b> ?</>}
+                            onProceed={() => {
+                              this.props.firebaseDeleteAccount(() => {
+                                push("/auth/signin");
+                              }, (error: string) => {
+                                this.setState(
+                                  produce(this.state, (draft) => {
+                                    draft.errors = error;
+                                    draft.showDeleteAccountDialog = false;
+                                  }),
+                                );
+                              });
+                            }} onCancel={() => {
+                              this.setState(
+                                produce(this.state, (draft) => {
+                                  draft.showDeleteAccountDialog = false;
+                                }),
+                              );
+                            }} />
+                        </>
+                      }
+                      {!showDeleteAccountDialog &&
+                      <DmButton
+                        text="Delete account"
+                        disabled={loadingExit}
+                        onClick={() => {
+                          this.setState(
+                            produce(this.state, (draft) => {
+                              draft.showDeleteAccountDialog = true;
+                            }),
+                          );
+                        }}
+                        icon={<MdDelete/>}
+                        className="dm-button-color-peru dm-button-margin-top" />
+                      }
+                    </>
+                  }
+
+                </DmFolderWidget>
+              </div>
           </div>
-      </div>
-    </div>
-    <Footer />
+        </div>
+        <Footer />
+      </>
+    }
     </>
+
+    );
+  }
+
+  /**
+   * Attempt to delete current session user account
+   */
+  public handleDeleteAccount() {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.showDeleteAccountDialog = true;
+      }),
     );
   }
 

@@ -218,11 +218,11 @@ implements ISigninProto {
                   <div className="margin-top custom-a">
                     <table className="full-width"><tbody><tr>
                     <td>
-                      <DmButton text={<FaGithub />} disabled={loading}
+                      <DmButton icon={<FaGithub />} disabled={loading}
                         onClick={this.handleGithub} className="button-grey" />
                     </td>
                     <td>
-                      <DmButton text={<FaGoogle />} disabled={loading}
+                      <DmButton icon={<FaGoogle />} disabled={loading}
                         onClick={this.handleGithub} className="button-grey" />
                     </td>
                     </tr></tbody></table>
