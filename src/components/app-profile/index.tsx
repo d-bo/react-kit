@@ -6,7 +6,7 @@ import DmButton from "../shared/elements/DmButton";
 import DmInput from "../shared/elements/DmInput";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
 import { setProfileImgUrl, setUserFirestoreData } from "../../redux/actions";
-import { MdClear, MdDone, MdEmail, MdDelete, MdSettings } from "react-icons/md";
+import { MdDone, MdEmail, MdDelete, MdSettings } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
 import { FaTrashAlt, FaSignOutAlt, FaPortrait, FaRegIdCard } from "react-icons/fa";
@@ -18,7 +18,6 @@ import { IPropsGlobal } from "../shared/Interfaces";
 import Modal from "react-responsive-modal";
 import {
   withFirebaseAuth,
-  IErrorArgs,
   IFirebaseAuth,
 } from "../shared/hocs/FirebaseAuth";
 import { ConfirmDialogWidget } from "../shared/widgets/ConfirmDIalogWidget";
@@ -29,6 +28,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
+// IFirebaseAuth mixed with local props (withFirebaseAuth)
 interface IProfileProps extends IPropsGlobal, IFirebaseAuth {
   readonly setProfileImgUrl: any;
   readonly setUserFirestoreData: any;
@@ -61,7 +61,6 @@ interface IProfileState {
 interface IProfileProto {
   [k: string]: any;
   [z: number]: any;
-  sendVerifyLink(): void;
   handleCityChange(city: string | null): void;
   handleCountryChange(country: string | null): void;
   handleUpdateUser(): void;
@@ -102,7 +101,6 @@ implements IProfileProto {
 
     [
       "handleLogOut",
-      "sendVerifyLink",
       "handleCityChange",
       "handleUpdateUser",
       "handleCountryChange",
@@ -341,23 +339,25 @@ implements IProfileProto {
 
               <div className="col-sm-4">
                 <DmFolderWidget title="Settings" titleIcon={<MdSettings/>} className="fade-in-fx">
+
                   <p></p>
+
                   <table style={{width: "100%"}}><tbody><tr>
                   <td>
                     <div style={{textAlign: "center"}}>
                       <b>Country</b>
                     </div>
                     <DmInput type="text"
-                    value={userData ? userData.country : ""}
-                    placeholder="Enter your city ..." onChange={this.handleCountryChange} />
+                      value={userData ? userData.country : ""}
+                      placeholder="Enter your city ..." onChange={this.handleCountryChange} />
                   </td>
                   <td>
                     <div style={{textAlign: "center"}}>
                       <b>City</b>
                     </div>
                     <DmInput type="text"
-                    value={userData ? userData.city : ""}
-                    placeholder="Enter your city ..." onChange={this.handleCityChange} />
+                      value={userData ? userData.city : ""}
+                      placeholder="Enter your city ..." onChange={this.handleCityChange} />
                   </td>
                   </tr></tbody></table>
 
@@ -418,9 +418,11 @@ implements IProfileProto {
                       {showDeleteAccountDialog &&
                         <>
                           <p></p>
-                          <ConfirmDialogWidget text={<>Are you sure you want to <b>delete account</b> ?</>}
+                          <ConfirmDialogWidget
+                            text={<>Are you sure you want to <b>delete account</b> ?</>}
                             onProceed={() => {
                               this.props.firebaseDeleteAccount(() => {
+                                contextSetFirebaseUser(null);
                                 push("/auth/signin");
                               }, (error: string) => {
                                 this.setState(
@@ -430,7 +432,8 @@ implements IProfileProto {
                                   }),
                                 );
                               });
-                            }} onCancel={() => {
+                            }}
+                            onCancel={() => {
                               this.setState(
                                 produce(this.state, (draft) => {
                                   draft.showDeleteAccountDialog = false;
@@ -440,18 +443,18 @@ implements IProfileProto {
                         </>
                       }
                       {!showDeleteAccountDialog &&
-                      <DmButton
-                        text="Delete account"
-                        disabled={loadingExit}
-                        onClick={() => {
-                          this.setState(
-                            produce(this.state, (draft) => {
-                              draft.showDeleteAccountDialog = true;
-                            }),
-                          );
-                        }}
-                        icon={<MdDelete/>}
-                        className="dm-button-color-peru dm-button-margin-top" />
+                        <DmButton
+                          text="Delete account"
+                          disabled={loadingExit}
+                          onClick={() => {
+                            this.setState(
+                              produce(this.state, (draft) => {
+                                draft.showDeleteAccountDialog = true;
+                              }),
+                            );
+                          }}
+                          icon={<MdDelete/>}
+                          className="dm-button-color-peru dm-button-margin-top" />
                       }
                     </>
                   }
@@ -498,44 +501,15 @@ implements IProfileProto {
       setProfileImgUrl(null);
       history.push("/auth/signin");
     };
-    const onError = (error: IErrorArgs) => {
-      const errorMessage = error.message;
+    const onError = (error: string) => {
       this.setState(
         produce(this.state, (draft) => {
-          draft.errors = errorMessage;
+          draft.errors = error;
           draft.loadingExit = false;
         }),
       );
     };
     firebaseLogOut(afterLogOut, onError);
-  }
-
-  public sendVerifyLink(): void {
-    const self = this;
-    const {firebaseUser} = this.context;
-    this.setState(
-      produce(this.state, (draft) => {
-        draft.loading = true;
-      }),
-    );
-    if (firebaseUser) {
-      firebaseUser.sendEmailVerification({
-        url: `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`,
-      }).then(() => {
-        self.setState(
-          produce(self.state, (draft) => {
-            draft.verifyLinkSent = true;
-          }),
-        );
-      }).catch((error: any) => {
-        self.setState(
-          produce(self.state, (draft) => {
-            draft.errors = error.message;
-            draft.loading = false;
-          }),
-        );
-      });
-    }
   }
 
   public handleCityChange(city: string | null): void {

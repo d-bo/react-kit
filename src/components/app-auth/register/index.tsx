@@ -1,7 +1,6 @@
 import "./style.css";
 import "firebase/auth";
 import { Link } from "react-router-dom";
-import firebase from "firebase/app";
 import React from "react";
 import DmInput from "../../shared/elements/DmInput";
 import DmButton from "../../shared/elements/DmButton";
@@ -35,6 +34,7 @@ interface IRegisterState {
   showRegisterButtonAfterCaptcha: boolean;
   verifyLinkSent: false;
   loading: boolean;
+  warnings: string | null;
 }
 
 interface IRegisterProto {
@@ -68,6 +68,7 @@ implements IRegisterProto {
       password: "",
       showRegisterButtonAfterCaptcha: false,
       verifyLinkSent: false,
+      warnings: null,
     };
     [
       "handleRegister",
@@ -172,6 +173,7 @@ implements IRegisterProto {
       errors,
       loading,
       showRegisterButtonAfterCaptcha,
+      warnings,
     } = this.state;
 
     return (
@@ -202,6 +204,10 @@ implements IRegisterProto {
 
                 {errors &&
                   <div className="error-message round-border-5px">{errors}</div>
+                }
+
+                {warnings &&
+                  <div className="action-message round-border-5px">{warnings}</div>
                 }
 
                 { // Is captcha solved ?
@@ -264,10 +270,7 @@ implements IRegisterProto {
 
     const self = this;
     let error: string | false;
-    const {
-      history,
-      createUserWithEmailAndPassword,
-    } = this.props;
+    const {createUserWithEmailAndPassword, history, firebaseGetUser, sendEmailVerification} = this.props;
     const {password, displayName, email} = this.state;
     const {contextSetFirebaseUser} = this.context;
 
@@ -299,36 +302,28 @@ implements IRegisterProto {
       }),
     );
 
-    createUserWithEmailAndPassword(email as string, password as string, {}, {
-      afterCreate: () => {
-        /*
-        const currentUser = firebase.auth().currentUser;
-        // Send email verify
-        if (currentUser) {
-          contextSetFirebaseUser(currentUser);
-          const url = `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`;
-          currentUser.sendEmailVerification({
-            url,
-          }).then(() => {
-            self.setState(
-              produce(self.state, (draft) => {
-                draft.loading = false;
-              }),
-            );
-            // User created and email verify sent
-            history.push("/");
-          }).catch((error) => {
-            self.setState(
-              produce(self.state, (draft) => {
-                draft.loading = false;
-                draft.errors = error.message;
-              }),
-            );
-          });
-        }
-        */
+    // Create firebase user
+    createUserWithEmailAndPassword(email as string, password as string,
+      // Success callback
+      // Scenario: create, log in, check email link to activate
+      () => {
+        this.setState(
+          produce(self.state, (draft) => {
+            draft.loading = false;
+          }),
+        );
+        sendEmailVerification({}, (error) => {
+          this.setState(
+            produce(self.state, (draft) => {
+              draft.errors = error;
+            }),
+          );
+        });
+        contextSetFirebaseUser(firebaseGetUser());
+        history.push("/profile");
       },
-      onError: (error: any) => {
+      // Error
+      (error: any) => {
         self.setState(
           produce(self.state, (draft) => {
             draft.loading = false;
@@ -336,7 +331,7 @@ implements IRegisterProto {
           }),
         );
       },
-    });
+    );
   }
 
   public handlePasswordChange(e: string): void {

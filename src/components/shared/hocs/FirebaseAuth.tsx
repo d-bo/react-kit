@@ -27,7 +27,7 @@ export interface ICaptchaHooks {
 }
 export interface ICreateUserHooks {
   onError?(error: string): void;
-  afterCreate?(): void;
+  onSuccess?(): void;
 }
 export interface IEmailVerifyHooks {
   afterSend?(): void;
@@ -43,23 +43,18 @@ export interface IDeleteAccountHooks {
 }
 
 /**
- * Define some actions after user is created
- */
-interface ICreateUserOptions {
-  stayLoggedAfterCreate: boolean;
-  sendVerifyLinkToEmail: boolean;
-}
-
-/**
  * Firebase wrapper interface
  */
 export interface IFirebaseAuth {
-  signOut(onSuccess: (() => void) | {}, onError: (e: string) => void): void;
-  sendEmailVerification(hooks: IEmailVerifyHooks): void;
-  firebaseLogOut(afterLogOut: ICaptchaHooks["afterLogOut"], onError: ICaptchaHooks["onError"]): void;
-  firebaseDeleteAccount(onUserDeleted: () => void, onError: (e: string) => void): void;
+  signOut(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
+  sendEmailVerification(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
+  firebaseLogOut(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
+  firebaseDeleteAccount(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
   firebaseRecaptchaRender(...args: any): any;
-  createUserWithEmailAndPassword(email: string, password: string, opts: object, hooks: object): void;
+  createUserWithEmailAndPassword(
+      email: string, password: string, onSuccess?: () => void, onError?: (e: string) => void,
+    ): void;
+  firebaseGetUser(): firebase.User | null;
 }
 
 /**
@@ -67,7 +62,7 @@ export interface IFirebaseAuth {
  * @param WrappedComponent Input component to wrap with
  */
 export function withFirebaseAuth(WrappedComponent: any) {
-  return class extends React.Component  {
+  return class extends React.Component implements IFirebaseAuth {
     constructor(props: any) {
       super(props);
       this.firebaseRecaptchaRender = this.firebaseRecaptchaRender.bind(this);
@@ -75,6 +70,8 @@ export function withFirebaseAuth(WrappedComponent: any) {
       this.sendEmailVerification = this.sendEmailVerification.bind(this);
       this.signOut = this.signOut.bind(this);
       this.firebaseDeleteAccount = this.firebaseDeleteAccount.bind(this);
+      this.createUserWithEmailAndPassword = this.createUserWithEmailAndPassword.bind(this);
+      this.firebaseGetUser = this.firebaseGetUser.bind(this);
     }
 
     /**
@@ -114,13 +111,10 @@ export function withFirebaseAuth(WrappedComponent: any) {
      * @param afterLogOut Callback after firebase user logged out
      * @param onError Error callback
      */
-    public firebaseLogOut(
-      afterLogOut: ICaptchaHooks["afterLogOut"],
-      onError: ICaptchaHooks["onError"],
-    ): void {
+    public firebaseLogOut(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void {
       firebase.auth().signOut().then(() => {
-        if (afterLogOut) {
-          afterLogOut();
+        if (typeof onSuccess === "function") {
+          onSuccess();
         }
       }).catch((error) => {
         if (onError) {
@@ -139,58 +133,41 @@ export function withFirebaseAuth(WrappedComponent: any) {
     public createUserWithEmailAndPassword(
       email: string,
       password: string,
-      options: ICreateUserOptions = {
-        sendVerifyLinkToEmail: true,
-        stayLoggedAfterCreate: false,
-      },
-      hooks: ICreateUserHooks = {}) {
-        firebase.auth().createUserWithEmailAndPassword(
-          email as string,
-          password as string,
-        ).then(() => {
-          if (options.sendVerifyLinkToEmail) {
-            // Email virification link
-            this.sendEmailVerification({
-              onError: (e: string) => {
-                if (hooks.onError) {
-                  hooks.onError(e);
-                }
-              },
-            });
-          }
-          if (!options.stayLoggedAfterCreate) {
-            // Sign out
-            this.signOut({},
-              (error: string) => {
-                if (hooks.onError) {
-                  hooks.onError(error);
-                }
-              },
-            );
-          }
-          if (hooks.afterCreate) {
-            hooks.afterCreate();
-          }
-        }).catch((error) => {
-          if (hooks.onError) {
-            hooks.onError(error);
-          }
-        });
+      onSuccess?: () => void,
+      onError?: (e: string) => void,
+    ) {
+      firebase.auth().createUserWithEmailAndPassword(
+        email as string,
+        password as string,
+      ).then(() => {
+        if (typeof onSuccess === "function") {
+          onSuccess();
+        }
+      }).catch((error) => {
+        if (onError) {
+          onError(error);
+        }
+      });
     }
 
-    public sendEmailVerification(hooks: IEmailVerifyHooks = {}) {
+    /**
+     * Send verification email
+     * @param onSuccess Success callback
+     * @param onError Error message
+     */
+    public sendEmailVerification(onSuccess: (() => void) | {} = {}, onError: (e: string) => void) {
       const currentUser = firebase.auth().currentUser;
       const url = `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`;
       if (currentUser) {
         currentUser.sendEmailVerification({
           url,
         }).then(() => {
-          if (hooks.afterSend) {
-            hooks.afterSend();
+          if (typeof onSuccess === "function") {
+            onSuccess();
           }
         }).catch((error) => {
-          if (hooks.onError) {
-            hooks.onError(error.message);
+          if (onError) {
+            onError(error.message);
           }
         });
       }
@@ -198,7 +175,8 @@ export function withFirebaseAuth(WrappedComponent: any) {
 
     /**
      * End user session
-     * @param hooks Sign out callbacks
+     * @param onSuccess Callback after signed out
+     * @param onError Error message callback
      */
     public signOut(onSuccess: (() => void) | {}, onError: (e: string) => void) {
       firebase.auth().signOut().then(() => {
@@ -212,12 +190,17 @@ export function withFirebaseAuth(WrappedComponent: any) {
       });
     }
 
-    public firebaseDeleteAccount(onUserDeleted: any, onError: any) {
+    /**
+     * Delete user account
+     * @param onSuccess After user account deleted
+     * @param onError Error message callback
+     */
+    public firebaseDeleteAccount(onSuccess?: (() => void) | {}, onError?: (e: string) => void) {
       const user = firebase.auth().currentUser;
       if (user) {
         user.delete().then(() => {
-          if (onUserDeleted) {
-            onUserDeleted();
+          if (typeof onSuccess === "function") {
+            onSuccess();
           }
         }).catch((error) => {
           if (onError) {
@@ -225,6 +208,17 @@ export function withFirebaseAuth(WrappedComponent: any) {
           }
         });
       }
+    }
+
+    /**
+     * Return current logged in user
+     */
+    public firebaseGetUser(): firebase.User | null {
+      const currentUser = firebase.auth().currentUser;
+      if (currentUser) {
+        return currentUser;
+      }
+      return null;
     }
 
     public render() {
@@ -235,6 +229,7 @@ export function withFirebaseAuth(WrappedComponent: any) {
         sendEmailVerification={this.sendEmailVerification}
         signOut={this.signOut}
         firebaseDeleteAccount={this.firebaseDeleteAccount}
+        firebaseGetUser={this.firebaseGetUser}
         {...this.props} />;
     }
   };
