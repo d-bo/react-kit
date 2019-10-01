@@ -31,6 +31,16 @@ body {
   border-radius: 5px;
 }
 
+.round-border-5px-right {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.round-border-5px-left {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
 .vertical-center {
   min-height: 80vh;
   display: flex;

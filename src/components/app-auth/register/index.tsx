@@ -1,4 +1,4 @@
-import "./style.css";
+import "./style.scss";
 import "firebase/auth";
 import { Link } from "react-router-dom";
 import React from "react";
@@ -16,6 +16,7 @@ import { connect } from "react-redux";
 import { IPropsGlobal } from "../../shared/Interfaces";
 import { withFirebaseAuth, IFirebaseAuth } from "../../shared/hocs/FirebaseAuth";
 import * as helpers from "../../shared/helpers/validate";
+import { MdClear, MdDone } from "react-icons/md";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -27,14 +28,18 @@ interface IRegisterProps extends IPropsGlobal, IFirebaseAuth {
 
 interface IRegisterState {
   captchaLoading: boolean;
-  errors: string | null;
+  errors: string | null | boolean;
   email: string | null;
   password: string | null;
   displayName: string | null;
   showRegisterButtonAfterCaptcha: boolean;
   verifyLinkSent: false;
   loading: boolean;
-  warnings: string | null;
+  passwordConfirm: string | null;
+  passwordMatch: boolean | null;
+  emailValidate: boolean | null;
+  nameValidate: boolean | null;
+  passwordValidate: boolean | null;
 }
 
 interface IRegisterProto {
@@ -46,6 +51,7 @@ interface IRegisterProto {
   handlePasswordChange(e: string): void;
   handleEmailChange(e: string): void;
   handleNameChange(e: string): void;
+  handlePasswordConfirmChange(e: string): void;
 }
 
 class Register
@@ -63,12 +69,16 @@ implements IRegisterProto {
       captchaLoading: true,
       displayName: "",
       email: "",
+      emailValidate: null,
       errors: null,
       loading: false,
+      nameValidate: null,
       password: "",
+      passwordConfirm: "",
+      passwordMatch: null,
+      passwordValidate: null,
       showRegisterButtonAfterCaptcha: false,
       verifyLinkSent: false,
-      warnings: null,
     };
     [
       "handleRegister",
@@ -77,6 +87,7 @@ implements IRegisterProto {
       "handleNameChange",
       "handleKeyboardEnter",
       "setRecaptchaRef",
+      "handlePasswordConfirmChange",
     ].forEach((propToBind: string) => {
       // @ts-ignore: Cannot find a proper solution
       this[propToBind as keyof IRegister] = this[propToBind as keyof Register].bind(this);
@@ -172,8 +183,12 @@ implements IRegisterProto {
       password,
       errors,
       loading,
+      passwordConfirm,
+      passwordValidate,
+      nameValidate,
+      emailValidate,
+      passwordMatch,
       showRegisterButtonAfterCaptcha,
-      warnings,
     } = this.state;
 
     return (
@@ -190,35 +205,47 @@ implements IRegisterProto {
               <div style={style}>
 
                 <DmInput type="text" value={displayName}
-                placeholder="NAME" onChange={this.handleNameChange} />
+                  placeholder="NAME" onChange={this.handleNameChange}
+                  rightWidget={nameValidate} />
 
                 <DmInput type="text" value={email}
-                placeholder="EMAIL" onChange={this.handleEmailChange} />
+                  placeholder="EMAIL" onChange={this.handleEmailChange}
+                  rightWidget={emailValidate} />
 
-                <DmInput type="password" value={password}
-                onChange={this.handlePasswordChange} placeholder="PASSWORD" />
+                <DmInput
+                    type="password"
+                    value={password}
+                    onChange={this.handlePasswordChange}
+                    placeholder="PASSWORD"
+                    rightWidget={passwordValidate} />
 
-                {networkStatus === "online" &&
-                  <ReCaptchav2 setRef={this.setRecaptchaRef} />
-                }
+                <DmInput
+                    type="password"
+                    value={passwordConfirm}
+                    onChange={this.handlePasswordConfirmChange}
+                    placeholder="CONFIRM PASSWORD"
+                    rightWidget={passwordMatch} />
 
                 {errors &&
                   <div className="error-message round-border-5px">{errors}</div>
                 }
 
-                {warnings &&
-                  <div className="action-message round-border-5px">{warnings}</div>
+                { // Captcha loading
+                  captchaLoading && networkStatus === "online" &&
+                  <>
+                    <p></p>
+                    <LoadingRollingBlack/>
+                  </>
+                }
+
+                {networkStatus === "online" &&
+                  <ReCaptchav2 setRef={this.setRecaptchaRef} />
                 }
 
                 { // Is captcha solved ?
                   showRegisterButtonAfterCaptcha &&
                     <DmButton text="Ok" loading={loading}
                     onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter} />
-                }
-
-                { // Captcha loading
-                  captchaLoading && networkStatus === "online" &&
-                  <LoadingRollingBlack/>
                 }
 
                 <Router history={history}>
@@ -264,33 +291,35 @@ implements IRegisterProto {
   }
 
   public handleRegister(): void {
+    // Doing nothing while loading
     if (this.state.loading) {
       return;
     }
-
     const self = this;
-    let error: string | false;
-    const {createUserWithEmailAndPassword, history, firebaseGetUser, sendEmailVerification} = this.props;
-    const {password, displayName, email} = this.state;
+    const {
+      createUserWithEmailAndPassword,
+      history,
+      firebaseGetUser,
+      sendEmailVerification,
+    } = this.props;
+    const {
+      password,
+      email,
+      displayName,
+      passwordConfirm,
+      nameValidate,
+      passwordValidate,
+      passwordMatch,
+      emailValidate,
+    } = this.state;
     const {contextSetFirebaseUser} = this.context;
 
-    // Validate name
-    error = helpers.validateName(displayName as string);
-    if (error) {
-      this.setError(error);
-      return;
-    }
+    this.handleNameChange(displayName);
+    this.handleEmailChange(email);
+    this.handlePasswordChange(password);
+    this.handlePasswordConfirmChange(passwordConfirm);
 
-    // Validate password
-    error = helpers.validatePassword(password as string);
-    if (error) {
-      this.setError(error);
-      return;
-    }
-
-    // Validate email
-    if (!helpers.validateEmail(email)) {
-      this.setError("Incorrect email");
+    if (!nameValidate || !passwordMatch || !passwordValidate || !emailValidate) {
       return;
     }
 
@@ -305,7 +334,7 @@ implements IRegisterProto {
     // Create firebase user
     createUserWithEmailAndPassword(email as string, password as string,
       // Success callback
-      // Scenario: create, log in, check email link to activate
+      // Scenario: create, auto log in, check email link to activate
       () => {
         this.setState(
           produce(self.state, (draft) => {
@@ -334,26 +363,72 @@ implements IRegisterProto {
     );
   }
 
-  public handlePasswordChange(e: string): void {
-    this.setState(
-      produce(this.state, (draft) => {
-        draft.password = e;
-      }),
-    );
-  }
-
-  public handleEmailChange(e: string): void {
+  /**
+   * Handle email change and validate
+   * @param e Email string
+   */
+  public handleEmailChange(e: string | null): void {
+    let error: string | false;
+    // Validate email
+    if (!helpers.validateEmail(e)) {
+      error = "Incorrect email";
+    } else {
+      error = false;
+    }
     this.setState(
       produce(this.state, (draft) => {
         draft.email = e;
+        draft.errors = error ? error : null;
+        draft.emailValidate = error ? false : true;
       }),
     );
   }
 
-  public handleNameChange(e: string): void {
+  /**
+   * Handle user name change
+   * @param e User name string
+   */
+  public handleNameChange(e: string | null): void {
+    let error: string | false;
+    error = helpers.validateName(e);
     this.setState(
       produce(this.state, (draft) => {
         draft.displayName = e;
+        draft.errors = error ? error : null;
+        draft.nameValidate = error ? false : true;
+      }),
+    );
+  }
+
+  /**
+   * Handle password change
+   * @param e Original password string
+   */
+  public handlePasswordChange(e: string | null): void {
+    let error: string | false;
+    // Validate password
+    error = helpers.validatePassword(e);
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.password = e;
+        draft.errors = error ? error : null;
+        draft.passwordValidate = error ? false : true;
+      }),
+    );
+  }
+
+  /**
+   * Handle change of confirmed password
+   * @param e Confirm password string
+   */
+  public handlePasswordConfirmChange(e: string | null): void {
+    const {password} = this.state;
+    const match = [password].includes(e);
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.passwordConfirm = e;
+        draft.errors = !match ? "Password mismatch" : null;
+        draft.passwordMatch = match;
       }),
     );
   }

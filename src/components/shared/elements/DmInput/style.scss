@@ -1,19 +1,55 @@
 @import "../../../../scss/vars.scss";
 
+.dm-input-container {
+  display: inline-block;
+  background: #e6e6e6;
+  margin: 7px 0;
+  text-align: center;
+  position: relative;
+  width: 100%;
+}
+
 .dm-input {
   border: 0;
   width: 100%;
   color: #403866;
   font-size: 14px;
   font-weight: bold;
-  display: inline-block;
-  padding: $element-padding;
   background: #e6e6e6;
-  margin: 7px 0;
-  cursor: pointer;
-  text-align: center;
+  min-height: 44px;
+  padding-left: 14px;
+  line-height: 0;
+  //border: 1px solid #e1e1e1;
 }
 
 .dm-input::placeholder {
   color: #999;
+}
+
+.dm-input:focus {
+  outline: none !important;
+  border: 0;
+  box-shadow: 0 0 10px #e1e1e1;
+}
+
+.dm-input-checker {
+  top: 0;
+  right: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 100%;
+  background-color: rgba($color: #fff, $alpha: 0.3);
+  font-size: 28px;
+  color: #555;
+}
+
+.dm-input-checker__green {
+  background: #59d263;
+}
+
+.dm-input-checker__red {
+  background: #d25959;
 }

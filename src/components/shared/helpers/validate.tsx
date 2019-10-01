@@ -13,8 +13,8 @@ export const validateEmail = (email: string | null): boolean => {
  * Validate password
  * @param password Input password
  */
-export const validatePassword = (password: string): string | false => {
-  if (password.length < 6) {
+export const validatePassword = (password: string | null): string | false => {
+  if (password && password.length < 6) {
     return "Password minimum 6 symbols";
   }
   return false;
@@ -24,8 +24,8 @@ export const validatePassword = (password: string): string | false => {
  * Validate user name
  * @param displayName Input user name
  */
-export const validateName = (displayName: string): string | false => {
-  if (displayName.length < 6) {
+export const validateName = (displayName: string | null): string | false => {
+  if (displayName && displayName.length < 6) {
     return "Name minimal 6 symbols length";
   }
   return false;
