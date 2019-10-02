@@ -1,11 +1,12 @@
 import React from "react";
 import DmButton from "../../../shared/elements/DmButton";
 import { MdClear, MdDone } from "react-icons/md";
+import "./style.scss";
 
 export const ConfirmDialogWidget = (props: any) => {
   return (
     <div>
-      <div className="text-center">
+      <div className="confirm-dialog-widget__text">
         {props.text}
       </div>
       <div className="profile-flex">

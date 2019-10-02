@@ -3,7 +3,6 @@
 .dm-button {
   min-height: 44px;
   display: flex;
-  border: 0;
   text-align: center;
   width: 100%;
   font-size: 14px;
@@ -17,11 +16,16 @@
   padding: 0;
   margin: 0;
   line-height: 0;
+  border: 0;
 }
 
-.dm-button-icon {
+.dm-button__icon {
   height: 100%;
   font-size: 1.7em;
+}
+
+.dm-button__text {
+  padding-left: 7px;
 }
 
 .dm-button-color-aquamarine {

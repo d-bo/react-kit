@@ -180,9 +180,9 @@ implements ISigninProto {
               {!firebaseUser &&
               <div style={style}>
 
-                <DmInput type="text" value={email}
+                <DmInput type="text" value={email} className="input-margin-top"
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
-                <DmInput type="password" value={password}
+                <DmInput type="password" value={password} className="input-margin-top"
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
                 {networkStatus === "online" &&
@@ -207,26 +207,24 @@ implements ISigninProto {
                 <div className="margin-top custom-a">
                   <table className="full-width"><tbody><tr>
                   <td style={{textAlign: "left"}}>
-                      <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
+                    <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
                   </td>
                   <td style={{textAlign: "right"}}>
-                      <Link to="/auth/register">REGISTER</Link>
+                    <Link to="/auth/register">REGISTER</Link>
                   </td>
                   </tr></tbody></table>
                 </div>
 
                 {networkStatus === "online" &&
-                  <div className="margin-top custom-a">
-                    <table className="full-width"><tbody><tr>
-                    <td>
-                      <DmButton icon={<FaGithub />} disabled={loading}
+                  <div className="signin-flex-box margin-top">
+                    <div className="signin-flex-item">
+                      <DmButton icon={<FaGithub />} text="Github" disabled={loading}
                         onClick={this.handleGithub} className="button-grey" />
-                    </td>
-                    <td>
-                      <DmButton icon={<FaGoogle />} disabled={loading}
+                    </div>
+                    <div className="signin-flex-item">
+                      <DmButton icon={<FaGoogle />} text="Google" disabled={loading}
                         onClick={this.handleGithub} className="button-grey" />
-                    </td>
-                    </tr></tbody></table>
+                    </div>
                   </div>
                 }
 

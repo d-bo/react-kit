@@ -400,6 +400,7 @@ implements IProfileProto {
                                 }),
                               );
                             }} />
+                            <p></p>
                         </>
                       }
                       {!showExitSessionDialog &&
@@ -415,6 +416,7 @@ implements IProfileProto {
                           }}
                           icon={<FaSignOutAlt/>} className="dm-button-margin-top" />
                       }
+                      <div className="profile-delete-account__block">
                       {showDeleteAccountDialog &&
                         <>
                           <p></p>
@@ -454,8 +456,9 @@ implements IProfileProto {
                             );
                           }}
                           icon={<MdDelete/>}
-                          className="dm-button-color-peru dm-button-margin-top" />
+                          className="dm-button-color-peru dm-button-margin-top profile-delete-account__button" />
                       }
+                      </div>
                     </>
                   }
 

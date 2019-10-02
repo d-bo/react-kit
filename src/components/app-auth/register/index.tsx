@@ -205,25 +205,25 @@ implements IRegisterProto {
 
                 <DmInput type="text" value={displayName}
                   placeholder="NAME" onChange={this.handleNameChange}
-                  rightWidget={nameValidate} />
+                  rightWidget={nameValidate} className="input-margin-top" />
 
                 <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange}
-                  rightWidget={emailValidate} />
+                  rightWidget={emailValidate} className="input-margin-top" />
 
                 <DmInput
                     type="password"
                     value={password}
                     onChange={this.handlePasswordChange}
                     placeholder="PASSWORD"
-                    rightWidget={passwordValidate} />
+                    rightWidget={passwordValidate} className="input-margin-top" />
 
                 <DmInput
                     type="password"
                     value={passwordConfirm}
                     onChange={this.handlePasswordConfirmChange}
                     placeholder="CONFIRM PASSWORD"
-                    rightWidget={passwordMatch} />
+                    rightWidget={passwordMatch} className="input-margin-top" />
 
                 {errors &&
                   <div className="error-message round-border-5px">{errors}</div>

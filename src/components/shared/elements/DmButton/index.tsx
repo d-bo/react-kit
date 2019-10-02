@@ -22,10 +22,14 @@ const DmButton = (props: IDMButtonProps) =>
         onKeyPress={props.onKeyPress} style={props.style && props.style}>
 
       {props.icon &&
-        <span className="dm-button-icon">{props.icon}</span>
+        <span className="dm-button__icon">{props.icon}</span>
       }
 
-      {props.loading ? <img src="/img/loading-button.gif" alt="" /> : props.text}
+      {props.text &&
+        <span className="dm-button__text">
+          {props.loading ? <img src="/img/loading-button.gif" alt="" /> : props.text}
+        </span>
+      }
 
       </div>
     }
