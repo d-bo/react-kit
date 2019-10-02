@@ -2,7 +2,6 @@ import React from "react";
 
 const ReCaptchav2 = (props: any) => {
   const containerId = "recaptcha-container";
-  // TODO: extend other components (withFirebaseAuth)
   if (props.hasOwnProperty("setRef")) {
     props.setRef(containerId);
   }

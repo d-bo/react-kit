@@ -117,15 +117,15 @@ implements IWidgetProto {
               }
 
               <div className="flex-buttons-row">
-                <DmButton text={<FaEnvelope />}
+                <DmButton icon={<FaEnvelope />}
                   onClick={() => null}
-                  className="margin-top button-grey flex-button-item" />
-                <DmButton text={<FaRegStar />}
+                  className="margin-top flex-button-item button-grey" />
+                <DmButton icon={<FaRegStar />}
                   onClick={() => null}
-                  className="margin-top button-grey flex-button-item" />
-                <DmButton text={<FaCommentAlt />}
+                  className="margin-top flex-button-item button-grey" />
+                <DmButton icon={<FaCommentAlt />}
                   onClick={() => null}
-                  className="margin-top button-grey flex-button-item" />
+                  className="margin-top flex-button-item button-grey" />
               </div>
 
             </div>

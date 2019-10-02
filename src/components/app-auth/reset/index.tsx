@@ -162,7 +162,7 @@ implements IResetProto {
                   Enter your email address. We will send you reset link.
                   </div>
 
-                  <DmInput type="text" value={email}
+                  <DmInput type="text" value={email} className="input-margin-top"
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
 
                 {networkStatus === "online" &&

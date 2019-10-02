@@ -6,6 +6,7 @@ interface IWidgetProps {
   className?: any;
   icon?: any;
   title?: any;
+  titleIcon?: any;
   children?: any;
   desc?: any;
   shadow?: string;
@@ -17,8 +18,8 @@ const DmFolderWidget = (props: IWidgetProps) =>
     <div className="folder-center">
       {props.title &&
         <div className="folder-right round-border-5px-only-top">
-          {props.icon &&
-            <span>{props.icon}</span>
+          {props.titleIcon &&
+            <span>{props.titleIcon} </span>
           }
           <b>{props.title}</b>
         </div>
