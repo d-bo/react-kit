@@ -16,7 +16,6 @@ import { connect } from "react-redux";
 import { IPropsGlobal } from "../../shared/Interfaces";
 import { withFirebaseAuth, IFirebaseAuth } from "../../shared/hocs/FirebaseAuth";
 import * as helpers from "../../shared/helpers/validate";
-import { MdClear, MdDone } from "react-icons/md";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 

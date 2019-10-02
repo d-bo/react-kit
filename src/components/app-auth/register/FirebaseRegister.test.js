@@ -26,6 +26,6 @@ describe("Register is rendering", () => {
       );
     expect(wrapper.find(".row")).toHaveLength(2);
     expect(wrapper.find(DmFolderWidget)).toHaveLength(1);
-    expect(wrapper.find(DmInput)).toHaveLength(3);
+    expect(wrapper.find(DmInput)).toHaveLength(4);
   });
 });
