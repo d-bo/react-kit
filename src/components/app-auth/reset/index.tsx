@@ -150,10 +150,9 @@ implements IResetProto {
         <div className="row">
           <div className="col-md-3 col-sm-2 col-lg-4"></div>
           <div className="col-md-6 col-sm-8 col-lg-4">
-          <div className="vertical-center">
+          <div className="flex-vertical-center">
             <DmFolderWidget title="Reset password" className="fade-in-fx"
               shadow="soft-left-bottom-shadow">
-              <p></p>
               {!firebaseUser &&
               <div style={style}>
                 {!resetSent &&

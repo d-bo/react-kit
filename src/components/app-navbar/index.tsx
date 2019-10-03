@@ -15,7 +15,7 @@ import { toggleSidebar, setProfileImgUrl, networkStatusType } from "../../redux/
 import produce from "immer";
 import { MdSignalWifiOff } from "react-icons/md";
 import { IPropsGlobal } from "../shared/Interfaces";
-import { withFirebaseAuth, IErrorArgs, ICaptchaHooks } from "../shared/hocs/FirebaseAuth";
+import { withFirebaseAuth, IErrorArgs, IFirebaseAuth } from "../shared/hocs/FirebaseAuth";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => {
@@ -25,12 +25,11 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-interface INavbarProps extends IPropsGlobal {
+interface INavbarProps extends IPropsGlobal, IFirebaseAuth {
   profileImgUrl?: string | null;
   setProfileImgUrl?: any;
   sidebar?: boolean;
   handleToggleSidebar?: any;
-  firebaseLogOut(afterLogOut: ICaptchaHooks["afterLogOut"], onError: ICaptchaHooks["onError"]): void;
 }
 
 interface INavbarState {
@@ -80,9 +79,9 @@ implements INavbarProto {
       setProfileImgUrl(null);
       history.push("/auth/signin");
     };
-    const onError = (error: IErrorArgs) => {
+    const onError = (error: string) => {
       if (error.hasOwnProperty("message")) {
-        const errorMessage = error.message;
+        const errorMessage = error;
         this.setState(
           produce(this.state, (draft) => {
             draft.errors = errorMessage;
@@ -143,15 +142,9 @@ implements INavbarProto {
 
                 <div className="col-sm-4 navbar-mobile-disabled">
                   {!firebaseUser &&
-                    <table style={{width: "100%"}}>
-                      <tbody><tr>
-                        <td style={{width: "50%"}}>
-                        <DmButton text="REGISTER"
-                            onClick={() => history.push("/auth/register")} />
-                        </td>
-                        <td style={{width: "50%"}}></td>
-                      </tr></tbody>
-                    </table>
+                    <DmButton text="REGISTER"
+                      onClick={() => history.push("/auth/register")}
+                      className="navbar-button"/>
                   }
                 </div>
 
@@ -206,10 +199,10 @@ implements INavbarProto {
                           </div>
                         }
                       </div>
-                      <div className="dm-button-flex-item">
+                      <div>
                         <DmButton text="SIGN IN" loading={loading}
                           onClick={() => history.push("/profile")}
-                          className="dm-button-outlined" />
+                          className="dm-button-outlined navbar-button" />
                       </div>
                     </div>
                   }

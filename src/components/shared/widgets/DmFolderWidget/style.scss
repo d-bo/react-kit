@@ -1,16 +1,15 @@
-@import "../../../../scss/vars.scss";
+@import "../../../../scss/vars";
 
 .folder-right {
   font-size: 20px;
   display: inline-block;
-  padding: 7px 14px;
-  background:$bg-widget;
+  padding: $margin / 2 $margin;
+  background: $bg-widget;
   color: #555;
-  border: 1px solid $widget-border;
   border-bottom: 0;
 }
 
-.folder-center {
+.dmfolder-widget-folder__text {
   width: 100%;
   text-align: left;
   margin-bottom: -1px;
@@ -29,9 +28,18 @@
   border-radius: 0 0 5px 5px;
 }
 
-#dmfolder-widget {
+.dmfolder-widget {
   p {
     font-size: 14px;
     color: #666;
   }
+}
+
+.dmfolder-widget__body {
+  padding: $margin;
+}
+
+.dmfolder-widget__outline {
+	background: $bg-widget;
+  color: #555;
 }

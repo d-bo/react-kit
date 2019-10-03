@@ -174,13 +174,13 @@ implements ISigninProto {
           <div className="col-md-3 col-sm-2 col-lg-4"></div>
           <div className="col-md-6 col-sm-8 col-lg-4">
 
-          <div className="vertical-center">
+          <div className="flex-vertical-center">
             <DmFolderWidget title="Sign In" className="fade-in-fx"
               shadow="soft-left-bottom-shadow">
               {!firebaseUser &&
               <div style={style}>
 
-                <DmInput type="text" value={email} className="input-margin-top"
+                <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
                 <DmInput type="password" value={password} className="input-margin-top"
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />

@@ -20,7 +20,7 @@ const Sidebar = (props: ISidebar) => {
       className={`${sidebarStatus ? "sidebar-opened" : "sidebar-closed"}`}
       onClick={onClick} />
     <div id="navbar-sidebar" onClick={onClick}
-      className={`animated slideInDown soft-left-top-shadow ${sidebarStatus ? "sidebar-opened" : "sidebar-closed"}`}>
+      className={`animated slideInDown faster soft-left-top-shadow ${sidebarStatus ? "sidebar-opened" : "sidebar-closed"}`}>
       <div className="navbar-sidebar-body">
         <nav>
           <Router history={history}>

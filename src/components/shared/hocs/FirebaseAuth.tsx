@@ -46,7 +46,6 @@ export interface IDeleteAccountHooks {
  * Firebase wrapper interface
  */
 export interface IFirebaseAuth {
-  signOut(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
   sendEmailVerification(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
   firebaseLogOut(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
   firebaseDeleteAccount(onSuccess?: (() => void) | {}, onError?: (e: string) => void): void;
@@ -68,7 +67,6 @@ export function withFirebaseAuth(WrappedComponent: any) {
       this.firebaseRecaptchaRender = this.firebaseRecaptchaRender.bind(this);
       this.firebaseLogOut = this.firebaseLogOut.bind(this);
       this.sendEmailVerification = this.sendEmailVerification.bind(this);
-      this.signOut = this.signOut.bind(this);
       this.firebaseDeleteAccount = this.firebaseDeleteAccount.bind(this);
       this.createUserWithEmailAndPassword = this.createUserWithEmailAndPassword.bind(this);
       this.firebaseGetUser = this.firebaseGetUser.bind(this);
@@ -174,23 +172,6 @@ export function withFirebaseAuth(WrappedComponent: any) {
     }
 
     /**
-     * End user session
-     * @param onSuccess Callback after signed out
-     * @param onError Error message callback
-     */
-    public signOut(onSuccess: (() => void) | {}, onError: (e: string) => void) {
-      firebase.auth().signOut().then(() => {
-        if (typeof onSuccess === "function") {
-          onSuccess();
-        }
-      }).catch((error) => {
-        if (onError) {
-          onError(error.message);
-        }
-      });
-    }
-
-    /**
      * Delete user account
      * @param onSuccess After user account deleted
      * @param onError Error message callback
@@ -227,7 +208,6 @@ export function withFirebaseAuth(WrappedComponent: any) {
         firebaseLogOut={this.firebaseLogOut}
         createUserWithEmailAndPassword={this.createUserWithEmailAndPassword}
         sendEmailVerification={this.sendEmailVerification}
-        signOut={this.signOut}
         firebaseDeleteAccount={this.firebaseDeleteAccount}
         firebaseGetUser={this.firebaseGetUser}
         {...this.props} />;

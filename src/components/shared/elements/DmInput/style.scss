@@ -1,14 +1,14 @@
-@import "../../../../scss/vars.scss";
+@import "../../../../scss/vars";
 
 .dm-input-container {
-  display: inline-block;
-  background: #e6e6e6;
+  display: inline-flex;
   text-align: center;
-  position: relative;
-  width: 100%;
+  justify-content: center;
+  align-items: center;
   padding: 0;
   margin: 0;
   line-height: 0;
+  width: 100%;
 }
 
 .dm-input {
@@ -19,7 +19,7 @@
   font-weight: bold;
   background: #e6e6e6;
   min-height: 44px;
-  padding-left: 14px;
+  padding-left: $margin;
   line-height: 0;
   //border: 1px solid #e1e1e1;
 }
@@ -34,18 +34,20 @@
   box-shadow: 0 0 10px #e1e1e1;
 }
 
+.dm-input-flex__item {
+  width: 100%;
+}
+
+.input-margin-top {
+  margin-top: $margin;
+}
+
 .dm-input-checker {
-  top: 0;
-  right: 0;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 50px;
-  height: 100%;
-  background-color: rgba($color: #fff, $alpha: 0.3);
+  min-width: 44px;
+  min-height: 44px;
+  background-color: rgba($color: #000000, $alpha: 0.15);
   font-size: 28px;
-  color: #555;
+  color: #fff;
 }
 
 .dm-input-checker__green {
@@ -54,8 +56,4 @@
 
 .dm-input-checker__red {
   background: #d25959;
-}
-
-.input-margin-top {
-  margin-top: 10px;
 }

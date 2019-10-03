@@ -26,7 +26,7 @@ const DmButton = (props: IDMButtonProps) =>
       }
 
       {props.text &&
-        <span className="dm-button__text">
+        <span className={props.icon && "dm-button-text__margin"}>
           {props.loading ? <img src="/img/loading-button.gif" alt="" /> : props.text}
         </span>
       }

@@ -1,4 +1,5 @@
 import React from "react";
+import "./style.scss";
 
 const ReCaptchav2 = (props: any) => {
   const containerId = "recaptcha-container";
@@ -7,8 +8,7 @@ const ReCaptchav2 = (props: any) => {
   }
   return (
     <>
-      <p></p>
-      <div className="text-center">
+      <div className="recaptcha-block text-center">
         <div style={{display: "inline-block"}} id={containerId}></div>
       </div>
     </>

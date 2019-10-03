@@ -197,70 +197,67 @@ implements IRegisterProto {
           <div className="col-md-3 col-sm-2 col-lg-4"></div>
           <div className="col-md-6 col-sm-8 col-lg-4">
 
-          <div className="vertical-center">
+          <div className="flex-vertical-center">
             <DmFolderWidget title="Register" className="fade-in-fx"
               shadow="soft-left-bottom-shadow">
               {!this.context.firebaseUser &&
-              <div style={style}>
+                <>
+                  <DmInput type="text" value={displayName}
+                    placeholder="NAME" onChange={this.handleNameChange}
+                    rightWidget={nameValidate} />
 
-                <DmInput type="text" value={displayName}
-                  placeholder="NAME" onChange={this.handleNameChange}
-                  rightWidget={nameValidate} className="input-margin-top" />
+                  <DmInput type="text" value={email}
+                    placeholder="EMAIL" onChange={this.handleEmailChange}
+                    rightWidget={emailValidate} className="input-margin-top" />
 
-                <DmInput type="text" value={email}
-                  placeholder="EMAIL" onChange={this.handleEmailChange}
-                  rightWidget={emailValidate} className="input-margin-top" />
+                  <DmInput
+                      type="password"
+                      value={password}
+                      onChange={this.handlePasswordChange}
+                      placeholder="PASSWORD"
+                      rightWidget={passwordValidate} className="input-margin-top" />
 
-                <DmInput
-                    type="password"
-                    value={password}
-                    onChange={this.handlePasswordChange}
-                    placeholder="PASSWORD"
-                    rightWidget={passwordValidate} className="input-margin-top" />
+                  <DmInput
+                      type="password"
+                      value={passwordConfirm}
+                      onChange={this.handlePasswordConfirmChange}
+                      placeholder="CONFIRM PASSWORD"
+                      rightWidget={passwordMatch} className="input-margin-top" />
 
-                <DmInput
-                    type="password"
-                    value={passwordConfirm}
-                    onChange={this.handlePasswordConfirmChange}
-                    placeholder="CONFIRM PASSWORD"
-                    rightWidget={passwordMatch} className="input-margin-top" />
+                  {errors &&
+                    <div className="error-message round-border-5px">{errors}</div>
+                  }
 
-                {errors &&
-                  <div className="error-message round-border-5px">{errors}</div>
-                }
+                  { // Captcha loading
+                    captchaLoading && networkStatus === "online" &&
+                    <>
+                      <LoadingRollingBlack/>
+                    </>
+                  }
 
-                { // Captcha loading
-                  captchaLoading && networkStatus === "online" &&
-                  <>
-                    <p></p>
-                    <LoadingRollingBlack/>
-                  </>
-                }
+                  {networkStatus === "online" &&
+                    <ReCaptchav2 setRef={this.setRecaptchaRef} />
+                  }
 
-                {networkStatus === "online" &&
-                  <ReCaptchav2 setRef={this.setRecaptchaRef} />
-                }
+                  { // Is captcha solved ?
+                    showRegisterButtonAfterCaptcha &&
+                      <DmButton text="Ok" loading={loading}
+                      onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter} />
+                  }
 
-                { // Is captcha solved ?
-                  showRegisterButtonAfterCaptcha &&
-                    <DmButton text="Ok" loading={loading}
-                    onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter} />
-                }
-
-                <Router history={history}>
-                  <div className="margin-top custom-a">
-                    <table className="full-width"><tbody><tr>
-                    <td style={{textAlign: "left"}}>
-                        <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
-                    </td>
-                    <td style={{textAlign: "right"}}>
-                        <Link to="/auth/signin">SIGN IN</Link>
-                    </td>
-                    </tr></tbody></table>
-                  </div>
-                </Router>
-
-              </div>
+                  <Router history={history}>
+                    <div className="margin-top custom-a">
+                      <table className="full-width"><tbody><tr>
+                      <td style={{textAlign: "left"}}>
+                          <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
+                      </td>
+                      <td style={{textAlign: "right"}}>
+                          <Link to="/auth/signin">SIGN IN</Link>
+                      </td>
+                      </tr></tbody></table>
+                    </div>
+                  </Router>
+                </>
               }
             </DmFolderWidget>
           </div>

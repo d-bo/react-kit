@@ -101,7 +101,7 @@ implements IHomeProto {
                                 shadow="soft-left-bottom-shadow"
                                 img_preview={item.img_preview}
                                 description={item.description}
-                                className="animated pulse">
+                                className="animated pulse faster">
                               </ProductCardMiniWidget>
                             </div>,
                           )
@@ -149,7 +149,7 @@ implements IHomeProto {
           {!items &&
             <div style={{textAlign: "center"}}>
               <div style={{display: "inline-block"}}>
-                <div className="vertical-center">
+                <div className="flex-vertical-center">
                   <LoadingRollingBlack className="home-loader animated fadeInDown" />
                 </div>
               </div>

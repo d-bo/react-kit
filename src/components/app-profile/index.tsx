@@ -25,7 +25,6 @@ import { ConfirmDialogWidget } from "../shared/widgets/ConfirmDIalogWidget";
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
   setProfileImgUrl: (imgUrl: string) => dispatch(setProfileImgUrl(imgUrl)),
-  setUserFirestoreData: (userData: object | null) => dispatch(setUserFirestoreData(userData)),
 });
 
 // IFirebaseAuth mixed with local props (withFirebaseAuth)
@@ -37,6 +36,12 @@ interface IProfileProps extends IPropsGlobal, IFirebaseAuth {
 
 interface IFileObject {
   name?: string;
+}
+
+interface IFirebaseUserData {
+  username: string;
+  city: string;
+  country: string;
 }
 
 interface IProfileState {
@@ -56,9 +61,13 @@ interface IProfileState {
   errors: string | null;
   errorsUploadPhoto: string | null;
   showDeleteAccountDialog: boolean;
+  firebaseUserData: null | IFirebaseUserData;
+  username: string | null;
+  updatingUser: boolean;
 }
 
 interface IProfileProto {
+  inputRef: any;
   [k: string]: any;
   [z: number]: any;
   handleCityChange(city: string | null): void;
@@ -78,13 +87,18 @@ class Profile
 extends React.PureComponent<IProfileProps, IProfileState>
 implements IProfileProto {
 
+  public inputRef: any;
+  protected firebaseGetUserDataListener: any;
+
   constructor(props: IProfileProps) {
     super(props);
+    this.inputRef = React.createRef();
     this.state = {
       city: null,
       country: null,
       errors: null,
       errorsUploadPhoto: null,
+      firebaseUserData: null,
       imgFile: null,
       loading: false,
       loadingExit: false,
@@ -95,7 +109,9 @@ implements IProfileProto {
       showExitSessionDialog: false,
       showSaveImgDialog: false,
       showUploadImgDialog: true,
+      updatingUser: false,
       uploadedImg: null,
+      username: null,
       verifyLinkSent: false,
     };
 
@@ -119,9 +135,35 @@ implements IProfileProto {
   }
 
   public componentDidMount(): void {
-    const {history: {push}} = this.props;
+    const {history: {push}, firebaseGetUser} = this.props;
     if (!this.context.firebaseUser) {
       push("/auth/signin");
+    }
+    // Read / listen user data update
+    const user = firebaseGetUser();
+    if (user) {
+      const collection = firebase.firestore().collection("users");
+      this.firebaseGetUserDataListener = collection
+        .doc(user.uid).onSnapshot((doc) => {
+          if (!doc.exists) {
+            // Must be updated at sign up
+            // Attempt to update user data if not exist
+          } else {
+            const data = doc.data();
+            this.setState({
+              city: data!.city,
+              country: data!.country,
+              username: data!.username,
+            });
+          }
+        });
+    }
+  }
+
+  public componentWillUnmount(): void {
+    // Clear user data listener
+    if (this.firebaseGetUserDataListener) {
+      this.firebaseGetUserDataListener();
     }
   }
 
@@ -151,7 +193,7 @@ implements IProfileProto {
   }
 
   public render(): JSX.Element {
-    const {userData, history: {push}} = this.props;
+    const {history: {push}} = this.props;
     const {firebaseUser, contextSetFirebaseUser} = this.context;
     const {
       showSaveImgDialog,
@@ -166,6 +208,7 @@ implements IProfileProto {
       errorsUploadPhoto,
       showDeleteAccountDialog,
       showExitSessionDialog,
+      updatingUser,
     } = this.state;
 
     return (
@@ -176,7 +219,7 @@ implements IProfileProto {
           <div className="row">
             <div className="col-md-3 col-sm-2 col-lg-4"></div>
             <div className="col-md-6 col-sm-8 col-lg-4">
-            <div className="vertical-center">
+            <div className="flex-vertical-center">
               <DmFolderWidget
                 title={firebaseUser.email}
                 titleIcon={<MdEmail/>}
@@ -185,9 +228,8 @@ implements IProfileProto {
                   <div className="action-message round-border-3px">
                     Please, check email verification link before getting started
                   </div>
-                  <p></p>
                   <DmButton text="EXIT" disabled={loadingExit} onClick={this.handleLogOut}
-                    style={{marginTop: "7px"}} />
+                    className="input-margin-top" />
               </DmFolderWidget>
             </div>
             </div>
@@ -201,9 +243,10 @@ implements IProfileProto {
             <div className="row">
 
               <div className="col-sm-4">
-                <DmFolderWidget title="Photo" titleIcon={<FaPortrait/>} className="fade-in-fx">
-
-                <p></p>
+                <DmFolderWidget
+                  title="Photo"
+                  titleIcon={<FaPortrait style={{color: "#d1d1d1"}}/>}
+                  className="fade-in-fx" shadow="soft-left-bottom-shadow">
 
                 {(firebaseUser && firebaseUser.hasOwnProperty("photoURL")) &&
                   <>
@@ -272,7 +315,6 @@ implements IProfileProto {
 
                 {loadingImg &&
                   <>
-                    <p></p>
                     <LoadingFacebookBlack/>
                   </>
                 }
@@ -280,7 +322,6 @@ implements IProfileProto {
                 { // Cancel image upload or save dialog
                   showSaveImgDialog &&
                   <>
-                    <p></p>
                     <ConfirmDialogWidget text={<>Are you sure you want to <b>upload image</b> ?</>}
                       onProceed={this.handleSaveImage} onCancel={this.cancelImgUpload} />
                   </>
@@ -289,7 +330,6 @@ implements IProfileProto {
                 { // Cancel drop image dialog
                   showDropImgDialog &&
                   <>
-                    <p></p>
                     <ConfirmDialogWidget text={<>Are you sure you want to <b>delete image</b> ?</>}
                       onProceed={this.handleDropImage} onCancel={this.cancelDropImg} />
                   </>
@@ -302,16 +342,18 @@ implements IProfileProto {
                 }
 
                 {showUploadImgDialog &&
-                  <table style={{width: "100%"}} className="animated pulse"><tbody><tr>
+                  <table style={{width: "100%"}}
+                    className="margin-top animated pulse faster">
+                    <tbody><tr>
                     <td style={{width: "80%"}}>
                       <input type="file" className="input-hidden"
                         onChange={this.handleImageChange} id="img-file-upload" />
                       <DmButton text="LOAD PROFILE IMAGE" disabled={loadingImg}
-                        className="margin-top" onClick={this.handleUploadClick} />
+                        onClick={this.handleUploadClick} />
                     </td>
                     <td style={{width: "80%"}}>
                       <DmButton text={<FaTrashAlt />}
-                        className="margin-top button-transparent"
+                        className="button-transparent"
                         onClick={this.handleDropImageDialog} />
                     </td>
                   </tr></tbody></table>
@@ -321,7 +363,10 @@ implements IProfileProto {
               </div>
 
               <div className="col-sm-4">
-                <DmFolderWidget title="Skills" titleIcon={<FaRegIdCard/>} className="fade-in-fx">
+                <DmFolderWidget
+                  title="Skills"
+                  titleIcon={<FaRegIdCard style={{color: "#d1d1d1"}}/>}
+                  className="fade-in-fx" shadow="soft-left-bottom-shadow">
                     Rizzle - Serenity <b>[Dispatch Recordings]</b><br/>
                     Kasra - Alburz <b>[Critical Music]</b><br/>
                     Skeptical - Mechanism <b>[Exit Records]</b><br/>
@@ -338,51 +383,73 @@ implements IProfileProto {
               </div>
 
               <div className="col-sm-4">
-                <DmFolderWidget title="Settings" titleIcon={<MdSettings/>} className="fade-in-fx">
+                <DmFolderWidget
+                  title="Settings"
+                  titleIcon={<MdSettings style={{color: "#d1d1d1"}}/>}
+                  className="fade-in-fx" shadow="soft-left-bottom-shadow">
 
                   <p></p>
 
-                  <table style={{width: "100%"}}><tbody><tr>
+                  <div className="profile-flex profile-flex-column">
+                    <div>
+                      Profile name:
+                    </div>
+                    <div>
+                      <DmInput type="text"
+                        value={this.state.username} ref={this.inputRef}
+                        placeholder="Enter your nickname ..."
+                        onChange={(e: any) => this.setState({username: e})} />
+                    </div>
+                  </div>
+
+                  <table style={{width: "100%"}} className="margin-top"><tbody><tr>
                   <td>
-                    <div style={{textAlign: "center"}}>
-                      <b>Country</b>
+                    <div>
+                      Country:
                     </div>
                     <DmInput type="text"
-                      value={userData ? userData.country : ""}
-                      placeholder="Enter your city ..." onChange={this.handleCountryChange} />
+                      value={this.state.country}
+                      placeholder="Enter your city ..."
+                      onChange={(e: any) => this.setState({country: e})} />
                   </td>
                   <td>
-                    <div style={{textAlign: "center"}}>
-                      <b>City</b>
+                    <div>
+                      City:
                     </div>
                     <DmInput type="text"
-                      value={userData ? userData.city : ""}
-                      placeholder="Enter your city ..." onChange={this.handleCityChange} />
+                      value={this.state.city}
+                      placeholder="Enter your city ..."
+                      onChange={(e: any) => this.setState({city: e})} />
                   </td>
                   </tr></tbody></table>
 
                   {firebaseUser &&
                     <>
-                      <p></p>
-
                       {errors &&
                         <div className="error-message round-border-5px">
                           {errors}
                         </div>
                       }
 
-                      <DmButton
-                        icon={<MdDone/>}
-                        disabled={loading}
-                        onClick={this.handleUpdateUser}
-                        className="dm-button-color-grey dm-button-margin-top" />
+                      {updatingUser &&
+                        <>
+                          <LoadingFacebookBlack/>
+                        </>
+                      }
+
+                      {!updatingUser &&
+                        <DmButton
+                          icon={<MdDone/>}
+                          loading={loading}
+                          onClick={this.handleUpdateUser}
+                          className="button-grey margin-top-half" />
+                      }
 
                       {showExitSessionDialog &&
                         <>
-                          <p></p>
                           <ConfirmDialogWidget text={<>Are you sure you want to <b>exit</b> ?</>}
                             onProceed={() => {
-                              this.props.signOut(() => {
+                              this.props.firebaseLogOut(() => {
                                 contextSetFirebaseUser(null);
                                 push("/auth/signin");
                               }, (error: string) => {
@@ -400,7 +467,6 @@ implements IProfileProto {
                                 }),
                               );
                             }} />
-                            <p></p>
                         </>
                       }
                       {!showExitSessionDialog &&
@@ -414,12 +480,11 @@ implements IProfileProto {
                               }),
                             );
                           }}
-                          icon={<FaSignOutAlt/>} className="dm-button-margin-top" />
+                          className="margin-top-double" />
                       }
                       <div className="profile-delete-account__block">
                       {showDeleteAccountDialog &&
                         <>
-                          <p></p>
                           <ConfirmDialogWidget
                             text={<>Are you sure you want to <b>delete account</b> ?</>}
                             onProceed={() => {
@@ -444,7 +509,7 @@ implements IProfileProto {
                             }} />
                         </>
                       }
-                      {!showDeleteAccountDialog &&
+                      {!showDeleteAccountDialog && !showExitSessionDialog &&
                         <DmButton
                           text="Delete account"
                           disabled={loadingExit}
@@ -456,7 +521,7 @@ implements IProfileProto {
                             );
                           }}
                           icon={<MdDelete/>}
-                          className="dm-button-color-peru dm-button-margin-top profile-delete-account__button" />
+                          className="dm-button-color-peru profile-delete-account__button" />
                       }
                       </div>
                     </>
@@ -534,17 +599,16 @@ implements IProfileProto {
   // Save additional user data to firestore
   public handleUpdateUser(): void {
     const self = this;
-    const {setUserFirestoreData} = this.props;
-    const {city, country} = this.state;
-    const currentUser = firebase.auth().currentUser;
+    const {city, country, username} = this.state;
+    const currentUser = this.props.firebaseGetUser();
     const userDataTemp = {
       city,
       country,
+      username,
     };
-    setUserFirestoreData(userDataTemp);
     this.setState(
       produce(self.state, (draft) => {
-        draft.loading = true;
+        draft.updatingUser = true;
       }),
     );
     if (currentUser != null) {
@@ -553,14 +617,14 @@ implements IProfileProto {
         .set(userDataTemp, {merge: true}).then((e) => {
           self.setState(
             produce(self.state, (draft) => {
-              draft.loading = false;
+              draft.updatingUser = false;
               draft.errors = null;
             }),
           );
         }).catch((error) => {
           self.setState(
             produce(self.state, (draft) => {
-              draft.loading = false;
+              draft.updatingUser = false;
               draft.errors = error.message;
             }),
           );
@@ -785,8 +849,7 @@ implements IProfileProto {
 
 Profile.contextType = FirebaseUserContext;
 
-export default withFirebaseAuth(
-  withRouter(
-      connect(mapStateToProps, mapDispatchToProps)(Profile) as any,
-    ),
+export default withFirebaseAuth(withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(Profile) as any,
+  ),
 );

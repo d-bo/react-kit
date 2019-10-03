@@ -1,11 +1,11 @@
-@import "../../scss/vars.scss";
+@import "../../scss/vars";
 
 $pr : "navbar";
 
 .img-#{$pr} {
   width: 40px;
   height: 40px;
-  margin: 0 7px 0 7px;
+  margin: 0 $margin;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -19,12 +19,15 @@ $pr : "navbar";
 }
 
 .#{$pr}-body {
-  padding: 10px;
-  background: $bg-widget;
+  padding: $margin / 2 0;
   color: $app-color;
   position: fixed;
   width: 100%;
   z-index: 99999;
+}
+
+.#{$pr}-button {
+  width: 200px !important;
 }
 
 ##{$pr}-sidebar-button {
@@ -73,7 +76,7 @@ $pr : "navbar";
 }
 
 .#{$pr}-networkStatus-icon {
-  padding-right: 30px;
+  padding-right: $margin * 2;
   display: inline-block;
   color: #c0c0c0;
   font-size: 28px !important;

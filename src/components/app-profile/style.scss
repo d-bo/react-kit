@@ -1,3 +1,5 @@
+@import "../../scss/vars";
+
 .profile-img {
 	max-width: 100%;
 	max-height: 300px;
@@ -32,8 +34,12 @@
 	justify-content: center;
 }
 
+.profile-flex-column {
+	flex-direction: column;
+}
+
 .profile-delete-account__block {
-	margin-top: 60px;
+	margin-top: $margin * 2;
 }
 
 .profile-delete-account__button {

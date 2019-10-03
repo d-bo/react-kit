@@ -11,7 +11,7 @@ html {
 @for $i from 1 through 6 {
   h#{$i} {
     color: $app-color;
-    padding-left: 7px;
+    padding-left: $margin / 2;
   }
   main h#{$i}::before {
     content: "» ";
@@ -19,8 +19,9 @@ html {
 }
 
 body {
+  background: rgb(238,174,202);
+  background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
   font-family: $font-stack;
-  background: $bg-color;
 }
 
 .round-border-3px {
@@ -41,7 +42,7 @@ body {
   border-bottom-left-radius: 5px;
 }
 
-.vertical-center {
+.flex-vertical-center {
   min-height: 80vh;
   display: flex;
   flex-direction: column;
@@ -66,8 +67,9 @@ body {
 .error-message {
   background: $bg-error;
   color: #fff;
-  padding: 10px;
-  margin: 7px 0;
+  padding: $margin / 2;
+  margin: $margin 0;
+  min-height: 44px;
   text-align: center;
 }
 
@@ -75,7 +77,7 @@ body {
   background: $bg-color;
   color: $app-color;
   font-size: 16px;
-  padding: 7px;
+  padding: $margin / 2;
 }
 
 .login-body {
@@ -86,21 +88,33 @@ body {
 }
 
 .margin-top {
-  margin-top: 21px !important;
+  margin-top: $margin !important;
+}
+
+.margin-top-half {
+  margin-top: $margin / 2 !important;
+}
+
+.margin-top-double {
+  margin-top: $margin * 2 !important;
+}
+
+.margin-top-triple {
+  margin-top: $margin * 3 !important;
 }
 
 .margin-top-10 {
-  margin: 10px 0;
+  margin: $margin 0;
 }
 
 .margin-bottom {
-  margin-bottom: 21px !important;
+  margin-bottom: $margin !important;
 }
 
 .custom-a a {
-  border-radius:5px;
+  border-radius: 5px;
   background: #f0f0f0;
-  padding: 7px;
+  padding: $margin / 2 $margin;
   cursor: pointer;
   font-size: 12px;
   font-weight: bold;
@@ -120,7 +134,7 @@ body {
   width: 80px;
   height: 80px;
   object-fit: cover;
-  margin-right: 7px;
+  margin-right: $margin;
 }
 
 .round-border-50 {
@@ -163,8 +177,7 @@ body {
 }
 
 .body-page-color {
-  background: url(#{$active-block-background}) $bg-front-page-color center center;
-  padding-top: 14px;
+  padding-top: $margin;
 }
 
 .body-page-margin-top {

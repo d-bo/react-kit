@@ -13,24 +13,24 @@ interface IWidgetProps {
 }
 
 const DmFolderWidget = (props: IWidgetProps) =>
-  <div id="dmfolder-widget" className={`nice-border shadow-right-bottom
+  <div className={`dmfolder-widget nice-border shadow-right-bottom
    margin-top-10 ${props.shadow} ${props.className}`} style={props.style}>
-    <div className="folder-center">
+    <div className="dmfolder-widget-folder__text">
       {props.title &&
         <div className="folder-right round-border-5px-only-top">
           {props.titleIcon &&
-            <span>{props.titleIcon} </span>
+            <span>{props.titleIcon}&nbsp;</span>
           }
           <b>{props.title}</b>
         </div>
       }
     </div>
 
-    <div className="login-body">
+    <div className="dmfolder-widget__outline round-border-5px-right">
       {props.desc &&
         <div style={{fontSize: "10px", textAlign: "left", marginBottom: "10px"}}>{props.desc}</div>
       }
-      <div>
+      <div className="dmfolder-widget__body">
         {props.children}
       </div>
     </div>

@@ -1,15 +1,22 @@
 // Font
 $font-stack: 'Montserrat', sans-serif;
 
+// Global margin between blocks, elements
+$margin: 20px;
+
 // Color scheme
 $bg-color: #f8f8f8;
 $bg-front-page-color: #fdfdfd;
 $app-color: #555;
-$bg-widget: #fafafa;
+$bg-widget: rgba($color: #000000, $alpha: 0.15);
 $bg-error: #ff6161;
 $widget-border: #f7f7f7;
 
-// Button colors
+// Global element minimal height
+// Button, inputs, block messages, warnings
+$element-min-height: 44px;
+
+// Buttons
 $button-color-aquamarine: #59d2ba;
 $button-color-default: #5998d2;
 

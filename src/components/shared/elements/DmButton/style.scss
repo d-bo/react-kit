@@ -24,8 +24,8 @@
   font-size: 1.7em;
 }
 
-.dm-button__text {
-  padding-left: 7px;
+.dm-button-text__margin {
+  padding-left: $margin;
 }
 
 .dm-button-color-aquamarine {
@@ -90,6 +90,6 @@
 
 .dm-button-flex-item {
   width: 100%;
-  margin-left: 1px;
-  margin-right: 1px;
+  margin-left: $margin;
+  margin-right: $margin;
 }

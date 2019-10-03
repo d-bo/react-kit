@@ -10,14 +10,15 @@ interface IDmInputProps extends IPropsGlobal {
   type: any;
   value: any;
   placeholder?: any;
-  onChange?: any;
+  onChange?: null | any;
   className?: any;
   style?: any;
   rightWidget?: any;
+  maxlength?: number;
 }
 
 interface IDmInputState {
-  value: string;
+  value: string | null;
 }
 
 interface IDmInputProto {
@@ -28,10 +29,15 @@ class DmInput
 extends React.PureComponent<IDmInputProps, IDmInputState>
 implements IDmInputProto {
 
+  // Update state when props change
+  public static getDerivedStateFromProps(props: any) {
+    return {value: props.value};
+  }
+
   constructor(props: IDmInputProps) {
     super(props);
     this.state = {
-      value: props.value,
+      value: null,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -41,30 +47,34 @@ implements IDmInputProto {
     const {className, style, placeholder, type, rightWidget} = this.props;
     return (
       <div className={`dm-input-container round-border-5px ${className}`}>
-        <input type={type} onChange={this.handleChange}
-          value={value || ""} placeholder={placeholder}
-          style={style} className="dm-input round-border-5px" />
-          {rightWidget === null && typeof rightWidget === "object" &&
-            <div className="dm-input-checker round-border-5px-right"></div>
-          }
-          {typeof rightWidget !== "boolean" &&
-            <div className="dm-input-checker round-border-5px-right">{rightWidget}</div>
-          }
-          {typeof rightWidget === "boolean" &&
-            <div className={`dm-input-checker round-border-5px-right
-              ${rightWidget ? "dm-input-checker__green" : "dm-input-checker__red"}`}></div>
-          }
+        <div className="dm-input-flex__item">
+          <input maxLength={this.props.maxlength ? this.props.maxlength : 100} type={type}
+            onChange={this.handleChange} value={value || ""}
+            placeholder={placeholder}
+            style={style} className="dm-input round-border-5px-left" />
+        </div>
+        {typeof rightWidget !== "boolean" &&
+          <div className="dm-input-checker round-border-5px-right">{rightWidget}</div>
+        }
+        {typeof rightWidget === "boolean" &&
+          <div className={`dm-input-checker round-border-5px-right
+            ${rightWidget ? "dm-input-checker__green" : "dm-input-checker__red"}`}></div>
+        }
       </div>
     );
   }
 
   public handleChange(e: any): void {
+    const {onChange} = this.props;
     this.setState(
       produce(this.state, (draft) => {
         draft.value = e.target.value;
       }),
     );
-    this.props.onChange(e.target.value);
+    if (onChange) {
+      onChange(e.target.value);
+    }
+
   }
 }
 

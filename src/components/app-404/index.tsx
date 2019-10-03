@@ -5,7 +5,7 @@ const NotFound404: React.SFC = () => (
   <>
     <div style={{textAlign: "center"}}
       className="container-fluid fade-in-fx body-page-color">
-      <div className="vertical-center">
+      <div className="flex-vertical-center">
           <h1>Page not found</h1>
       </div>
     </div>
