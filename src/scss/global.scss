@@ -4,9 +4,7 @@
 @import "animate.css";
 @import "no-gutters";
 
-html {
-  //scroll-behavior: smooth;
-}
+html {}
 
 @for $i from 1 through 6 {
   h#{$i} {
