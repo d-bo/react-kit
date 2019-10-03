@@ -26,5 +26,5 @@ send_msg "
 <code>${TRAVIS_REPO_SLUG}:</code><b>${TRAVIS_BRANCH}</b>
 <code>Commit Msg:</code>
 <i>${TRAVIS_COMMIT_MESSAGE}</i>
-<a href=\"${TRAVIS_JOB_WEB_URL})\">[Job Log link]</a>
+<a href=\"${TRAVIS_JOB_WEB_URL}\">[Job Log link]</a>
 "

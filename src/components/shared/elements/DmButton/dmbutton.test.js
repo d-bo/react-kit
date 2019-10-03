@@ -9,6 +9,6 @@ describe("DmButton is rendering", () => {
     expect(wrapper).toExist();
     expect(wrapper.find(".dm-button")).toHaveLength(1);
     expect(wrapper.find(".dm-button__icon")).toHaveLength(1);
-    expect(wrapper.find(".dm-button__text")).toHaveLength(1);
+    expect(wrapper.find(".dm-button-text__margin")).toHaveLength(1);
   });
 });

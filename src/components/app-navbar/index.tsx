@@ -15,7 +15,7 @@ import { toggleSidebar, setProfileImgUrl, networkStatusType } from "../../redux/
 import produce from "immer";
 import { MdSignalWifiOff } from "react-icons/md";
 import { IPropsGlobal } from "../shared/Interfaces";
-import { withFirebaseAuth, IErrorArgs, IFirebaseAuth } from "../shared/hocs/FirebaseAuth";
+import { withFirebaseAuth, IFirebaseAuth } from "../shared/hocs/FirebaseAuth";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => {
@@ -106,7 +106,7 @@ implements INavbarProto {
     return (
       <header>
         <nav>
-          <div className="navbar-body soft-left-bottom-shadow fade-in-fx">
+          <div className="navbar-body fade-in-fx">
             <div className="container-fluid navbar">
               <div className="row">
 
