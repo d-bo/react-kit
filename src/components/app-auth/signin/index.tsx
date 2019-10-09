@@ -204,15 +204,13 @@ implements ISigninProto {
                   <div className="error-message round-border-5px">{errors}</div>
                 }
 
-                <div className="margin-top custom-a">
-                  <table className="full-width"><tbody><tr>
-                  <td style={{textAlign: "left"}}>
+                <div className="flex-space-between flex-button-link margin-top">
+                  <div>
                     <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
-                  </td>
-                  <td style={{textAlign: "right"}}>
+                  </div>
+                  <div>
                     <Link to="/auth/register">REGISTER</Link>
-                  </td>
-                  </tr></tbody></table>
+                  </div>
                 </div>
 
                 {networkStatus === "online" &&

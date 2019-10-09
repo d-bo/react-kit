@@ -191,15 +191,13 @@ implements IResetProto {
                   </>
                 }
                 <Router history={history}>
-                  <div className="margin-top custom-a">
-                    <table className="full-width"><tbody><tr>
-                    <td style={{textAlign: "left"}}>
+                  <div className="flex-space-between flex-button-link margin-top">
+                    <div>
                         <Link to="/auth/signin">SIGN IN</Link>
-                    </td>
-                    <td style={{textAlign: "right"}}>
+                    </div>
+                    <div>
                         <Link to="/auth/register">REGISTER</Link>
-                    </td>
-                    </tr></tbody></table>
+                    </div>
                   </div>
                 </Router>
               </div>

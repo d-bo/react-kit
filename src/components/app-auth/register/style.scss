@@ -19,18 +19,3 @@
 .register-green {
   color: green;
 }
-
-.register-flex-space-between {
-  display: flex;
-  align-content: center;
-  justify-content: space-between;
-}
-
-.register-link a {
-  border-radius: 5px;
-  background: #f0f0f0;
-  padding: $margin / 2 $margin;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: bold;
-}

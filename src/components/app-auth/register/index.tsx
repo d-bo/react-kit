@@ -246,7 +246,7 @@ implements IRegisterProto {
                   }
 
                   <Router history={history}>
-                    <div className="register-flex-space-between register-link margin-top">
+                    <div className="flex-space-between flex-button-link margin-top">
                       <div>
                         <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
                       </div>
