@@ -246,15 +246,13 @@ implements IRegisterProto {
                   }
 
                   <Router history={history}>
-                    <div className="margin-top custom-a">
-                      <table className="full-width"><tbody><tr>
-                      <td style={{textAlign: "left"}}>
-                          <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
-                      </td>
-                      <td style={{textAlign: "right"}}>
-                          <Link to="/auth/signin">SIGN IN</Link>
-                      </td>
-                      </tr></tbody></table>
+                    <div className="register-flex-space-between register-link margin-top">
+                      <div>
+                        <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
+                      </div>
+                      <div>
+                        <Link to="/auth/signin">SIGN IN</Link>
+                      </div>
                     </div>
                   </Router>
                 </>

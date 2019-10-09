@@ -109,15 +109,6 @@ body {
   margin-bottom: $margin !important;
 }
 
-.custom-a a {
-  border-radius: 5px;
-  background: #f0f0f0;
-  padding: $margin / 2 $margin;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: bold;
-}
-
 .slide-in-fx {
   animation: custom_slide_in 0.5s;
 }
