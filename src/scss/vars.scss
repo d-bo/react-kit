@@ -8,13 +8,15 @@ $margin: 20px;
 $bg-color: #f8f8f8;
 $bg-front-page-color: #fdfdfd;
 $app-color: #555;
-$bg-widget: rgba($color: #000000, $alpha: 0.15);
+$bg-widget: rgba($color: #000000, $alpha: 0.0);
 $bg-error: #ff6161;
 $widget-border: #f7f7f7;
+$input-bg: #ad76a0;
+$input-color: #fff;
 
 // Global element minimal height
 // Button, inputs, block messages, warnings
-$element-min-height: 44px;
+$element-min-height: 55px;
 
 // Buttons
 $button-color-aquamarine: #59d2ba;

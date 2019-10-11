@@ -8,7 +8,7 @@ import produce from "immer";
 import { connect } from "react-redux";
 import { hideSidebar, receiveNetworkStatus, networkStatusType } from "../../redux/actions";
 import { IPropsGlobal } from "../shared/Interfaces";
-import { LoadingRollingBlack, LoadingFacebookBlack } from "../shared/elements/Loader";
+import { LoadingRollingBlack } from "../shared/elements/Loader";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -153,7 +153,7 @@ implements IAppProto {
             <Navbar {...this.props} />
           }
             <Router history={history}>
-              <Suspense fallback={<LoadingFacebookBlack/>}>
+              <Suspense fallback="">
                 <Switch>
                   <Route path="/" exact>
                     <LazyComponents.HomeComponent/>

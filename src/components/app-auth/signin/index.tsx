@@ -1,6 +1,6 @@
 import "./style.scss";
 import "firebase/auth";
-import React, { Component } from "react";
+import React from "react";
 import DmButton from "../../shared/elements/DmButton";
 import DmInput from "../../shared/elements/DmInput";
 import { connect } from "react-redux";
@@ -175,14 +175,13 @@ implements ISigninProto {
           <div className="col-md-6 col-sm-8 col-lg-4">
 
           <div className="flex-vertical-center">
-            <DmFolderWidget title="Sign In" className="fade-in-fx"
-              shadow="soft-left-bottom-shadow">
+            <DmFolderWidget title="Sign In" className="fade-in-fx">
               {!firebaseUser &&
               <div style={style}>
 
                 <DmInput type="text" value={email}
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
-                <DmInput type="password" value={password} className="input-margin-top"
+                <DmInput type="password" value={password} className="input-margin-half-top"
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
                 {networkStatus === "online" &&

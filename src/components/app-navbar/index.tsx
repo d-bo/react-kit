@@ -11,7 +11,7 @@ import {
   FaPlay, FaFastForward,
 } from "react-icons/fa";
 import Sidebar from "../shared/widgets/Sidebar";
-import { toggleSidebar, setProfileImgUrl, networkStatusType } from "../../redux/actions";
+import { toggleSidebar, setProfileImgUrl } from "../../redux/actions";
 import produce from "immer";
 import { MdSignalWifiOff } from "react-icons/md";
 import { IPropsGlobal } from "../shared/Interfaces";

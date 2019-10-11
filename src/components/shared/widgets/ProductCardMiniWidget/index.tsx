@@ -96,7 +96,7 @@ implements IWidgetProto {
               <Modal open={modalIsOpen}
                 onClose={this.onCloseModal} blockScroll={false}
                 overlayId="product-modal-overlay" center>
-                <img src={img_preview} className="product-modal-image" />
+                <img src={img_preview} className="product-modal-image" alt="" />
               </Modal>
           }
 

@@ -1,7 +1,7 @@
 @import "../../../../scss/vars";
 
 .folder-right {
-  font-size: 20px;
+  font-size: 26px;
   display: inline-block;
   padding: $margin / 2 $margin;
   background: $bg-widget;
@@ -40,5 +40,5 @@
 
 .dmfolder-widget__outline {
 	background: $bg-widget;
-  color: #555;
+  color: #fff;
 }

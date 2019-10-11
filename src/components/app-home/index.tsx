@@ -98,7 +98,7 @@ implements IHomeProto {
                             <div className="col-sm-12 col-lg-6 col-md-12 col-xl-4" key={item.id}>
                               <ProductCardMiniWidget
                                 title={item.name}
-                                shadow="soft-left-bottom-shadow"
+                                 
                                 img_preview={item.img_preview}
                                 description={item.description}
                                 className="animated pulse faster">

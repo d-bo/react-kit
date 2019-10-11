@@ -43,16 +43,6 @@ const getInitState = () => {
   return initState;
 };
 
-// State to localStorage wrapper
-const storeState = (state: any) => {
-  const localAppCurrentUserID = localStorage.getItem("localAppCurrentUserID");
-  if (localAppCurrentUserID) {
-    const stateName = `localAppState${localAppCurrentUserID}`;
-    localStorage.setItem(stateName, JSON.stringify(state));
-  }
-  return state;
-};
-
 const firebaseAuth = (state = getInitState(), action: any) =>
   produce(state, (draft: any) => {
 

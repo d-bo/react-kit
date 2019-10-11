@@ -1,6 +1,5 @@
 import React from "react";
 import "./style.scss";
-import { FaRegWindowClose } from "react-icons/fa";
 import { Router } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { IPropsGlobal } from "../../Interfaces";

@@ -174,7 +174,7 @@ implements IRegisterProto {
   }
 
   public render(): JSX.Element {
-    const {style, history, networkStatus} = this.props;
+    const { history, networkStatus} = this.props;
     const {
       captchaLoading,
       displayName,
@@ -199,7 +199,7 @@ implements IRegisterProto {
 
           <div className="flex-vertical-center">
             <DmFolderWidget title="Register" className="fade-in-fx"
-              shadow="soft-left-bottom-shadow">
+               >
               {!this.context.firebaseUser &&
                 <>
                   <DmInput type="text" value={displayName}
@@ -208,21 +208,21 @@ implements IRegisterProto {
 
                   <DmInput type="text" value={email}
                     placeholder="EMAIL" onChange={this.handleEmailChange}
-                    rightWidget={emailValidate} className="input-margin-top" />
+                    rightWidget={emailValidate} className="input-margin-half-top" />
 
                   <DmInput
                       type="password"
                       value={password}
                       onChange={this.handlePasswordChange}
                       placeholder="PASSWORD"
-                      rightWidget={passwordValidate} className="input-margin-top" />
+                      rightWidget={passwordValidate} className="input-margin-half-top" />
 
                   <DmInput
                       type="password"
                       value={passwordConfirm}
                       onChange={this.handlePasswordConfirmChange}
                       placeholder="CONFIRM PASSWORD"
-                      rightWidget={passwordMatch} className="input-margin-top" />
+                      rightWidget={passwordMatch} className="input-margin-half-top" />
 
                   {errors &&
                     <div className="error-message round-border-5px">{errors}</div>

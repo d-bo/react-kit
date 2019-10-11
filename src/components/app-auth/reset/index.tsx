@@ -1,5 +1,5 @@
 import "./style.css";
-import React, { Component } from "react";
+import React from "react";
 import DmButton from "../../shared/elements/DmButton";
 import DmInput from "../../shared/elements/DmInput";
 import { connect } from "react-redux";
@@ -152,7 +152,7 @@ implements IResetProto {
           <div className="col-md-6 col-sm-8 col-lg-4">
           <div className="flex-vertical-center">
             <DmFolderWidget title="Reset password" className="fade-in-fx"
-              shadow="soft-left-bottom-shadow">
+               >
               {!firebaseUser &&
               <div style={style}>
                 {!resetSent &&
@@ -228,7 +228,7 @@ implements IResetProto {
     );
     firebase.auth().sendPasswordResetEmail(
         email as string,
-        {url: `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`},
+        {url: `${window.location.protocol}//${window.location.hostname}${(window.location.port ? `:${window.location.port}` : "")}`},
       ).then(() => {
       self.setState(
         produce(self.state, (draft) => {

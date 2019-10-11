@@ -5,11 +5,11 @@ import firebase from "firebase/app";
 import DmButton from "../shared/elements/DmButton";
 import DmInput from "../shared/elements/DmInput";
 import DmFolderWidget from "../shared/widgets/DmFolderWidget";
-import { setProfileImgUrl, setUserFirestoreData } from "../../redux/actions";
+import { setProfileImgUrl } from "../../redux/actions";
 import { MdDone, MdEmail, MdDelete, MdSettings } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FirebaseUserContext } from "../../contexts/FirebaseUserContext";
-import { FaTrashAlt, FaSignOutAlt, FaPortrait, FaRegIdCard } from "react-icons/fa";
+import { FaTrashAlt, FaPortrait, FaRegIdCard } from "react-icons/fa";
 import { withRouter } from "react-router";
 import Footer from "../app-footer";
 import produce from "immer";
@@ -67,7 +67,6 @@ interface IProfileState {
 }
 
 interface IProfileProto {
-  inputRef: any;
   [k: string]: any;
   [z: number]: any;
   handleCityChange(city: string | null): void;
@@ -87,12 +86,10 @@ class Profile
 extends React.PureComponent<IProfileProps, IProfileState>
 implements IProfileProto {
 
-  public inputRef: any;
   protected firebaseGetUserDataListener: any;
 
   constructor(props: IProfileProps) {
     super(props);
-    this.inputRef = React.createRef();
     this.state = {
       city: null,
       country: null,
@@ -224,7 +221,7 @@ implements IProfileProto {
                 title={firebaseUser.email}
                 titleIcon={<MdEmail/>}
                 className="fade-in-fx"
-                shadow="soft-left-bottom-shadow">
+                 >
                   <div className="action-message round-border-3px">
                     Please, check email verification link before getting started
                   </div>
@@ -246,7 +243,7 @@ implements IProfileProto {
                 <DmFolderWidget
                   title="Photo"
                   titleIcon={<FaPortrait style={{color: "#d1d1d1"}}/>}
-                  className="fade-in-fx" shadow="soft-left-bottom-shadow">
+                  className="fade-in-fx"  >
 
                 {(firebaseUser && firebaseUser.hasOwnProperty("photoURL")) &&
                   <>
@@ -261,7 +258,7 @@ implements IProfileProto {
                       <Modal open={modalIsOpen}
                         onClose={this.onCloseModal} blockScroll={false}
                         overlayId="profile-modal-overlay" modalId="profile-modal" center>
-                        <img src={firebaseUser.photoURL} className="profile-modal-image" />
+                        <img src={firebaseUser.photoURL} className="profile-modal-image" alt="" />
                       </Modal>
                     </>
                   }
@@ -277,7 +274,7 @@ implements IProfileProto {
                       <Modal open={modalIsOpen}
                         onClose={this.onCloseModal} blockScroll={false}
                         overlayId="profile-modal-overlay" modalId="profile-modal" center>
-                        <img src={uploadedImg as string} className="profile-modal-image" />
+                        <img src={uploadedImg as string} className="profile-modal-image" alt="" />
                       </Modal>
                     </>
                   }
@@ -306,7 +303,7 @@ implements IProfileProto {
                       <Modal open={modalIsOpen}
                         onClose={this.onCloseModal} blockScroll={false}
                         overlayId="profile-modal-overlay" modalId="profile-modal" center>
-                        <img src={uploadedImg as string} className="profile-modal-image" />
+                        <img src={uploadedImg as string} className="profile-modal-image" alt="" />
                       </Modal>
                     </>
                   }
@@ -366,7 +363,7 @@ implements IProfileProto {
                 <DmFolderWidget
                   title="Skills"
                   titleIcon={<FaRegIdCard style={{color: "#d1d1d1"}}/>}
-                  className="fade-in-fx" shadow="soft-left-bottom-shadow">
+                  className="fade-in-fx"  >
                     Rizzle - Serenity <b>[Dispatch Recordings]</b><br/>
                     Kasra - Alburz <b>[Critical Music]</b><br/>
                     Skeptical - Mechanism <b>[Exit Records]</b><br/>
@@ -386,7 +383,7 @@ implements IProfileProto {
                 <DmFolderWidget
                   title="Settings"
                   titleIcon={<MdSettings style={{color: "#d1d1d1"}}/>}
-                  className="fade-in-fx" shadow="soft-left-bottom-shadow">
+                  className="fade-in-fx"  >
 
                   <p></p>
 
@@ -396,7 +393,7 @@ implements IProfileProto {
                     </div>
                     <div>
                       <DmInput type="text"
-                        value={this.state.username} ref={this.inputRef}
+                        value={this.state.username}
                         placeholder="Enter your nickname ..."
                         onChange={(e: any) => this.setState({username: e})} />
                     </div>

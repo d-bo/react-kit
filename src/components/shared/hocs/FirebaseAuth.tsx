@@ -155,7 +155,7 @@ export function withFirebaseAuth(WrappedComponent: any) {
      */
     public sendEmailVerification(onSuccess: (() => void) | {} = {}, onError: (e: string) => void) {
       const currentUser = firebase.auth().currentUser;
-      const url = `${location.protocol}//${location.hostname}${(location.port ? `:${location.port}` : "")}`;
+      const url = `${window.location.protocol}//${window.location.hostname}${(window.location.port ? `:${window.location.port}` : "")}`;
       if (currentUser) {
         currentUser.sendEmailVerification({
           url,
