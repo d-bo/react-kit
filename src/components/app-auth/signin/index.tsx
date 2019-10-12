@@ -17,6 +17,7 @@ import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { IPropsGlobal } from "../../shared/Interfaces";
+import { validateEmail, validatePassword } from "../../shared/helpers/validate";
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -179,9 +180,9 @@ implements ISigninProto {
               {!firebaseUser &&
               <div style={style}>
 
-                <DmInput type="text" value={email}
+                <DmInput type="text" value={email} className="input-margin-top"
                   placeholder="EMAIL" onChange={this.handleEmailChange} />
-                <DmInput type="password" value={password}
+                <DmInput type="password" value={password} className="input-margin-top"
                   onChange={this.handlePasswordChange} placeholder="PASSWORD" />
 
                 {networkStatus === "online" &&
@@ -206,26 +207,24 @@ implements ISigninProto {
                 <div className="margin-top custom-a">
                   <table className="full-width"><tbody><tr>
                   <td style={{textAlign: "left"}}>
-                      <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
+                    <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
                   </td>
                   <td style={{textAlign: "right"}}>
-                      <Link to="/auth/register">REGISTER</Link>
+                    <Link to="/auth/register">REGISTER</Link>
                   </td>
                   </tr></tbody></table>
                 </div>
 
                 {networkStatus === "online" &&
-                  <div className="margin-top custom-a">
-                    <table className="full-width"><tbody><tr>
-                    <td>
-                      <DmButton text={<FaGithub />} disabled={loading}
+                  <div className="signin-flex-box margin-top">
+                    <div className="signin-flex-item">
+                      <DmButton icon={<FaGithub />} text="Github" disabled={loading}
                         onClick={this.handleGithub} className="button-grey" />
-                    </td>
-                    <td>
-                      <DmButton text={<FaGoogle />} disabled={loading}
+                    </div>
+                    <div className="signin-flex-item">
+                      <DmButton icon={<FaGoogle />} text="Google" disabled={loading}
                         onClick={this.handleGithub} className="button-grey" />
-                    </td>
-                    </tr></tbody></table>
+                    </div>
                   </div>
                 }
 
@@ -243,33 +242,35 @@ implements ISigninProto {
     );
   }
 
+  public setError(e: string): void {
+    this.setState(
+      produce(this.state, (draft) => {
+        draft.errors = e;
+        draft.loading = false;
+      }),
+    );
+  }
+
   public handleSignIn(): void {
-    const {contextSetFirebaseUser} = this.context;
+    let error: string | false;  // error message
+    const {contextSetFirebaseUser} = this.context;  // react context API
     if (this.state.loading) {
       return;
     }
     const self = this;
     const {password, email} = this.state;
     const {history} = this.props;
+
     // Validate email
-    const re = /\S+@\S+\.\S+/;
-    if (!re.test(this.state.email as string)) {
-      this.setState(
-        produce(this.state, (draft) => {
-          draft.errors = "Incorrect email";
-          draft.loading = false;
-        }),
-      );
+    if (!validateEmail(email)) {
+      this.setError("Incorrect email");
       return;
     }
+
     // Validate password
-    if (password && password.length < 6) {
-      this.setState(
-        produce(this.state, (draft) => {
-          draft.errors = "Password min 6 symbols length";
-          draft.loading = false;
-        }),
-      );
+    error = validatePassword(password as string);
+    if (error) {
+      this.setError(error);
       return;
     }
 
@@ -422,6 +423,10 @@ implements ISigninProto {
         }),
       );
     });
+  }
+
+  public componentWillUnmount() {
+    // TODO: stop captcha loading
   }
 }
 

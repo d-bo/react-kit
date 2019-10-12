@@ -147,8 +147,7 @@ implements INavbarProto {
                       <tbody><tr>
                         <td style={{width: "50%"}}>
                         <DmButton text="REGISTER"
-                            onClick={() => history.push("/auth/register")}
-                            style={{padding: "7px 0"}} />
+                            onClick={() => history.push("/auth/register")} />
                         </td>
                         <td style={{width: "50%"}}></td>
                       </tr></tbody>
@@ -196,25 +195,23 @@ implements INavbarProto {
                     </div>
                   }
                   {!firebaseUser &&
-                    <table style={{width: "100%"}}>
-                      <tbody><tr>
-                        <td style={{width: "50%"}}>
-                          {// Show network disconnect status
-                            networkStatus &&
-                            <div className="navbar-networkStatus-icon">
-                            {networkStatus === "offline" &&
-                              <MdSignalWifiOff/>
-                            }
-                            </div>
+                    <div className="dm-button-flex-row">
+                      <div className="dm-button-flex-item">
+                        {// Show network disconnect status
+                          networkStatus &&
+                          <div className="navbar-networkStatus-icon">
+                          {networkStatus === "offline" &&
+                            <MdSignalWifiOff/>
                           }
-                        </td>
-                        <td style={{width: "50%"}}>
-                          <DmButton text="SIGN IN" loading={loading}
-                            onClick={() => history.push("/profile")}
-                            theme="outlined" />
-                        </td>
-                      </tr></tbody>
-                    </table>
+                          </div>
+                        }
+                      </div>
+                      <div className="dm-button-flex-item">
+                        <DmButton text="SIGN IN" loading={loading}
+                          onClick={() => history.push("/profile")}
+                          className="dm-button-outlined" />
+                      </div>
+                    </div>
                   }
                   </div>
                 </div>

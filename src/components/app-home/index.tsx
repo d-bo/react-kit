@@ -130,17 +130,13 @@ implements IHomeProto {
                           desc="Тип загрузки: фронтальная, максимальная загрузка: 4кг,
                           отжим: 1000об/мин, класс стирки: A, класс отжима: B, дисплей, цвет: белый"
                           style={{textAlign: "center"}}>
-
                           <ButtonWidget />
-
                           <LazyLoadImage
                             src="/img/prod-1.jpg"
                             placeholderSrc="/img/no-image-slide.png"
                             effect="blur"
                             className="fit-in-cover-product round-border-3px" />
-
                           <h2 className="price">{<FaRegStar/>} 233 $</h2>
-
                         </DmFolderWidget>
                       </article>
                     </div>

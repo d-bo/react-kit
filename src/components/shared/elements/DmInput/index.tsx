@@ -13,6 +13,7 @@ interface IDmInputProps extends IPropsGlobal {
   onChange?: any;
   className?: any;
   style?: any;
+  rightWidget?: any;
 }
 
 interface IDmInputState {
@@ -37,14 +38,23 @@ implements IDmInputProto {
 
   public render() {
     const {value} = this.state;
-    const {className, style, placeholder, type} = this.props;
+    const {className, style, placeholder, type, rightWidget} = this.props;
     return (
-      <>
+      <div className={`dm-input-container round-border-5px ${className}`}>
         <input type={type} onChange={this.handleChange}
-          className={`dm-input round-border-5px ${className}`}
           value={value || ""} placeholder={placeholder}
-          style={style} />
-      </>
+          style={style} className="dm-input round-border-5px" />
+          {rightWidget === null && typeof rightWidget === "object" &&
+            <div className="dm-input-checker round-border-5px-right"></div>
+          }
+          {typeof rightWidget !== "boolean" &&
+            <div className="dm-input-checker round-border-5px-right">{rightWidget}</div>
+          }
+          {typeof rightWidget === "boolean" &&
+            <div className={`dm-input-checker round-border-5px-right
+              ${rightWidget ? "dm-input-checker__green" : "dm-input-checker__red"}`}></div>
+          }
+      </div>
     );
   }
 
