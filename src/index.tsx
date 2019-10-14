@@ -7,7 +7,7 @@ import "firebase/storage";
 import React from "react";
 import ReactDOM from "react-dom";
 import store from "./redux/stores/store";
-import App from "./components/app";
+import { MainApp } from "./components/app";
 import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";
 import * as serviceWorker from "./serviceWorker";
@@ -31,7 +31,7 @@ firebase.auth().onAuthStateChanged((firebaseUser) => {
   }
   ReactDOM.render(
     <Provider store={store}>
-      <App history={history} firebaseUser={firebaseUser} />
+      <MainApp history={history} firebaseUser={firebaseUser} />
     </Provider>
     , document.getElementById("root"));
 });

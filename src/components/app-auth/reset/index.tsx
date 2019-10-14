@@ -13,10 +13,10 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import { IWindow } from "../../shared/Interfaces";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
-import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { IPropsGlobal } from "../../shared/Interfaces";
+
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -209,7 +209,6 @@ implements IResetProto {
         <div className="col-md-3 col-sm-2 col-lg-4"></div>
       </div>
     </div>
-    <Footer />
     </>
     );
   }

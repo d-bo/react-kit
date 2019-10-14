@@ -9,13 +9,13 @@ import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { Router } from "react-router-dom";
 import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
-import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { connect } from "react-redux";
 import { IPropsGlobal } from "../../shared/Interfaces";
 import { withFirebaseAuth, IFirebaseAuth } from "../../shared/hocs/FirebaseAuth";
 import * as helpers from "../../shared/helpers/validate";
+
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
@@ -45,7 +45,6 @@ interface IRegisterProto {
   [k: string]: any;
   [z: number]: any;
   recaptchaElement?: any;
-  handleKeyboardEnter?(e: any): void;
   handleRegister(): void;
   handlePasswordChange(e: string): void;
   handleEmailChange(e: string): void;
@@ -84,7 +83,6 @@ implements IRegisterProto {
       "handleEmailChange",
       "handlePasswordChange",
       "handleNameChange",
-      "handleKeyboardEnter",
       "setRecaptchaRef",
       "handlePasswordConfirmChange",
     ].forEach((propToBind: string) => {
@@ -242,7 +240,7 @@ implements IRegisterProto {
                   { // Is captcha solved ?
                     showRegisterButtonAfterCaptcha &&
                       <DmButton text="Ok" loading={loading}
-                      onClick={this.handleRegister} onKeyPress={this.handleKeyboardEnter} />
+                      onClick={this.handleRegister} />
                   }
 
                   <Router history={history}>
@@ -264,15 +262,8 @@ implements IRegisterProto {
           <div className="col-md-3 col-sm-2 col-lg-4"></div>
         </div>
       </div>
-      <Footer />
     </>
     );
-  }
-
-  public handleKeyboardEnter(e: any): void {
-    if (e.key === "Enter") {
-      this.handleRegister();
-    }
   }
 
   public setError(e: string): void {

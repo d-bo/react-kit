@@ -16,11 +16,15 @@ import {
 import ProductCardMiniWidget from "../shared/widgets/ProductCardMiniWidget";
 import "./style.scss";
 import { IPropsGlobal } from "../shared/Interfaces";
+import Navbar from "../app-navbar";
+import { withToaster } from "../shared/hocs/toast-notes";
+
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 
 interface IHomeProps extends IPropsGlobal {
   readonly items: object[] | null;
+  toast?: any;
 }
 
 interface IHomeState {
@@ -50,31 +54,30 @@ implements IHomeProto {
   }
 
   public componentDidUpdate(prevProps: IHomeProps) {
-    const {location, items} = this.props;
+    const {location} = this.props;
     if (location !== prevProps.location) {
       window.scrollTo(0, 0);
-    }
-    if (prevProps.items && items && prevProps.items.length !== items.length) {
-      store.dispatch(this.fetchItemsMongoAtlas() as any);
     }
   }
 
   public fetchItemsMongoAtlas(): (dispatch: any) => void {
     return (dispatch: any) => {
-      const client = Stitch.initializeDefaultAppClient("kuvalda-uuveu");
-      client.auth.loginWithCredential(new AnonymousCredential()).then((user) => {
-        client.callFunction("function0", []).then((res) => {
-          dispatch(receiveItems(res));
+      try {
+        const client = Stitch.initializeDefaultAppClient("kuvalda-uuveu");
+        client.auth.loginWithCredential(new AnonymousCredential()).then((user) => {
+          client.callFunction("function0", []).then((res) => {
+            dispatch(receiveItems(res));
+          });
         });
-      });
+      } catch (e) {
+        // do nothing if stitch is allready initialized
+      }
     };
   }
 
   public componentDidMount(): void {
-    const {networkStatus, items} = this.props;
-    if (!items && networkStatus === "online") {
-      store.dispatch(this.fetchItemsMongoAtlas() as any);
-    }
+    this.props.toast();
+    store.dispatch(this.fetchItemsMongoAtlas() as any);
   }
 
   public render() {
@@ -82,6 +85,7 @@ implements IHomeProto {
     const {items} = this.props;
     return (
       <main>
+        <Navbar {...this.props} />
         <div className="container-fluid fade-in-fx body-page-color body-page-margin-top">
 
           {items &&
@@ -167,4 +171,4 @@ implements IHomeProto {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Home) as any);
+export default withToaster(withRouter(connect(mapStateToProps)(Home) as any));

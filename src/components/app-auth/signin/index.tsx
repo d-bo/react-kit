@@ -13,11 +13,12 @@ import { FirebaseUserContext } from "../../../contexts/FirebaseUserContext";
 import { withRouter } from "react-router";
 import ReCaptchav2 from "../../shared/elements/ReCaptchav2";
 import { IWindow } from "../../shared/Interfaces";
-import Footer from "../../app-footer";
 import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { IPropsGlobal } from "../../shared/Interfaces";
 import { validateEmail, validatePassword } from "../../shared/helpers/validate";
+import { withToaster } from "../../shared/hocs/toast-notes";
+
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
 const mapDispatchToProps = (dispatch: any) => ({
@@ -203,7 +204,7 @@ implements ISigninProto {
                   <div className="error-message round-border-5px">{errors}</div>
                 }
 
-                <div className="flex-space-between flex-button-link margin-top">
+                <div className="flex-space-between flex-button-link margin-top-double">
                   <div>
                     <Link to="/auth/reset">FORGOT PASSWORD ?</Link>
                   </div>
@@ -234,7 +235,6 @@ implements ISigninProto {
         <div className="col-md-3 col-sm-2 col-lg-4"></div>
       </div>
     </div>
-    <Footer />
     </>
     );
   }
@@ -429,4 +429,4 @@ implements ISigninProto {
 
 SignIn.contextType = FirebaseUserContext;
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SignIn) as any);
+export default withToaster(withRouter(connect(mapStateToProps, mapDispatchToProps)(SignIn) as any));

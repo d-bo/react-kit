@@ -23,7 +23,6 @@ $pr : "navbar";
   color: $app-color;
   position: fixed;
   width: 100%;
-  z-index: 99999;
 }
 
 .#{$pr}-button {
@@ -54,7 +53,6 @@ $pr : "navbar";
     position: fixed;
     top: 10px;
     right: 20px;
-    z-index: 99999;
   }
 }
 
@@ -71,7 +69,6 @@ $pr : "navbar";
       padding: 20px;
       cursor: pointer;
     }
-    z-index: 99996;
   }
 }
 

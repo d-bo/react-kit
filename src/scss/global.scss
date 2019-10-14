@@ -1,7 +1,7 @@
 @import "~bootstrap/scss/bootstrap-reboot";
 @import "~bootstrap/scss/bootstrap-grid";
 @import "vars";
-@import "animate.css";
+@import "~animate.css/animate.css";
 @import "no-gutters";
 
 html {}
@@ -202,4 +202,8 @@ a {
   cursor: pointer;
   font-size: 12px;
   font-weight: bold;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
