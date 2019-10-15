@@ -31,6 +31,7 @@ interface ISigninProps extends IPropsGlobal {
   readonly style: any;
   readonly setProfileImgUrl: any;
   readonly setUserFirestoreData: any;
+  toast: any;
 }
 
 interface ISigninState {
@@ -74,6 +75,7 @@ implements ISigninProto {
   }
 
   public componentDidMount() {
+    this.props.toast("Fun");
     const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
       push("/profile");
