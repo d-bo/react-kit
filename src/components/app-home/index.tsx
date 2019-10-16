@@ -17,7 +17,6 @@ import ProductCardMiniWidget from "../shared/widgets/ProductCardMiniWidget";
 import "./style.scss";
 import { IPropsGlobal } from "../shared/Interfaces";
 import Navbar from "../app-navbar";
-import { withToaster } from "../shared/hocs/toast-notes";
 
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
@@ -76,7 +75,6 @@ implements IHomeProto {
   }
 
   public componentDidMount(): void {
-    this.props.toast();
     store.dispatch(this.fetchItemsMongoAtlas() as any);
   }
 
@@ -171,4 +169,4 @@ implements IHomeProto {
   }
 }
 
-export default withToaster(withRouter(connect(mapStateToProps)(Home) as any));
+export default withRouter(connect(mapStateToProps)(Home) as any);

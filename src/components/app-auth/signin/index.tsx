@@ -17,7 +17,7 @@ import produce from "immer";
 import { LoadingRollingBlack } from "../../shared/elements/Loader";
 import { IPropsGlobal } from "../../shared/Interfaces";
 import { validateEmail, validatePassword } from "../../shared/helpers/validate";
-import { withToaster } from "../../shared/hocs/toast-notes";
+import { Toaster } from "../../shared/hocs/toast-notes";
 
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
@@ -31,7 +31,6 @@ interface ISigninProps extends IPropsGlobal {
   readonly style: any;
   readonly setProfileImgUrl: any;
   readonly setUserFirestoreData: any;
-  toast: any;
 }
 
 interface ISigninState {
@@ -75,7 +74,7 @@ implements ISigninProto {
   }
 
   public componentDidMount() {
-    this.props.toast("Fun");
+    Toaster.show("Nothing special", { position: "top-right" });
     const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
       push("/profile");
@@ -431,4 +430,4 @@ implements ISigninProto {
 
 SignIn.contextType = FirebaseUserContext;
 
-export default withToaster(withRouter(connect(mapStateToProps, mapDispatchToProps)(SignIn) as any));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SignIn) as any);

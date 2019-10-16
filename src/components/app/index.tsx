@@ -8,7 +8,6 @@ import { connect } from "react-redux";
 import { hideSidebar, receiveNetworkStatus, networkStatusType } from "../../redux/actions";
 import { IPropsGlobal } from "../shared/Interfaces";
 import { LoadingRollingBlack } from "../shared/elements/Loader";
-import { withToaster } from "../shared/hocs/toast-notes";
 
 
 const mapStateToProps = (state: any) => state.firebaseAuth;
@@ -198,4 +197,4 @@ implements IAppProto {
   }
 }
 
-export default withToaster(connect(mapStateToProps, mapDispatchToProps)(MainApp));
+export default connect(mapStateToProps, mapDispatchToProps)(MainApp);
