@@ -10,6 +10,9 @@ interface IToastOptions {
   position?: "left-top" | "top-left" | "left-bottom" | "bottom-left" |
     "center-top" | "top-center" | "center-bottom" | "bottom-center" |
     "right-top" | "top-right" | "right-bottom" | "bottom-right";
+  width?: string;
+  background?: string;
+  color?: string;
 }
 export interface Toaster {
   getViewportHeightWidth(): Viewport;
@@ -42,16 +45,15 @@ export class Toaster {
 
   // Create container
   public static createContainer(): HTMLElement {
-    const {height, width} = this.getViewportHeightWidth();
     const div = document.createElement("div");
     div.id = `toast-container-${new Date().getTime()}`;
     div.setAttribute("style",
       `position: fixed;
       bottom: 0;
       left: 0;
-      width: ${width}px;
-      height: ${height}px;
-      background: rgba(38, 12, 12, 0.22)`);
+      right: 0;
+      top: 0;
+      `);
     document.body.appendChild(div);
     return div;
   }
@@ -59,100 +61,76 @@ export class Toaster {
   public static createToast(text?: string, options?: IToastOptions) {
 
     // defaults
-    let duration = 3000, speed = "fast";
-    let animateOut = "fadeOutUp", animateIn = "fadeInDown";
-    let verticalPosition = "bottom", horizontalPosition = "center";
+    let animateIn: string = "", animateOut: string = "";
+    let elementWidth = null, elementBackground = "#333", elementColor = "#fff";
 
-    const toastElementContainer = document.createElement("div");
-    const toastFlex = document.createElement("div");
+    const {width, height} = this.getViewportHeightWidth();
+
     const toastItem = document.createElement("div");
-
-    if (options) {
-      if (options.hasOwnProperty("position")) {
-        switch(options.position) {
-          case "left-bottom" || "bottom-left":
-            verticalPosition = "bottom";
-            horizontalPosition = "left";
-            animateIn = "fadeInDown";
-            animateOut = "fadeInUp";
-            break;
-          case "left-top" || "top-left":
-            verticalPosition = "top";
-            horizontalPosition = "left";
-            animateOut = "fadeInDown";
-            animateIn = "fadeInUp";
-            break;
-          case "center-top" || "top-center":
-            verticalPosition = "top";
-            horizontalPosition = "center";
-            animateIn = "fadeInDown";
-            animateOut = "fadeInUp";
-            break;
-          case "center-bottom" || "bottom-center":
-            verticalPosition = "bottom";
-            horizontalPosition = "center";
-            animateIn = "fadeInDown";
-            animateOut = "fadeInUp";
-            break;
-          case "right-bottom" || "bottom-right":
-            verticalPosition = "bottom";
-            horizontalPosition = "right";
-            animateIn = "fadeInDown";
-            animateOut = "fadeInUp";
-            break;
-          case "right-top" || "top-right":
-            verticalPosition = "top";
-            horizontalPosition = "right";
-            animateIn = "fadeInDown";
-            animateOut = "fadeInUp";
-            break;
-        }
-      }
+    if (options && options.width) {
+      elementWidth = options.width;
     }
-    toastElementContainer.setAttribute("style", `
-      position: fixed;
-      ${verticalPosition === "top" ? "top: 0" : "bottom: 0"};
-      text-align: "${horizontalPosition}";
-      width: 100%;
-    `);
-    toastElementContainer.className = `animated ${speed} ${animateIn}`;
-    toastFlex.setAttribute("style", `
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 60px;
-    `);
+    if (options && options.background) {
+      elementBackground = options.background;
+    }
+    if (options && options.color) {
+      elementColor = options.color;
+    }
+
     toastItem.setAttribute("style", `
-      max-width: 300px;
+      position: absolute;
       padding: 20px;
-      text-align: center;
-      background: #333;
-      color: #fefefe;
+      background: ${elementBackground};
+      color: ${elementColor};
       font-size: 16px;
-      margin: 20px;
       border-radius: 3px 3px 3px 3px;
       -moz-border-radius: 3px 3px 3px 3px;
       -webkit-border-radius: 3px 3px 3px 3px;
+      visibility: hidden;
+      word-break: break-word;
+      ${elementWidth && `width: ${elementWidth};`};
     `);
     if (text) {
       toastItem.innerHTML = `<div>${text}</div>`;
     }
-    toastElementContainer.appendChild(
-        toastFlex.appendChild(toastItem)
-      );
+    document.body.appendChild(toastItem);
+    // Calculate coords
+    if (options && options.hasOwnProperty("position")) {
+      if (options!.position!.indexOf("bottom") !== -1) {
+        toastItem.style.bottom = "20px";
+        animateIn = "fadeInDown";
+        animateOut = "fadeOutUp";
+      }
+      if (options!.position!.indexOf("top") !== -1) {
+        toastItem.style.top = "20px";
+        animateIn = "fadeInUp";
+        animateOut = "fadeOutDown";
+      }
+      if (options!.position!.indexOf("left") !== -1) {
+        toastItem.style.left = "20px";
+        animateIn = "fadeInRight";
+      }
+      if (options!.position!.indexOf("right") !== -1) {
+        toastItem.style.right = "20px";
+        animateIn = "fadeInLeft";
+      }
+      if (options!.position!.indexOf("center") !== -1) {
+        const centerX = (width / 2) - (toastItem.scrollWidth / 2);
+        toastItem.style.left = `${centerX}px`;
+      }
+    }
+    //toastItem.style.left = "100px";
+    //toastItem.style.top = "200px";
+    toastItem.className = `animated fast ${animateIn}`;
+    toastItem.style.visibility = "visible";
     setTimeout(() => {
-      toastElementContainer.className = `animated ${speed} ${animateOut}`;
-    }, duration);
-    return toastElementContainer;
+      toastItem.className = `animated fast ${animateOut}`;
+    }, 2000);
   }
 
   public static show(text?: string, options?: IToastOptions): void {
     // TODO: toast directly in the DOM
-    const container: HTMLElement = this.createContainer();
-    const toastElementContainer: HTMLElement = this.createToast(text, options);
-    container.appendChild(toastElementContainer);
-    document.body.appendChild(container);
+    const toastElementContainer = this.createToast(text, options);
   }
 
 }

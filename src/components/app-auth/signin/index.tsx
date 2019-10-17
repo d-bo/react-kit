@@ -74,7 +74,10 @@ implements ISigninProto {
   }
 
   public componentDidMount() {
-    Toaster.show("Nothing special", { position: "top-right" });
+    Toaster.show(
+        "Nothing special iuh98giufiuwefwgfwkgefekgf oiwheiowhfihweiofh",
+        {position: "right-top", width: "100px", background: "#333", color: "#fefefe"}
+      );
     const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
       push("/profile");
