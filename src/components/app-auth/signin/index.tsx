@@ -73,11 +73,16 @@ implements ISigninProto {
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
 
+  public toast() {
+    Toaster.show(
+      "Nothing special iuh98giufiuwefwgfwkgefekgf oiwheiowhfihweiofh",
+    );
+  }
+
   public componentDidMount() {
     Toaster.show(
-        "Nothing special iuh98giufiuwefwgfwkgefekgf oiwheiowhfihweiofh",
-        {position: "right-top", width: "100px", background: "#333", color: "#fefefe"}
-      );
+      "Nothing special iuh98giufiuwefwgfwkgefekgf oiwheiowhfihweiofh"
+    );
     const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
       push("/profile");
@@ -214,6 +219,9 @@ implements ISigninProto {
                   </div>
                   <div>
                     <Link to="/auth/register">REGISTER</Link>
+                  </div>
+                  <div>
+                    <DmButton onClick={this.toast} text="ewioh" />
                   </div>
                 </div>
 

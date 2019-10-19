@@ -1,10 +1,9 @@
-import "./style.scss";
-
 
 type Viewport = {
   height: number;
   width: number;
 }
+
 interface IToastOptions {
   text?: string;
   position?: "left-top" | "top-left" | "left-bottom" | "bottom-left" |
@@ -13,15 +12,20 @@ interface IToastOptions {
   width?: string;
   background?: string;
   color?: string;
-}
-export interface Toaster {
-  getViewportHeightWidth(): Viewport;
-  show(text?: string, options?: IToastOptions): void;
-  createToast(text?: string, options?: IToastOptions): void;
-  createContainer(): HTMLElement;
+  animateIn?: string;
+  animateOut?: string;
+  [key: string]: string | number | undefined;
 }
 
 export class Toaster {
+
+  public static containerId: string = "itemToastId";
+  public static animateIn: string = "fadeInDown";
+  public static animateOut: string = "fadeOutUp";
+  public static x: string | number = "center";
+  public static y: string | number = "top";
+  public static width: number;
+  public static height: number;
 
   /**
    * Get window width and height
@@ -43,94 +47,133 @@ export class Toaster {
     return {width: viewportwidth, height: viewportheight};
   }
 
-  // Create container
-  public static createContainer(): HTMLElement {
-    const div = document.createElement("div");
-    div.id = `toast-container-${new Date().getTime()}`;
-    div.setAttribute("style",
-      `position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: 0;
-      `);
-    document.body.appendChild(div);
-    return div;
+  /**
+   * Set element position
+   * @param toastItem HTML element
+   * @param options Custom options
+   */
+  public static setPosition(toastItem: HTMLDivElement, options?: IToastOptions): HTMLDivElement {
+
+    if (options && options.x) {
+      this.x = options.x;
+    }
+    if (typeof this.x === "string") {
+      if (this.x.toLowerCase() === "center") {
+        const {width} = this.getViewportHeightWidth();
+        toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth / 2)}px`;
+      }
+      if (this.x.toLowerCase() === "left") {
+        toastItem.style.left = "0";
+      }
+      if (this.x.toLowerCase() === "right") {
+        toastItem.style.right = "0";
+      }
+    }
+
+    if (options && options.y) {
+      this.y = options.y;
+    }
+    if (typeof this.y === "string") {
+      if (this.y.toLowerCase() === "center") {
+        const {height} = this.getViewportHeightWidth();
+        toastItem.style.top = `${(height / 2) - (toastItem.scrollHeight / 2)}px`;
+      }
+      if (this.y.toLowerCase() === "top") {
+        toastItem.style.top = "0";
+      }
+      if (this.y.toLowerCase() === "bottom") {
+        toastItem.style.bottom = "0";
+      }
+    }
+
+    return toastItem;
   }
 
-  public static createToast(text?: string, options?: IToastOptions) {
+  /**
+   * Show toast container
+   * @param text Text string
+   * @param options Custom options
+   */
+  public static show(text?: string, options?: IToastOptions) {
 
-    // defaults
-    let animateIn: string = "", animateOut: string = "";
-    let elementWidth = null, elementBackground = "#333", elementColor = "#fff";
+    let styles;
 
-    const {width, height} = this.getViewportHeightWidth();
+    // Do not spawn node if it is allready exist
+    const node = document.getElementById(this.containerId);
+    if (node && node.style.visibility === "visible") {
+      console.log(node.style.visibility);
+      return;
+    }
 
+    // Create container with default style
     const toastItem = document.createElement("div");
-    if (options && options.width) {
-      elementWidth = options.width;
-    }
-    if (options && options.background) {
-      elementBackground = options.background;
-    }
-    if (options && options.color) {
-      elementColor = options.color;
-    }
+    toastItem.id = this.containerId;
 
-    toastItem.setAttribute("style", `
+    // Merge custom options with element style
+    if (options) {
+      styles = JSON.stringify(options);
+      styles = styles.replace(/"/g, "");
+      styles = styles.replace(/'/g, "");
+      styles = styles.replace(/,/g, ";");
+      styles = styles.replace("{", "");
+      styles = styles.replace("}", "");
+    }
+    const styleSet = `
       position: absolute;
-      padding: 20px;
-      background: ${elementBackground};
-      color: ${elementColor};
-      font-size: 16px;
+      padding: 15px;
+      background: #333;
+      color: #fefefe;
+      font-size: 15px;
+      cursor: pointer;
       border-radius: 3px 3px 3px 3px;
       -moz-border-radius: 3px 3px 3px 3px;
       -webkit-border-radius: 3px 3px 3px 3px;
       visibility: hidden;
       word-break: break-word;
-      ${elementWidth && `width: ${elementWidth};`};
-    `);
+      margin: 15px;
+      ${styles !== undefined ? styles : ""}
+    `;
+
+    toastItem.setAttribute("style", styleSet);
+
     if (text) {
       toastItem.innerHTML = `<div>${text}</div>`;
     }
     document.body.appendChild(toastItem);
-    // Calculate coords
-    if (options && options.hasOwnProperty("position")) {
-      if (options!.position!.indexOf("bottom") !== -1) {
-        toastItem.style.bottom = "20px";
-        animateIn = "fadeInDown";
-        animateOut = "fadeOutUp";
-      }
-      if (options!.position!.indexOf("top") !== -1) {
-        toastItem.style.top = "20px";
-        animateIn = "fadeInUp";
-        animateOut = "fadeOutDown";
-      }
-      if (options!.position!.indexOf("left") !== -1) {
-        toastItem.style.left = "20px";
-        animateIn = "fadeInRight";
-      }
-      if (options!.position!.indexOf("right") !== -1) {
-        toastItem.style.right = "20px";
-        animateIn = "fadeInLeft";
-      }
-      if (options!.position!.indexOf("center") !== -1) {
-        const centerX = (width / 2) - (toastItem.scrollWidth / 2);
-        toastItem.style.left = `${centerX}px`;
-      }
-    }
-    //toastItem.style.left = "100px";
-    //toastItem.style.top = "200px";
-    toastItem.className = `animated fast ${animateIn}`;
+
+    // Calculate position after element rendered
+    this.setPosition(toastItem);
+
+    toastItem.classList.add("animated", "fast", this.animateIn);
     toastItem.style.visibility = "visible";
-    setTimeout(() => {
-      toastItem.className = `animated fast ${animateOut}`;
-    }, 2000);
+
+    const animationShowEnd = (ev: AnimationEvent) => {
+      setTimeout(() => {
+        this.hide(toastItem);
+        toastItem.removeEventListener("animationend", animationShowEnd);
+        toastItem.addEventListener("animationend", animationHideEnd);
+      }, 2000);
+    };
+    const animationHideEnd = (ev: AnimationEvent) => {
+      toastItem.remove();
+      toastItem.removeEventListener("animationend", animationHideEnd);
+    };
+    // Remove on click
+    toastItem.onclick = (ev: MouseEvent) => {
+      this.hide(toastItem);
+      toastItem.removeEventListener("animationend", animationShowEnd);
+      toastItem.addEventListener("animationend", animationHideEnd);
+    };
+    toastItem.addEventListener("animationend", animationShowEnd);
   }
 
-  public static show(text?: string, options?: IToastOptions): void {
-    // TODO: toast directly in the DOM
-    const toastElementContainer = this.createToast(text, options);
+  /**
+   * Animate out
+   * @param element HTML container element
+   */
+  public static hide(element: HTMLDivElement) {
+    element.classList.remove(this.animateIn);
+    element.classList.add("animated", "fast", this.animateOut);
   }
 
 }
