@@ -11,7 +11,7 @@ interface IToastOptions {
   color?: string;
   animateIn?: string;
   animateOut?: string;
-  [key: string]: string | number | undefined;
+  [key: string]: any;
 }
 
 export class Toaster {
@@ -19,10 +19,12 @@ export class Toaster {
   public static containerId: string = "itemToastId";
   public static animateIn: string = "fadeInDown";
   public static animateOut: string = "fadeOutUp";
-  public static x: string | number = "right";
-  public static y: string | number = "top";
+  public static horizontal: string | number = "right";
+  public static vertical: string | number = "top";
   public static width: number;
   public static height: number;
+  public static delay: string | number | boolean;
+  public static hideOnClick: boolean = true;
 
   /**
    * Get window width and height
@@ -49,33 +51,29 @@ export class Toaster {
    * @param toastItem HTML element
    * @param options Custom options
    */
-  public static setPosition(toastItem: HTMLDivElement, options?: IToastOptions): HTMLDivElement {
+  public static setPosition(toastItem: HTMLDivElement): HTMLDivElement {
 
-    if (options && options.x) {
-      this.x = options.x;
-    }
     const {width, height} = this.getViewport();
     // Horizontal position
-    console.log("H:", toastItem.scrollWidth, width);
     if (toastItem.scrollWidth > width) {
-      this.x = "center";
+      this.horizontal = "center";
       toastItem.style.width = "auto";
     }
-    if (typeof this.x === "string") {
-      if (this.x.toLowerCase() === "center") {
+    if (typeof this.horizontal === "string") {
+      if (this.horizontal.toLowerCase() === "center") {
         // Reset margins
         toastItem.style.marginLeft = "0";
         toastItem.style.marginRight = "0";
         toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth / 2)}px`;
         toastItem.style.right = toastItem.style.left;  // kind of responsive
       }
-      if (this.x.toLowerCase() === "left") {
+      if (this.horizontal.toLowerCase() === "left") {
         toastItem.style.left = "0";
         if (toastItem.style.marginLeft) {
           toastItem.style.left = toastItem.style.marginLeft;
         }
       }
-      if (this.x.toLowerCase() === "right") {
+      if (this.horizontal.toLowerCase() === "right") {
         toastItem.style.right = "0";
         if (toastItem.style.marginRight) {
           toastItem.style.right = toastItem.style.marginRight;
@@ -83,28 +81,24 @@ export class Toaster {
       }
     }
 
-    // Vertical position
-    if (options && options.y) {
-      this.y = options.y;
-    }
     if (toastItem.scrollHeight > height) {
-      this.y = "center";
+      this.vertical = "center";
       toastItem.style.height = "auto";
     }
-    if (typeof this.y === "string") {
-      if (this.y.toLowerCase() === "center") {
+    if (typeof this.vertical === "string") {
+      if (this.vertical.toLowerCase() === "center") {
         toastItem.style.marginTop = "0";
         toastItem.style.marginBottom = "0";
         toastItem.style.top = `${(height / 2) - (toastItem.scrollHeight / 2)}px`;
         toastItem.style.bottom = toastItem.style.top;
       }
-      if (this.y.toLowerCase() === "top") {
+      if (this.vertical.toLowerCase() === "top") {
         toastItem.style.top = "0";
         if (toastItem.style.marginTop) {
           toastItem.style.top = toastItem.style.marginTop;
         }
       }
-      if (this.y.toLowerCase() === "bottom") {
+      if (this.vertical.toLowerCase() === "bottom") {
         toastItem.style.bottom = "0";
         if (toastItem.style.marginBottom) {
           toastItem.style.bottom = toastItem.style.marginBottom;
@@ -115,8 +109,6 @@ export class Toaster {
     return toastItem;
   }
 
-
-  
   /**
    * Show toast container
    * @param text Text string
@@ -126,6 +118,10 @@ export class Toaster {
 
     let styles, toastItem: HTMLDivElement;
 
+    const getDelay = () => {
+      return this.delay as number;
+    }
+
     // Listeners
     // Fade in end
     const animationShowEnd = (ev: AnimationEvent) => {
@@ -133,7 +129,7 @@ export class Toaster {
         this.hide(toastItem);
         toastItem.removeEventListener("animationend", animationShowEnd);
         toastItem.addEventListener("animationend", animationHideEnd);
-      }, 2000);
+      }, getDelay());
     };
     // Animation fade out end - remove element from DOM
     const animationHideEnd = (ev: AnimationEvent) => {
@@ -164,21 +160,32 @@ export class Toaster {
 
     window.addEventListener('resize', onWindowResize);
 
-    // Remove on click
-    toastItem.onclick = (ev: MouseEvent) => {
-      this.hide(toastItem);
-      toastItem.removeEventListener("animationend", animationShowEnd);
-      toastItem.addEventListener("animationend", animationHideEnd);
-    };
-
     // Merge custom options with element style
     if (options) {
-      styles = JSON.stringify(options);
-      styles = styles.replace(/"/g, "");
-      styles = styles.replace(/'/g, "");
-      styles = styles.replace(/,/g, ";");
-      styles = styles.replace("{", "");
-      styles = styles.replace("}", "");
+      // Style object to CSS string
+      for (let key in options) {
+        styles = `${styles} ${key}: ${options[key]};`;
+      }
+      console.log(styles);
+      if (options.horizontal) {
+        this.horizontal = options.horizontal;
+      }
+      if (options.vertical) {
+        this.vertical = options.vertical;
+      }
+      // Auto close on delay
+      if (options.delay !== false && options.delay !== 0 && options.delay !== "0") {
+        this.delay = options.delay;
+        toastItem.addEventListener("animationend", animationShowEnd);
+      }
+      if (options.hideOnClick === true && this.hideOnClick === true) {
+        // Remove on click
+        toastItem.onclick = (ev: MouseEvent) => {
+          this.hide(toastItem);
+          toastItem.removeEventListener("animationend", animationShowEnd);
+          toastItem.addEventListener("animationend", animationHideEnd);
+        };
+      }
     }
     const styleSet = `
       position: absolute;
@@ -208,8 +215,6 @@ export class Toaster {
 
     toastItem.classList.add("animated", "fast", this.animateIn);
     toastItem.style.visibility = "visible";
-
-    toastItem.addEventListener("animationend", animationShowEnd);
   }
 
   /**

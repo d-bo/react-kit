@@ -76,7 +76,7 @@ implements ISigninProto {
   public toast() {
     Toaster.show(
       "Nothing special iuh98giufiuwefwgfwkgefekgf oiwheiowhfihweiofh",
-      {margin: "20px", width: "600px",background: "#fefefe", border: "6px solid #f0f0f0", color: "#333", padding: "100px"}
+      {hideOnClick: false, delay: false, margin: 0, horizontal: "center", vertical: "bottom", background: "rgba(0,154,255, 0.7)", border: "6px dashed #f0f0f0", color: "#fefefe", padding: "100px"}
     );
   }
 
