@@ -76,13 +76,12 @@ implements ISigninProto {
   public toast() {
     Toaster.show(
       "Nothing special iuh98giufiuwefwgfwkgefekgf oiwheiowhfihweiofh",
+      {margin: "20px", width: "600px",background: "#fefefe", border: "6px solid #f0f0f0", color: "#333", padding: "100px"}
     );
   }
 
   public componentDidMount() {
-    Toaster.show(
-      "Nothing special iuh98giufiuwefwgfwkgefekgf oiwheiowhfihweiofh"
-    );
+    this.toast();
     const {history: {push}, networkStatus} = this.props;
     if (this.context.firebaseUser) {
       push("/profile");

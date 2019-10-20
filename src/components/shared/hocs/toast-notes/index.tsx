@@ -6,9 +6,6 @@ type Viewport = {
 
 interface IToastOptions {
   text?: string;
-  position?: "left-top" | "top-left" | "left-bottom" | "bottom-left" |
-    "center-top" | "top-center" | "center-bottom" | "bottom-center" |
-    "right-top" | "top-right" | "right-bottom" | "bottom-right";
   width?: string;
   background?: string;
   color?: string;
@@ -22,7 +19,7 @@ export class Toaster {
   public static containerId: string = "itemToastId";
   public static animateIn: string = "fadeInDown";
   public static animateOut: string = "fadeOutUp";
-  public static x: string | number = "center";
+  public static x: string | number = "right";
   public static y: string | number = "top";
   public static width: number;
   public static height: number;
@@ -30,7 +27,7 @@ export class Toaster {
   /**
    * Get window width and height
    */
-  public static getViewportHeightWidth(): Viewport {
+  public static getViewport(): Viewport {
     let viewportwidth, viewportheight;
     if (typeof window.innerWidth != "undefined") {
       viewportwidth = window.innerWidth;
@@ -57,38 +54,69 @@ export class Toaster {
     if (options && options.x) {
       this.x = options.x;
     }
+    const {width, height} = this.getViewport();
+    // Horizontal position
+    console.log("H:", toastItem.scrollWidth, width);
+    if (toastItem.scrollWidth > width) {
+      this.x = "center";
+      toastItem.style.width = "auto";
+    }
     if (typeof this.x === "string") {
       if (this.x.toLowerCase() === "center") {
-        const {width} = this.getViewportHeightWidth();
+        // Reset margins
+        toastItem.style.marginLeft = "0";
+        toastItem.style.marginRight = "0";
         toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth / 2)}px`;
+        toastItem.style.right = toastItem.style.left;  // kind of responsive
       }
       if (this.x.toLowerCase() === "left") {
         toastItem.style.left = "0";
+        if (toastItem.style.marginLeft) {
+          toastItem.style.left = toastItem.style.marginLeft;
+        }
       }
       if (this.x.toLowerCase() === "right") {
         toastItem.style.right = "0";
+        if (toastItem.style.marginRight) {
+          toastItem.style.right = toastItem.style.marginRight;
+        }
       }
     }
 
+    // Vertical position
     if (options && options.y) {
       this.y = options.y;
     }
+    if (toastItem.scrollHeight > height) {
+      this.y = "center";
+      toastItem.style.height = "auto";
+    }
     if (typeof this.y === "string") {
       if (this.y.toLowerCase() === "center") {
-        const {height} = this.getViewportHeightWidth();
+        toastItem.style.marginTop = "0";
+        toastItem.style.marginBottom = "0";
         toastItem.style.top = `${(height / 2) - (toastItem.scrollHeight / 2)}px`;
+        toastItem.style.bottom = toastItem.style.top;
       }
       if (this.y.toLowerCase() === "top") {
         toastItem.style.top = "0";
+        if (toastItem.style.marginTop) {
+          toastItem.style.top = toastItem.style.marginTop;
+        }
       }
       if (this.y.toLowerCase() === "bottom") {
         toastItem.style.bottom = "0";
+        if (toastItem.style.marginBottom) {
+          toastItem.style.bottom = toastItem.style.marginBottom;
+        }
       }
     }
 
     return toastItem;
   }
 
+
+  
   /**
    * Show toast container
    * @param text Text string
@@ -96,18 +124,52 @@ export class Toaster {
    */
   public static show(text?: string, options?: IToastOptions) {
 
-    let styles;
+    let styles, toastItem: HTMLDivElement;
+
+    // Listeners
+    // Fade in end
+    const animationShowEnd = (ev: AnimationEvent) => {
+      setTimeout(() => {
+        this.hide(toastItem);
+        toastItem.removeEventListener("animationend", animationShowEnd);
+        toastItem.addEventListener("animationend", animationHideEnd);
+      }, 2000);
+    };
+    // Animation fade out end - remove element from DOM
+    const animationHideEnd = (ev: AnimationEvent) => {
+      toastItem.remove();
+      toastItem.removeEventListener("animationend", animationHideEnd);
+      window.removeEventListener('resize', onWindowResize);
+    };
 
     // Do not spawn node if it is allready exist
-    const node = document.getElementById(this.containerId);
-    if (node && node.style.visibility === "visible") {
-      console.log(node.style.visibility);
+    // Just close it
+    toastItem = document.getElementById(this.containerId) as HTMLDivElement;
+    if (toastItem) {
+      this.hide(toastItem as HTMLDivElement);
+      toastItem.removeEventListener("animationend", animationShowEnd);
+      toastItem.addEventListener("animationend", animationHideEnd);
       return;
     }
 
     // Create container with default style
-    const toastItem = document.createElement("div");
+    toastItem = document.createElement("div");
     toastItem.id = this.containerId;
+
+    // Resize box on window resize
+    const onWindowResize = (ev: Event) => {
+      console.log(this.getViewport());
+      this.setPosition(toastItem);
+    }
+
+    window.addEventListener('resize', onWindowResize);
+
+    // Remove on click
+    toastItem.onclick = (ev: MouseEvent) => {
+      this.hide(toastItem);
+      toastItem.removeEventListener("animationend", animationShowEnd);
+      toastItem.addEventListener("animationend", animationHideEnd);
+    };
 
     // Merge custom options with element style
     if (options) {
@@ -121,7 +183,7 @@ export class Toaster {
     const styleSet = `
       position: absolute;
       padding: 15px;
-      background: #333;
+      background: rgba(0,0,0, 0.9);
       color: #fefefe;
       font-size: 15px;
       cursor: pointer;
@@ -147,23 +209,6 @@ export class Toaster {
     toastItem.classList.add("animated", "fast", this.animateIn);
     toastItem.style.visibility = "visible";
 
-    const animationShowEnd = (ev: AnimationEvent) => {
-      setTimeout(() => {
-        this.hide(toastItem);
-        toastItem.removeEventListener("animationend", animationShowEnd);
-        toastItem.addEventListener("animationend", animationHideEnd);
-      }, 2000);
-    };
-    const animationHideEnd = (ev: AnimationEvent) => {
-      toastItem.remove();
-      toastItem.removeEventListener("animationend", animationHideEnd);
-    };
-    // Remove on click
-    toastItem.onclick = (ev: MouseEvent) => {
-      this.hide(toastItem);
-      toastItem.removeEventListener("animationend", animationShowEnd);
-      toastItem.addEventListener("animationend", animationHideEnd);
-    };
     toastItem.addEventListener("animationend", animationShowEnd);
   }
 
