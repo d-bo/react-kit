@@ -14,16 +14,20 @@ interface IToastOptions {
   [key: string]: any;
 }
 
+type BoxWidth = number | string | null;
+type BoxHeight = BoxWidth;
+type CloseDelay = string | number | boolean;
+
 export class Toaster {
 
   public static containerId: string = "itemToastId";
   public static animateIn: string = "fadeInDown";
   public static animateOut: string = "fadeOutUp";
-  public static horizontal: string | number = "right";
+  public static horizontal: string | number = "center";
   public static vertical: string | number = "top";
-  public static width: number;
-  public static height: number;
-  public static delay: string | number | boolean;
+  public static width: BoxWidth = null;
+  public static height: BoxHeight = null;
+  public static delay: CloseDelay = 1500;
   public static hideOnClick: boolean = true;
 
   /**
@@ -61,11 +65,13 @@ export class Toaster {
     }
     if (typeof this.horizontal === "string") {
       if (this.horizontal.toLowerCase() === "center") {
+        console.log(toastItem.scrollWidth);
         // Reset margins
         toastItem.style.marginLeft = "0";
         toastItem.style.marginRight = "0";
-        toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth / 2)}px`;
-        toastItem.style.right = toastItem.style.left;  // kind of responsive
+        toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth as number / 2)}px`;
+        // equal left right margins if custom options width is higher
+        toastItem.style.right = toastItem.style.left;
       }
       if (this.horizontal.toLowerCase() === "left") {
         toastItem.style.left = "0";
@@ -80,7 +86,11 @@ export class Toaster {
         }
       }
     }
+    // TODO: width in case of pure XY coords
+    if (typeof this.horizontal === "number") {}
 
+
+    // Vertical position
     if (toastItem.scrollHeight > height) {
       this.vertical = "center";
       toastItem.style.height = "auto";
@@ -116,14 +126,14 @@ export class Toaster {
    */
   public static show(text?: string, options?: IToastOptions) {
 
-    let styles, toastItem: HTMLDivElement;
+    let toastItem: HTMLDivElement;
 
     const getDelay = () => {
       return this.delay as number;
     }
 
     // Listeners
-    // Fade in end
+    // Fade on end
     const animationShowEnd = (ev: AnimationEvent) => {
       setTimeout(() => {
         this.hide(toastItem);
@@ -136,6 +146,12 @@ export class Toaster {
       toastItem.remove();
       toastItem.removeEventListener("animationend", animationHideEnd);
       window.removeEventListener('resize', onWindowResize);
+    };
+    // Hide on modal body click
+    const hideOnClickListener = (ev: MouseEvent) => {
+      this.hide(toastItem);
+      toastItem.removeEventListener("animationend", animationShowEnd);
+      toastItem.addEventListener("animationend", animationHideEnd);
     };
 
     // Do not spawn node if it is allready exist
@@ -153,20 +169,22 @@ export class Toaster {
     toastItem.id = this.containerId;
 
     // Resize box on window resize
+    // TODO: not working
     const onWindowResize = (ev: Event) => {
       console.log(this.getViewport());
       this.setPosition(toastItem);
     }
 
-    window.addEventListener('resize', onWindowResize);
+    window.addEventListener("resize", onWindowResize);
 
     // Merge custom options with element style
+    let styles = "";
     if (options) {
       // Style object to CSS string
+      
       for (let key in options) {
-        styles = `${styles} ${key}: ${options[key]};`;
+        styles += `${key}: ${options[key]};`;
       }
-      console.log(styles);
       if (options.horizontal) {
         this.horizontal = options.horizontal;
       }
@@ -174,19 +192,30 @@ export class Toaster {
         this.vertical = options.vertical;
       }
       // Auto close on delay
-      if (options.delay !== false && options.delay !== 0 && options.delay !== "0") {
+      if (options.delay) {
         this.delay = options.delay;
-        toastItem.addEventListener("animationend", animationShowEnd);
       }
-      if (options.hideOnClick === true && this.hideOnClick === true) {
-        // Remove on click
-        toastItem.onclick = (ev: MouseEvent) => {
-          this.hide(toastItem);
-          toastItem.removeEventListener("animationend", animationShowEnd);
-          toastItem.addEventListener("animationend", animationHideEnd);
-        };
+      if (options.hideOnClick) {
+        this.hideOnClick = options.hideOnClick;
+      }
+      if (options.width) {
+        this.width = options.width;
+      }
+      if (options.height) {
+        this.height = options.height;
       }
     }
+
+    // Hide on modal body click
+    if (this.hideOnClick) {
+      toastItem.addEventListener("click", hideOnClickListener);
+    }
+
+    // Auto close delay
+    if (this.delay) {
+      toastItem.addEventListener("animationend", animationShowEnd);
+    }
+
     const styleSet = `
       position: absolute;
       padding: 15px;
@@ -199,10 +228,10 @@ export class Toaster {
       -webkit-border-radius: 3px 3px 3px 3px;
       visibility: hidden;
       word-break: break-word;
-      margin: 15px;
+      margin: 5px;
       ${styles !== undefined ? styles : ""}
     `;
-
+    console.log("STYLE:", styleSet);
     toastItem.setAttribute("style", styleSet);
 
     if (text) {
