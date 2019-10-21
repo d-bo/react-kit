@@ -191,7 +191,6 @@ export class Toaster {
       if (options.vertical) {
         this.vertical = options.vertical;
       }
-      // Auto close on delay
       if (options.delay) {
         this.delay = options.delay;
       }
@@ -203,6 +202,12 @@ export class Toaster {
       }
       if (options.height) {
         this.height = options.height;
+      }
+      if (options.animateIn) {
+        this.animateIn = options.animateIn
+      }
+      if (options.animateOut) {
+        this.animateOut = options.animateOut;
       }
     }
 

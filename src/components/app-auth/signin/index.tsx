@@ -75,8 +75,8 @@ implements ISigninProto {
 
   public toast() {
     Toaster.show(
-      "Load API failure",
-      {background: "brown", width: "320px", "text-align": "center"}
+      `Your api is a mistake`,
+      {animateIn: "fadeIn", animateOut: "fadeOutDown", background: "rgba(255,255,255, 0.7)", color: "#333", "text-align": "center", vertical: "top", width: "700px"}
     );
   }
 
