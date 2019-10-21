@@ -59,30 +59,34 @@ export class Toaster {
 
     const {width, height} = this.getViewport();
     // Horizontal position
+    let controlWidth = toastItem.scrollWidth;
+    // case height overload from options -> force align center
     if (toastItem.scrollWidth > width) {
       this.horizontal = "center";
       toastItem.style.width = "auto";
-    }
-    if (typeof this.horizontal === "string") {
-      if (this.horizontal.toLowerCase() === "center") {
-        console.log(toastItem.scrollWidth);
-        // Reset margins
-        toastItem.style.marginLeft = "0";
-        toastItem.style.marginRight = "0";
-        toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth as number / 2)}px`;
-        // equal left right margins if custom options width is higher
-        toastItem.style.right = toastItem.style.left;
-      }
-      if (this.horizontal.toLowerCase() === "left") {
-        toastItem.style.left = "0";
-        if (toastItem.style.marginLeft) {
-          toastItem.style.left = toastItem.style.marginLeft;
+      toastItem.style.left = toastItem.style.marginLeft;
+      toastItem.style.right = toastItem.style.left;
+    } else {
+      if (typeof this.horizontal === "string") {
+        if (this.horizontal.toLowerCase() === "center") {
+          console.log(toastItem.scrollWidth);
+          // Reset margins
+          toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth as number / 2)}px`;
+          // equal left right margins if custom options width is higher
+          toastItem.style.right = toastItem.style.left;
+          toastItem.style.width = "auto";
         }
-      }
-      if (this.horizontal.toLowerCase() === "right") {
-        toastItem.style.right = "0";
-        if (toastItem.style.marginRight) {
-          toastItem.style.right = toastItem.style.marginRight;
+        if (this.horizontal.toLowerCase() === "left") {
+          toastItem.style.left = "0";
+          if (toastItem.style.marginLeft) {
+            toastItem.style.left = toastItem.style.marginLeft;
+          }
+        }
+        if (this.horizontal.toLowerCase() === "right") {
+          toastItem.style.right = "0";
+          if (toastItem.style.marginRight) {
+            toastItem.style.right = toastItem.style.marginRight;
+          }
         }
       }
     }
