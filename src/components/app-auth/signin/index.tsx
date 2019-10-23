@@ -75,8 +75,8 @@ implements ISigninProto {
 
   public toast() {
     Toaster.show(
-      `Your api is a mistake`,
-      {horizontal: "left", animateIn: "fadeIn", animateOut: "fadeOutUp", background: "rgba(255,255,255, 0.7)", color: "#333", "text-align": "center", vertical: "top", width: "700px"}
+      `4535 awesome ihgeguegruegegruegergioe 98348934 y87t78 8y8trt89 8y9y3894 hjh`,
+      {horizontal: "center", animateIn: "fadeIn", animateOut: "fadeOutUp", "text-align": "center", delay: false}
     );
   }
 

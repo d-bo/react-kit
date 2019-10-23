@@ -59,7 +59,6 @@ export class Toaster {
 
     const {width, height} = this.getViewport();
     // Horizontal position
-    let controlWidth = toastItem.scrollWidth;
     // case height overload from options -> force align center
     if (toastItem.scrollWidth > width) {
       this.horizontal = "center";
@@ -69,12 +68,11 @@ export class Toaster {
     } else {
       if (typeof this.horizontal === "string") {
         if (this.horizontal.toLowerCase() === "center") {
-          console.log(toastItem.scrollWidth);
-          // Reset margins
-          toastItem.style.left = `${(width / 2) - (toastItem.scrollWidth as number / 2)}px`;
+          //toastItem.style.left = toastItem.style.marginLeft;
+          toastItem.style.left = `${(width / 2) - (toastItem.offsetWidth as number / 2)}px`;
           // equal left right margins if custom options width is higher
-          toastItem.style.right = toastItem.style.left;
-          toastItem.style.width = "auto";
+          //toastItem.style.right = toastItem.style.left;
+          //toastItem.style.width = "auto";
         }
         if (this.horizontal.toLowerCase() === "left") {
           toastItem.style.left = "0";
@@ -185,33 +183,33 @@ export class Toaster {
     let styles = "";
     if (options) {
       // Style object to CSS string
-      
+
       for (let key in options) {
         styles += `${key}: ${options[key]};`;
       }
-      if (options.horizontal) {
+      if (options.hasOwnProperty("horizontal")) {
         this.horizontal = options.horizontal;
       }
-      if (options.vertical) {
+      if (options.hasOwnProperty("vertical")) {
         this.vertical = options.vertical;
       }
-      if (options.delay) {
+      if (options.hasOwnProperty("delay")) {
         this.delay = options.delay;
       }
-      if (options.hideOnClick) {
+      if (options.hasOwnProperty("hideOnClick")) {
         this.hideOnClick = options.hideOnClick;
       }
-      if (options.width) {
-        this.width = options.width;
+      if (options.hasOwnProperty("width")) {
+        this.width = options.width as BoxWidth;
       }
-      if (options.height) {
+      if (options.hasOwnProperty("height")) {
         this.height = options.height;
       }
-      if (options.animateIn) {
-        this.animateIn = options.animateIn
+      if (options.hasOwnProperty("animateIn")) {
+        this.animateIn = options.animateIn as string;
       }
-      if (options.animateOut) {
-        this.animateOut = options.animateOut;
+      if (options.hasOwnProperty("animateOut")) {
+        this.animateOut = options.animateOut as string;
       }
     }
 
@@ -237,7 +235,6 @@ export class Toaster {
       -webkit-border-radius: 3px 3px 3px 3px;
       visibility: hidden;
       word-break: break-word;
-      margin: 5px;
       ${styles !== undefined ? styles : ""}
     `;
     console.log("STYLE:", styleSet);
