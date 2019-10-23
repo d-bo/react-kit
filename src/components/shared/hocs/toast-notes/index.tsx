@@ -9,8 +9,9 @@ interface IToastOptions {
   width?: string;
   background?: string;
   color?: string;
-  animateIn?: string;
-  animateOut?: string;
+  animateIn?: string | boolean;
+  animateOut?: string | boolean;
+  animateSpeed: string;
   [key: string]: any;
 }
 
@@ -21,8 +22,9 @@ type CloseDelay = string | number | boolean;
 export class Toaster {
 
   public static containerId: string = "itemToastId";
-  public static animateIn: string = "fadeInDown";
-  public static animateOut: string = "fadeOutUp";
+  public static animateIn: string | boolean = "fadeInDown";
+  public static animateOut: string | boolean = "fadeOutUp";
+  public static animateSpeed: string = "faster";
   public static horizontal: string | number = "center";
   public static vertical: string | number = "top";
   public static width: BoxWidth = null;
@@ -34,19 +36,11 @@ export class Toaster {
    * Get window width and height
    */
   public static getViewport(): Viewport {
-    let viewportwidth, viewportheight;
-    if (typeof window.innerWidth != "undefined") {
-      viewportwidth = window.innerWidth;
-      viewportheight = window.innerHeight;
-    } else if (typeof document.documentElement != "undefined"
-        && typeof document.documentElement.clientWidth != "undefined"
-        && document.documentElement.clientWidth !== 0) {
-          viewportwidth = document.documentElement.clientWidth;
-          viewportheight = document.documentElement.clientHeight;
-    } else {
-      viewportwidth = document.getElementsByTagName('body')[0].clientWidth;
-      viewportheight = document.getElementsByTagName('body')[0].clientHeight;
-    }
+
+    let viewportwidth = document.documentElement.clientWidth
+    || document.body.clientWidth;
+    let viewportheight = document.documentElement.clientHeight
+    || document.body.clientHeight;
     return {width: viewportwidth, height: viewportheight};
   }
 
@@ -71,8 +65,7 @@ export class Toaster {
           //toastItem.style.left = toastItem.style.marginLeft;
           toastItem.style.left = `${(width / 2) - (toastItem.offsetWidth as number / 2)}px`;
           // equal left right margins if custom options width is higher
-          //toastItem.style.right = toastItem.style.left;
-          //toastItem.style.width = "auto";
+          toastItem.style.right = toastItem.style.left;
         }
         if (this.horizontal.toLowerCase() === "left") {
           toastItem.style.left = "0";
@@ -211,6 +204,9 @@ export class Toaster {
       if (options.hasOwnProperty("animateOut")) {
         this.animateOut = options.animateOut as string;
       }
+      if (options.hasOwnProperty("animateSpeed")) {
+        this.animateSpeed = options.animateSpeed as string;
+      }
     }
 
     // Hide on modal body click
@@ -230,14 +226,13 @@ export class Toaster {
       color: #fefefe;
       font-size: 15px;
       cursor: pointer;
-      border-radius: 3px 3px 3px 3px;
-      -moz-border-radius: 3px 3px 3px 3px;
-      -webkit-border-radius: 3px 3px 3px 3px;
+      border-radius: 4px 4px 4px 4px;
+      -moz-border-radius: 4px 4px 4px 4px;
+      -webkit-border-radius: 4px 4px 4px 4px;
       visibility: hidden;
       word-break: break-word;
       ${styles !== undefined ? styles : ""}
     `;
-    console.log("STYLE:", styleSet);
     toastItem.setAttribute("style", styleSet);
 
     if (text) {
@@ -248,7 +243,9 @@ export class Toaster {
     // Calculate position after element rendered
     this.setPosition(toastItem);
 
-    toastItem.classList.add("animated", "fast", this.animateIn);
+    if (typeof this.animateIn === "string") {
+      toastItem.classList.add("animated", this.animateSpeed, this.animateIn);
+    }
     toastItem.style.visibility = "visible";
   }
 
@@ -257,8 +254,12 @@ export class Toaster {
    * @param element HTML container element
    */
   public static hide(element: HTMLDivElement) {
-    element.classList.remove(this.animateIn);
-    element.classList.add("animated", "fast", this.animateOut);
+    if (typeof this.animateIn === "string") {
+      element.classList.remove(this.animateIn);
+    }
+    if (typeof this.animateOut === "string") {
+      element.classList.add("animated", "fast", this.animateOut);
+    }
   }
 
 }

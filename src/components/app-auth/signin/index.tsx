@@ -75,8 +75,8 @@ implements ISigninProto {
 
   public toast() {
     Toaster.show(
-      `4535 awesome ihgeguegruegegruegergioe 98348934 y87t78 8y8trt89 8y9y3894 hjh`,
-      {horizontal: "center", animateIn: "fadeIn", animateOut: "fadeOutUp", "text-align": "center", delay: false}
+      `W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors, but we cannot warrant full correctness of all content. While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright 1999-2019 by Refsnes Data. All Rights Reserved.`,
+      {width: "340px", horizontal: "center", vertical: "center", margin: "5px", animateSpeed: "slow", animateIn: false, animateOut: false, delay: false}
     );
   }
 
