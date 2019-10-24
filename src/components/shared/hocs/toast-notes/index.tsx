@@ -252,7 +252,7 @@ export class Toaster {
     this.setPosition(toastItem);
 
     if (typeof this.animateIn === "string") {
-      toastItem.classList.add("animated", this.animateSpeed, this.animateIn);
+      toastItem.classList.add("animated", this.animateSpeed as string, this.animateIn);
     }
     toastItem.style.visibility = "visible";
   }
