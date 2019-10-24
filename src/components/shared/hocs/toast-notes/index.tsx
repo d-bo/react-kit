@@ -11,7 +11,7 @@ interface IToastOptions {
   color?: string;
   animateIn?: string | boolean;
   animateOut?: string | boolean;
-  animateSpeed: string;
+  animateSpeed: string | boolean;
   [key: string]: any;
 }
 
@@ -24,7 +24,7 @@ export class Toaster {
   public static containerId: string = "itemToastId";
   public static animateIn: string | boolean = "fadeInDown";
   public static animateOut: string | boolean = "fadeOutUp";
-  public static animateSpeed: string = "faster";
+  public static animateSpeed: string | boolean = "faster";
   public static horizontal: string | number = "center";
   public static vertical: string | number = "top";
   public static width: BoxWidth = null;
@@ -146,6 +146,10 @@ export class Toaster {
     const hideOnClickListener = (ev: MouseEvent) => {
       this.hide(toastItem);
       toastItem.removeEventListener("animationend", animationShowEnd);
+      if (!this.animateOut) {
+        toastItem.remove();
+        return;
+      }
       toastItem.addEventListener("animationend", animationHideEnd);
     };
 
@@ -155,6 +159,10 @@ export class Toaster {
     if (toastItem) {
       this.hide(toastItem as HTMLDivElement);
       toastItem.removeEventListener("animationend", animationShowEnd);
+      if (!this.animateOut) {
+        toastItem.remove();
+        return;
+      }
       toastItem.addEventListener("animationend", animationHideEnd);
       return;
     }
@@ -199,13 +207,13 @@ export class Toaster {
         this.height = options.height;
       }
       if (options.hasOwnProperty("animateIn")) {
-        this.animateIn = options.animateIn as string;
+        this.animateIn = options.animateIn === true ? this.animateIn : options.animateIn as string;
       }
       if (options.hasOwnProperty("animateOut")) {
-        this.animateOut = options.animateOut as string;
+        this.animateOut = options.animateOut === true ? this.animateOut : options.animateOut as string;
       }
       if (options.hasOwnProperty("animateSpeed")) {
-        this.animateSpeed = options.animateSpeed as string;
+        this.animateSpeed = options.animateSpeed === true ? this.animateSpeed : options.animateSpeed as string;
       }
     }
 
