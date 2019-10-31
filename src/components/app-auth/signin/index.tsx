@@ -75,8 +75,8 @@ implements ISigninProto {
 
   public toast() {
     Toaster.show(
-      `W3Schools is optimized for learning, testing, and training. Examples might be simplified to improve reading and basic understanding. Tutorials, references, and examples are constantly reviewed to avoid errors, but we cannot warrant full correctness of all content. While using this site, you agree to have read and accepted our terms of use, cookie and privacy policy. Copyright 1999-2019 by Refsnes Data. All Rights Reserved.`,
-      { horizontal: "center", vertical: "top", margin: "5px", animateSpeed: "faster", animateIn: "pulse", animateOut: "fadeOut", delay: false}
+      `<b>Error:</b> Not authenticated 33g 3g 3g 34 3g3g5g5hh5h5 j5j5 56h5h6`,
+      {margin: "5px", animateSpeed: "faster", delay: false}
     );
   }
 

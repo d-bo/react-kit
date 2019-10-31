@@ -52,8 +52,26 @@ export class Toaster {
   public static setPosition(toastItem: HTMLDivElement): HTMLDivElement {
 
     const {width, height} = this.getViewport();
-    // Horizontal position
-    // case height overload from options -> force align center
+    const el = toastItem.getBoundingClientRect();
+    // TODO: calculate Scroll top if position is absolute (no need if static)
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    let elFullWidth = el.width;
+    let elFullHeight = el.height;
+    const computed = window.getComputedStyle(toastItem, null);
+
+    // Calculate element full WIDTH + margins (may be relative in vw)
+    if (computed.marginLeft || computed.marginRight) {
+      const calculatedMarginsX = (parseFloat(computed.marginLeft as any) + parseFloat(computed.marginRight as any));
+      elFullWidth = el.width as any + calculatedMarginsX;
+    }
+    // Calculate element full HEIGHT + margins (may be relative in vw)
+    if (computed.marginTop || computed.marginBottom) {
+      const calculatedMarginsY = (parseFloat(computed.marginTop as any) + parseFloat(computed.marginBottom as any));
+      elFullHeight = el.height as any + calculatedMarginsY;
+    }
+
+    // Case: height overload from options -> force align center
     if (toastItem.scrollWidth > width) {
       this.horizontal = "center";
       toastItem.style.width = "auto";
@@ -62,10 +80,7 @@ export class Toaster {
     } else {
       if (typeof this.horizontal === "string") {
         if (this.horizontal.toLowerCase() === "center") {
-          //toastItem.style.left = toastItem.style.marginLeft;
-          toastItem.style.left = `${(width / 2) - (toastItem.offsetWidth as number / 2)}px`;
-          // equal left right margins if custom options width is higher
-          toastItem.style.right = toastItem.style.left;
+          toastItem.style.left = `${(width / 2) - ((elFullWidth) / 2)}px`;
         }
         if (this.horizontal.toLowerCase() === "left") {
           toastItem.style.left = "0";
@@ -84,18 +99,9 @@ export class Toaster {
     // TODO: width in case of pure XY coords
     if (typeof this.horizontal === "number") {}
 
-
-    // Vertical position
-    if (toastItem.scrollHeight > height) {
-      this.vertical = "center";
-      toastItem.style.height = "auto";
-    }
     if (typeof this.vertical === "string") {
       if (this.vertical.toLowerCase() === "center") {
-        toastItem.style.marginTop = "0";
-        toastItem.style.marginBottom = "0";
-        toastItem.style.top = `${(height / 2) - (toastItem.scrollHeight / 2)}px`;
-        toastItem.style.bottom = toastItem.style.top;
+        toastItem.style.top = `${(height / 2) - ((elFullHeight) / 2)}px`;
       }
       if (this.vertical.toLowerCase() === "top") {
         toastItem.style.top = "0";
@@ -228,7 +234,7 @@ export class Toaster {
     }
 
     const styleSet = `
-      position: absolute;
+      position: fixed;
       padding: 15px;
       background: rgba(0,0,0, 0.9);
       color: #fefefe;
