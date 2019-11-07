@@ -56,23 +56,25 @@ export class Toaster {
     // TODO: calculate Scroll top if position is absolute (no need if static)
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
 
+    let calculatedMarginsX, calculatedMarginsY;
     let elFullWidth = el.width;
     let elFullHeight = el.height;
     const computed = window.getComputedStyle(toastItem, null);
 
     // Calculate element full WIDTH + margins (may be relative in vw)
     if (computed.marginLeft || computed.marginRight) {
-      const calculatedMarginsX = (parseFloat(computed.marginLeft as any) + parseFloat(computed.marginRight as any));
-      elFullWidth = el.width as any + calculatedMarginsX;
+      calculatedMarginsX = (parseFloat(computed.marginLeft as any) + parseFloat(computed.marginRight as any));
+      elFullWidth = el.width as any + (calculatedMarginsX * 2);
     }
     // Calculate element full HEIGHT + margins (may be relative in vw)
     if (computed.marginTop || computed.marginBottom) {
-      const calculatedMarginsY = (parseFloat(computed.marginTop as any) + parseFloat(computed.marginBottom as any));
-      elFullHeight = el.height as any + calculatedMarginsY;
+      calculatedMarginsY = (parseFloat(computed.marginTop as any) + parseFloat(computed.marginBottom as any));
+      elFullHeight = el.height as any + (calculatedMarginsY * 2);
     }
 
+    console.log("SUMMARY", elFullWidth, width, calculatedMarginsX, calculatedMarginsY);
     // Case: height overload from options -> force align center
-    if (toastItem.scrollWidth > width) {
+    if (elFullWidth > width) {
       this.horizontal = "center";
       toastItem.style.width = "auto";
       toastItem.style.left = toastItem.style.marginLeft;

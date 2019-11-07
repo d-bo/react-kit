@@ -76,7 +76,7 @@ implements ISigninProto {
   public toast() {
     Toaster.show(
       `<b>Error:</b> Not authenticated 33g 3g 3g 34 3g3g5g5hh5h5 j5j5 56h5h6`,
-      {margin: "5px", animateSpeed: "faster", delay: false}
+      {animateSpeed: "faster", width: '100%', "text-align": "center", "border-radius": "0", vertical: "bottom", padding: "30px"}
     );
   }
 
