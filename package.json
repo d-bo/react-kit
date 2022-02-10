@@ -16,7 +16,7 @@
     "history": "^4.9.0",
     "immer": "^3.2.0",
     "mongodb-stitch-browser-sdk": "^4.4.0",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "puppeteer": "^1.19.0",
     "react": "^16.6.3",
     "react-device-detect": "^1.7.5",
