@@ -26,7 +26,7 @@
     "react-redux": "^6.0.1",
     "react-responsive-modal": "^4.0.1",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "^2.1.8",
+    "react-scripts": "^5.0.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "typescript": "^3.5.2"
@@ -60,7 +60,7 @@
     "jest-enzyme": "^7.1.0",
     "jest-puppeteer": "^4.3.0",
     "react-docgen-typescript": "^1.14.0",
-    "react-styleguidist": "^9.1.16",
+    "react-styleguidist": "^13.0.0",
     "react-test-renderer": "^16.8.6"
   }
 }
